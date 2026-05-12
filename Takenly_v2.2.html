@@ -1,0 +1,3757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Takenly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   MEDTIME v2.0 — DESIGN SYSTEM
+   
+   Colour budget:
+   --bg / --surface / --ink family = neutrals only
+   --teal = brand + interactive affordances ONLY
+   --green = taken / success (medical state)
+   --red   = missed / overdue (medical state)
+   --amber = early / partial (medical state)
+   Nothing else gets colour.
+═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #F8F5F0;
+  --surface:   #FFFFFF;
+  --surface2:  #F2EFE9;
+  --border:    #E8E4DF;
+  --ink:       #141210;
+  --ink-mid:   #3A3632;  /* was #4A4642 — darkened for AA contrast on #F8F5F0 */
+  --ink-dim:   #6B6762;  /* was #A8A4A0 — 4.6:1 on #F8F5F0, passes AA */
+  --ink-faint: #E2DED9;  /* was #E8E4DF — slightly darker for border visibility */
+  --teal:      #0D7377;
+  --teal-mid:  #14999E;
+  --teal-dim:  rgba(13,115,119,0.08);
+  --teal-glow: rgba(13,115,119,0.15);
+  --green:     #1A7A4A;
+  --green-dim: rgba(26,122,74,0.08);
+  --red:       #C0392B;
+  --red-dim:   rgba(192,57,43,0.07);
+  --amber:     #A0640A;
+  --amber-dim: rgba(160,100,10,0.08);
+  --radius:    14px;
+  --font-head: 'Fraunces', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --tab-h:     72px;
+  --safe-b:    env(safe-area-inset-bottom, 0px);
+}
+
+/* ── DARK MODE PREFERENCE ── */
+/* Light is the default. .dark on body flips to dark palette. */
+body.dark {
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --surface2:  #1e2530;
+  --border:    #30363d;
+  --ink:       #e6edf3;
+  --ink-mid:   #8d9299;
+  --ink-dim:   #6e7681;
+  --ink-faint: #21262d;
+  --teal:      #14999E;
+  --teal-mid:  #1ac7ce;
+  --teal-dim:  rgba(20,153,158,0.12);
+  --teal-glow: rgba(20,153,158,0.2);
+  --green:     #3fb950;
+  --green-dim: rgba(63,185,80,0.1);
+  --red:       #f85149;
+  --red-dim:   rgba(248,81,73,0.1);
+  --amber:     #d29922;
+  --amber-dim: rgba(210,153,34,0.1);
+}
+body.dark .tab-bar {
+  background: rgba(13,17,23,0.92);
+}
+body.dark .pin-key {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+/* ── LAYOUT ── */
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg);
+}
+
+.screen {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--tab-h) + var(--safe-b) + 16px);
+}
+.screen::-webkit-scrollbar { display: none; }
+
+/* ── LOGO — Takenly Direction E ── */
+/* Three stacked teal squares (full/50%/20%) + TAKENLY all-caps bold sans */
+.tk-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  user-select: none;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.tk-mark {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  flex-shrink: 0;
+}
+.tk-sq {
+  background: var(--teal);
+  border-radius: 1px;
+}
+.tk-sq:nth-child(2) { opacity: 0.5; }
+.tk-sq:nth-child(3) { opacity: 0.2; }
+.tk-wordmark {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  line-height: 1;
+  text-transform: uppercase;
+}
+/* Size variants */
+.tk-logo-lg .tk-sq { width: 9px; height: 9px; }
+.tk-logo-lg .tk-wordmark { font-size: 17px; }
+.tk-logo-md .tk-sq { width: 7px; height: 7px; }
+.tk-logo-md .tk-wordmark { font-size: 13px; }
+.tk-logo-sm .tk-sq { width: 6px; height: 6px; }
+.tk-logo-sm .tk-wordmark { font-size: 11px; }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-size: 11px; /* bumped from 10px — improves readability at all contrast levels */
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mid); /* was ink-dim — now passes WCAG AA */
+  font-family: var(--font-body);
+}
+
+/* ── BOTTOM TAB BAR ── */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: calc(var(--tab-h) + var(--safe-b));
+  padding: 0 8px var(--safe-b);
+  background: rgba(248,245,240,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  z-index: 200;
+}
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 4px;
+  transition: opacity 0.15s;
+  position: relative;
+}
+.tab-btn:active { opacity: 0.6; }
+.tab-icon { font-size: 22px; line-height: 1; }
+.tab-label {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--ink-mid); /* was ink-dim */
+  letter-spacing: 0.04em;
+  font-family: var(--font-body);
+  transition: color 0.2s, font-weight 0.2s;
+}
+.tab-btn.active .tab-label {
+  color: var(--teal);
+  font-weight: 700;
+}
+.tab-dot {
+  position: absolute;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--teal);
+  display: none;
+}
+.tab-btn.active .tab-dot { display: block; }
+
+/* ── SCREEN HEADERS ── */
+.screen-header {
+  padding: 16px 22px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.screen-title {
+  font-family: var(--font-head);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ── SURFACE CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* ── PROGRESS PIPS — today's doses ── */
+.progress-bar-wrap {
+  padding: 14px 22px 0;
+}
+.today-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.today-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.today-pips {
+  display: flex;
+  gap: 5px;
+}
+.today-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: background 0.4s;
+}
+.pip-taken  { background: var(--green); }
+.pip-due    { background: var(--teal); }
+.pip-future { background: var(--ink-faint); }
+.today-text { flex: 1; }
+.today-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+.today-sub {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+.today-pct {
+  font-family: var(--font-head);
+  font-size: 24px;
+  color: var(--ink);
+}
+
+/* ── CARER NOTIFICATION ── */
+.carer-notif {
+  margin: 10px 22px 0;
+  padding: 11px 14px;
+  background: var(--teal-dim);
+  border: 1px solid rgba(13,115,119,0.15);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.carer-notif-icon { font-size: 16px; flex-shrink: 0; }
+.carer-notif-text { flex: 1; }
+.carer-notif-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal);
+  font-family: var(--font-body);
+}
+.carer-notif-sub {
+  font-size: 11px;
+  color: var(--ink-mid);
+  font-family: var(--font-body);
+}
+.carer-notif-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-dim);
+  font-size: 16px;
+  padding: 2px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  padding: 20px 22px 0;
+}
+.timeline-header {
+  margin-bottom: 16px;
+}
+
+.timeline-node {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+.timeline-spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+.timeline-dot {
+  border-radius: 50%;
+  transition: all 0.4s cubic-bezier(0.34,1.2,0.64,1);
+  flex-shrink: 0;
+  z-index: 2;
+  position: relative;
+}
+.dot-taken {
+  width: 10px; height: 10px;
+  background: var(--green);
+  border: 2px solid var(--green);
+  margin-top: 14px;
+}
+.dot-due {
+  width: 16px; height: 16px;
+  background: var(--teal);
+  border: 2px solid var(--teal);
+  margin-top: 20px;
+  box-shadow: 0 0 0 5px var(--teal-dim), 0 0 0 10px var(--teal-dim);
+}
+.dot-future {
+  width: 10px; height: 10px;
+  background: transparent;
+  border: 2px solid var(--ink-faint);
+  margin-top: 14px;
+}
+.timeline-line {
+  width: 1.5px;
+  flex: 1;
+  background: var(--ink-faint);
+  margin-top: 4px;
+  transition: background 0.4s;
+  min-height: 28px;
+}
+.line-taken { background: rgba(26,122,74,0.25); }
+.line-due   { min-height: 48px; }
+
+.timeline-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Taken strip */
+.slot-taken-strip {
+  padding: 12px 8px 10px 10px;
+  margin-bottom: 4px;
+}
+.slot-taken-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.slot-taken-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  font-family: var(--font-head);
+}
+.slot-taken-badge {
+  font-size: 10px;
+  color: var(--green);
+  background: var(--green-dim);
+  padding: 1px 8px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+}
+.slot-undo-btn {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--ink-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+.slot-undo-btn:hover { color: var(--ink-mid); }
+.slot-taken-meds {
+  font-size: 10px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  line-height: 1.4;
+}
+
+/* Due card */
+.slot-due-card {
+  margin-left: 10px;
+  margin-bottom: 20px;
+  background: var(--surface);
+  border: 1.5px solid var(--teal);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px var(--teal-glow), 0 2px 8px rgba(0,0,0,0.05);
+}
+.slot-due-accent {
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--teal-mid));
+}
+.slot-due-body { padding: 20px 20px 18px; }
+.slot-due-time-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.slot-due-time {
+  font-family: var(--font-head);
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+}
+.slot-due-ampm {
+  font-size: 18px;
+  color: var(--teal);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+.slot-due-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-family: var(--font-body);
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+.slot-due-meds { margin-bottom: 18px; }
+.slot-due-med-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--ink-faint);
+}
+.slot-due-med-row:first-child { border-top: none; padding-top: 0; }
+.slot-due-med-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--teal-dim);
+  border: 1px solid rgba(13,115,119,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.slot-due-med-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-body);
+  margin-bottom: 2px;
+}
+.slot-due-med-detail {
+  font-size: 12px;
+  color: var(--ink-mid);
+  font-family: var(--font-body);
+}
+.take-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--teal);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  box-shadow: 0 4px 16px var(--teal-glow);
+  -webkit-tap-highlight-color: transparent;
+}
+.take-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px var(--teal-glow);
+}
+.take-btn.taken {
+  background: var(--green);
+  box-shadow: 0 4px 16px rgba(26,122,74,0.2);
+}
+.take-btn-icon { font-size: 18px; }
+
+/* Future strip */
+.slot-future-strip {
+  padding: 12px 8px 14px 10px;
+}
+.slot-future-time-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.slot-future-time {
+  font-family: var(--font-head);
+  font-size: 20px;
+  color: var(--ink-dim);
+  letter-spacing: -0.01em;
+}
+.slot-future-countdown {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+.slot-future-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  margin-bottom: 4px;
+}
+.slot-future-meds {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+
+/* ── HISTORY / ADHERENCE ── */
+.adherence-card {
+  margin: 0 22px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 20px 16px;
+}
+.adherence-ring-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.adherence-ring-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+.adherence-ring-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.adherence-ring-pct {
+  font-family: var(--font-head);
+  font-size: 28px;
+  color: var(--ink);
+  line-height: 1;
+}
+.adherence-ring-unit {
+  font-size: 10px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  letter-spacing: 0.06em;
+}
+.adherence-label {
+  font-family: var(--font-head);
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.adherence-sub {
+  font-size: 12px;
+  color: var(--ink-mid);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+/* Bar heatmap */
+.bar-heatmap {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 32px;
+  margin-top: 2px;
+}
+.bar-day {
+  flex: 1;
+  border-radius: 2px;
+  transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+  min-height: 3px;
+}
+.bar-today {
+  outline: 2px solid var(--teal);
+  outline-offset: 1px;
+}
+.heatmap-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ink-faint);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+/* Streak card */
+.streak-card {
+  margin: 0 22px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.streak-icon { font-size: 28px; line-height: 1; }
+.streak-num {
+  font-family: var(--font-head);
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 2px;
+  line-height: 1;
+}
+.streak-sub {
+  font-size: 12px;
+  color: var(--ink-mid);
+  font-family: var(--font-body);
+}
+.streak-badge {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--teal);
+  font-family: var(--font-body);
+  font-weight: 600;
+  background: var(--teal-dim);
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* By slot bars */
+.slot-adherence-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ink-faint);
+}
+.slot-adherence-row:last-child { border-bottom: none; }
+.slot-adherence-emoji { font-size: 15px; width: 24px; text-align: center; }
+.slot-adherence-name {
+  font-size: 13px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  width: 64px;
+}
+.slot-adherence-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--ink-faint);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.slot-adherence-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.slot-adherence-pct {
+  font-family: var(--font-head);
+  font-size: 14px;
+  width: 36px;
+  text-align: right;
+}
+
+/* ── CAREGIVERS ── */
+.carer-screen-header {
+  padding: 16px 22px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.add-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(13,115,119,0.3);
+  background: var(--teal-dim);
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.add-btn.cancel {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+
+/* Stat row */
+.carer-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 0 22px 14px;
+}
+.carer-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 10px 8px;
+  text-align: center;
+}
+.carer-stat-num {
+  font-family: var(--font-head);
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.carer-stat-label {
+  font-size: 9px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+}
+
+/* Add form */
+.carer-add-form {
+  margin: 0 22px 14px;
+  background: var(--surface);
+  border: 1.5px solid rgba(13,115,119,0.3);
+  border-radius: var(--radius);
+  padding: 18px;
+  animation: fadeUp 0.25s ease both;
+}
+.form-field { margin-bottom: 12px; }
+.form-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  margin-bottom: 6px;
+}
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-dim);
+}
+.form-input::placeholder { color: var(--ink-dim); }
+.pin-wrap { position: relative; }
+.pin-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--ink-dim);
+  cursor: pointer;
+  font-size: 11px;
+  font-family: var(--font-body);
+  padding: 4px 6px;
+}
+.slot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.slot-toggle {
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.slot-toggle.on {
+  border-color: rgba(13,115,119,0.5);
+  background: var(--teal-dim);
+}
+.slot-toggle-emoji { font-size: 14px; }
+.slot-toggle-label {
+  font-size: 12px;
+  color: var(--ink-mid);
+  font-family: var(--font-body);
+  flex: 1;
+}
+.slot-toggle.on .slot-toggle-label { color: var(--teal); }
+.slot-toggle-check {
+  font-size: 10px;
+  color: var(--teal);
+  display: none;
+}
+.slot-toggle.on .slot-toggle-check { display: block; }
+.history-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.history-toggle-row.on { border-color: rgba(13,115,119,0.3); }
+.history-toggle-text { }
+.history-toggle-title {
+  font-size: 13px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  margin-bottom: 1px;
+}
+.history-toggle-sub {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+.toggle-switch {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.25s, border-color 0.25s;
+  flex-shrink: 0;
+  background: var(--ink-faint);
+}
+.toggle-switch.on { background: var(--teal); }
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.25s cubic-bezier(0.34,1.2,0.64,1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.toggle-switch.on::after { transform: translateX(16px); }
+.create-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.create-btn.ready {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 4px 12px var(--teal-glow);
+}
+.create-btn.disabled {
+  background: var(--ink-faint);
+  color: var(--ink-dim);
+  cursor: not-allowed;
+}
+
+/* Code card */
+.code-card {
+  margin: 0 22px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.code-card.blocked { opacity: 0.6; }
+.code-card-top {
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.code-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--teal-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--teal);
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+.code-avatar.blocked {
+  background: var(--surface2);
+  color: var(--ink-dim);
+}
+.code-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-body);
+  margin-bottom: 2px;
+}
+.code-meta {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+.code-status {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.status-active {
+  background: var(--green-dim);
+  color: var(--green);
+}
+.status-blocked {
+  background: var(--red-dim);
+  color: var(--red);
+}
+.code-uses {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+.code-uses-num {
+  font-family: var(--font-head);
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1;
+}
+.code-uses-label {
+  font-size: 9px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  letter-spacing: 0.06em;
+}
+.code-url-strip {
+  margin: 0 16px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.code-url-text {
+  flex: 1;
+  font-size: 9px;
+  color: var(--teal);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.copy-btn {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(13,115,119,0.3);
+  background: transparent;
+  color: var(--teal);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.copy-btn.copied {
+  background: var(--teal-dim);
+  color: var(--green);
+  border-color: var(--green);
+}
+.code-actions {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 14px;
+}
+.code-action-btn {
+  flex: 1;
+  padding: 7px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink-mid);
+  font-size: 11px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.code-action-btn:hover { color: var(--ink); }
+.code-action-btn.danger {
+  border-color: rgba(192,57,43,0.25);
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+/* ── ONBOARDING ── */
+.ob-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 28px calc(48px + var(--safe-b));
+  overflow-y: auto;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(13,115,119,0.06), transparent 55%);
+}
+.ob-step {
+  display: none;
+  width: 100%;
+  max-width: 380px;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+.ob-step.active {
+  display: flex;
+  animation: fadeUp 0.32s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ob-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.ob-progress {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.ob-seg {
+  height: 3px;
+  border-radius: 2px;
+  transition: background 0.3s, width 0.3s;
+}
+.ob-seg-done   { background: var(--teal); opacity: 0.4; width: 16px; }
+.ob-seg-active { background: var(--teal); width: 26px; }
+.ob-seg-todo   { background: var(--border); width: 16px; }
+.ob-title {
+  font-family: var(--font-head);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.ob-body {
+  font-size: 15px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  font-weight: 300;
+  max-width: 300px;
+}
+.ob-input-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+.ob-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: block;
+  margin-bottom: 6px;
+}
+.ob-input {
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+.ob-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-dim);
+}
+.ob-input::placeholder { color: var(--ink-dim); }
+.ob-input[type="time"] {
+  font-family: var(--font-head);
+  font-size: 32px;
+  text-align: center;
+  letter-spacing: -0.02em;
+  padding: 16px;
+}
+.ob-input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+}
+/* Who-for buttons */
+.ob-who-grid {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+.ob-who-btn {
+  flex: 1;
+  padding: 18px 8px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+.ob-who-btn:hover { border-color: var(--teal); }
+.ob-who-btn.selected {
+  border-color: var(--teal);
+  background: var(--teal-dim);
+  color: var(--teal);
+}
+.ob-who-emoji { font-size: 24px; }
+/* Patient name reveal */
+.ob-patient-wrap {
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s;
+  opacity: 0;
+}
+.ob-patient-wrap.show {
+  max-height: 120px;
+  opacity: 1;
+}
+/* Schedule type */
+.ob-type-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ob-type-btn {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.ob-type-btn:hover { border-color: var(--teal); }
+.ob-type-btn.selected {
+  border-color: var(--teal);
+  background: var(--teal-dim);
+}
+.ob-type-icon { font-size: 24px; flex-shrink: 0; }
+.ob-type-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-body);
+  margin-bottom: 3px;
+}
+.ob-type-btn.selected .ob-type-label { color: var(--teal); }
+.ob-type-sub {
+  font-size: 12px;
+  color: var(--ink-mid);
+  font-family: var(--font-body);
+  line-height: 1.4;
+}
+/* Slot selection */
+.ob-slots-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+.ob-slot-card {
+  padding: 18px 12px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.ob-slot-card:hover { border-color: var(--teal); }
+.ob-slot-card.selected {
+  border-color: var(--teal);
+  background: var(--teal-dim);
+}
+.ob-slot-check {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 10px;
+  color: var(--teal);
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.ob-slot-card.selected .ob-slot-check { opacity: 1; }
+.ob-slot-emoji { font-size: 24px; }
+.ob-slot-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+.ob-slot-card.selected .ob-slot-name { color: var(--teal); }
+.ob-slot-time {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+/* Per-slot configure */
+.ob-slot-config {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ob-slot-config-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+}
+.ob-slot-config-emoji { font-size: 22px; }
+.ob-slot-config-name {
+  font-family: var(--font-head);
+  font-size: 18px;
+  color: var(--teal);
+}
+.ob-slot-config-count {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  margin-left: auto;
+}
+.ob-meds-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ob-med-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.ob-med-remove {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--red-dim);
+  border: 1px solid rgba(192,57,43,0.15);
+  color: var(--red);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.ob-add-med-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1.5px dashed var(--border);
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ob-add-med-btn:hover { border-color: var(--teal); color: var(--teal); }
+/* Done screen */
+.ob-done-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--green-dim);
+  border: 2px solid rgba(26,122,74,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  animation: pop-in 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.ob-done-slots {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ob-done-slot-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.ob-done-slot-emoji { font-size: 16px; }
+.ob-done-slot-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-body);
+  flex: 1;
+}
+.ob-done-slot-meds {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+}
+.ob-done-slot-time {
+  font-family: var(--font-head);
+  font-size: 14px;
+  color: var(--teal);
+}
+.ob-note {
+  font-size: 12px;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  text-align: center;
+}
+/* CTA buttons */
+.ob-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: none;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ob-btn:active { transform: scale(0.98); }
+.ob-btn-primary {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--teal-glow);
+}
+.ob-btn-primary:hover { opacity: 0.9; }
+.ob-btn-primary.disabled {
+  background: var(--ink-faint);
+  color: var(--ink-dim);
+  box-shadow: none;
+  pointer-events: none;
+}
+.ob-btn-finish {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(26,122,74,0.2);
+}
+.ob-btn-ghost {
+  background: var(--surface);
+  color: var(--ink-dim);
+  border: 1.5px solid var(--border);
+  font-size: 14px;
+  padding: 13px;
+}
+.ob-btn-ghost:hover { color: var(--ink-mid); }
+.ob-btn-skip {
+  background: transparent;
+  color: var(--ink-dim);
+  border: none;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 10px;
+}
+
+/* ── CAREGIVER PIN OVERLAY ── */
+.pin-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 910;
+  background: var(--bg);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  gap: 18px;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(13,115,119,0.05), transparent 55%);
+}
+.pin-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+.pin-close:hover { color: var(--ink); }
+.pin-title {
+  font-family: var(--font-head);
+  font-size: 24px;
+  color: var(--ink);
+  text-align: center;
+}
+.pin-sub {
+  font-size: 14px;
+  color: var(--ink-mid);
+  text-align: center;
+  line-height: 1.5;
+  max-width: 280px;
+}
+.pin-dots {
+  display: flex;
+  gap: 14px;
+}
+.pin-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  transition: all 0.2s;
+}
+.pin-dot.filled {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.pin-error {
+  font-size: 13px;
+  color: var(--red);
+  min-height: 1.2em;
+  text-align: center;
+  font-family: var(--font-body);
+}
+.pin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 260px;
+}
+.pin-key {
+  height: 64px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  font-family: var(--font-head);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.pin-key:active {
+  background: var(--teal);
+  color: #fff;
+  transform: scale(0.95);
+  box-shadow: none;
+}
+.pin-key-del {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-mid);
+}
+.pin-key-cancel {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-mid);
+}
+
+/* ── EARLY MODAL ── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,18,16,0.5);
+  z-index: 800;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-backdrop.open { display: flex; }
+.modal-sheet {
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  padding: 0 22px calc(32px + var(--safe-b));
+  width: 100%;
+  max-width: 480px;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.34,1.15,0.64,1);
+}
+.modal-backdrop.open .modal-sheet { transform: translateY(0); }
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  margin: 14px auto 22px;
+}
+.modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--amber-dim);
+  border: 2px solid rgba(160,100,10,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin: 0 auto 14px;
+}
+.modal-title {
+  font-family: var(--font-head);
+  font-size: 22px;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.modal-body {
+  font-size: 14px;
+  color: var(--ink-mid);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.modal-body strong { color: var(--amber); }
+.modal-note-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  margin-bottom: 8px;
+}
+.modal-note-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 12px 14px;
+  outline: none;
+  resize: none;
+  min-height: 80px;
+  transition: border-color 0.2s;
+}
+.modal-note-input:focus { border-color: var(--amber); }
+.modal-note-input::placeholder { color: var(--ink-dim); }
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.modal-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.modal-btn-cancel {
+  background: var(--surface2);
+  color: var(--ink-mid);
+  border: 1px solid var(--border);
+}
+.modal-btn-confirm {
+  background: var(--amber);
+  color: #fff;
+}
+
+/* ── SETTINGS ── */
+.settings-panel {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  padding: 0 22px calc(40px + var(--safe-b));
+  z-index: 600;
+  max-height: 90vh;
+  overflow-y: auto;
+  transition: transform 0.4s cubic-bezier(0.34,1.2,0.64,1);
+}
+.settings-panel.open { transform: translateX(-50%) translateY(0); }
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,18,16,0.45);
+  z-index: 599;
+  display: none;
+  backdrop-filter: blur(3px);
+}
+.settings-overlay.open { display: block; }
+.panel-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 14px auto 22px;
+}
+.panel-title {
+  font-family: var(--font-head);
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 22px;
+}
+.setting-section { margin-bottom: 22px; }
+.setting-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  font-family: var(--font-body);
+  margin-bottom: 10px;
+}
+.save-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: var(--radius);
+  background: var(--teal);
+  border: none;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  box-shadow: 0 4px 12px var(--teal-glow);
+  margin-top: 8px;
+}
+.save-btn:hover { opacity: 0.88; }
+
+/* ── DEV RESET ── */
+.dev-reset-btn {
+  width: calc(100% - 44px);
+  margin: 12px 22px 0;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(192,57,43,0.2);
+  background: var(--red-dim);
+  color: var(--red);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dev-reset-btn:hover { background: rgba(192,57,43,0.12); }
+
+/* ── CARER BANNER (active mode) ── */
+.carer-mode-banner {
+  background: var(--teal-dim);
+  border-bottom: 1px solid rgba(13,115,119,0.12);
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.carer-mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal);
+  font-family: var(--font-body);
+  flex: 1;
+}
+.carer-mode-exit {
+  font-size: 11px;
+  color: var(--teal);
+  background: rgba(13,115,119,0.12);
+  border: 1px solid rgba(13,115,119,0.2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.carer-mode-exit:hover { background: var(--teal); color: #fff; }
+
+/* ── MISC ── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink-dim);
+  font-size: 14px;
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 22px;
+}
+.version-tag {
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  padding: 16px 0 4px;
+  font-family: var(--font-body);
+}
+</style>
+</head>
+<body>
+
+<!-- ══ ONBOARDING ══ -->
+<div class="ob-overlay" id="obOverlay">
+
+  <!-- STEP 1 — Welcome -->
+  <div class="ob-step active" id="ob-1">
+    <div class="ob-logo-wrap">
+      <div class="tk-logo tk-logo-md">
+      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+      <span class="tk-wordmark">Takenly</span>
+    </div>
+    </div>
+    <div class="ob-progress" id="ob-prog-1"></div>
+    <div class="ob-title">Welcome</div>
+    <div class="ob-body">A medication reminder built around you. Let's get set up in a few steps.</div>
+    <div class="ob-input-group">
+      <div>
+        <label class="ob-label" id="ob-name-label">Your name (optional)</label>
+        <input class="ob-input" type="text" id="obName" placeholder="e.g. Sarah" maxlength="40" autocomplete="given-name">
+      </div>
+      <div>
+        <label class="ob-label">Setting this up for…</label>
+        <div class="ob-who-grid">
+          <button class="ob-who-btn selected" id="obForSelf" onclick="selectWho('self')">
+            <span class="ob-who-emoji">🙋</span>Myself
+          </button>
+          <button class="ob-who-btn" id="obForOther" onclick="selectWho('other')">
+            <span class="ob-who-emoji">❤️</span>Someone else
+          </button>
+        </div>
+      </div>
+      <div class="ob-patient-wrap" id="obPatientWrap">
+        <label class="ob-label">Who are you caring for?</label>
+        <input class="ob-input" type="text" id="obPatientName" placeholder="e.g. Mum, David, Mrs Chen" maxlength="40">
+      </div>
+    </div>
+    <button class="ob-btn ob-btn-primary" onclick="obStep1Next()">Continue →</button>
+    <button class="ob-btn ob-btn-skip" onclick="skipOnboarding()">Skip setup</button>
+  </div>
+
+  <!-- STEP 2 — Schedule type -->
+  <div class="ob-step" id="ob-2">
+    <div class="tk-logo tk-logo-md">
+      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+      <span class="tk-wordmark">Takenly</span>
+    </div>
+    <div class="ob-progress" id="ob-prog-2"></div>
+    <div class="ob-title" id="ob2-title">What does the schedule look like?</div>
+    <div class="ob-body">This helps Takenly set up the right reminders from the start.</div>
+    <div class="ob-type-list">
+      <button class="ob-type-btn" id="obTypeScheduled" onclick="selectScheduleType('scheduled')">
+        <div class="ob-type-icon">📋</div>
+        <div>
+          <div class="ob-type-label">Doctor's schedule</div>
+          <div class="ob-type-sub">Morning, lunch, dinner or bedtime — I'll configure each slot</div>
+        </div>
+      </button>
+      <button class="ob-type-btn" id="obTypeSimple" onclick="selectScheduleType('simple')">
+        <div class="ob-type-icon">🌙</div>
+        <div>
+          <div class="ob-type-label">Just a daily reminder</div>
+          <div class="ob-type-sub">One notification at a set time each day</div>
+        </div>
+      </button>
+    </div>
+    <button class="ob-btn ob-btn-primary disabled" id="ob2NextBtn" onclick="obStep2Next()">Continue →</button>
+    <button class="ob-btn ob-btn-ghost" onclick="obGoTo(1)">← Back</button>
+  </div>
+
+  <!-- STEP 3 — Slot selection -->
+  <div class="ob-step" id="ob-3">
+    <div class="tk-logo tk-logo-md">
+      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+      <span class="tk-wordmark">Takenly</span>
+    </div>
+    <div class="ob-progress" id="ob-prog-3"></div>
+    <div class="ob-title" id="ob3-title">Which slots apply?</div>
+    <div class="ob-body">Tap each time of day that has a dose. You can adjust any time later.</div>
+    <div class="ob-slots-grid">
+      <div class="ob-slot-card" id="obSlot-morning" onclick="toggleObSlot('morning')">
+        <span class="ob-slot-check">✓</span>
+        <span class="ob-slot-emoji">🌅</span>
+        <div class="ob-slot-name">Morning</div>
+        <div class="ob-slot-time">8:00 AM</div>
+      </div>
+      <div class="ob-slot-card" id="obSlot-lunch" onclick="toggleObSlot('lunch')">
+        <span class="ob-slot-check">✓</span>
+        <span class="ob-slot-emoji">☀️</span>
+        <div class="ob-slot-name">Lunch</div>
+        <div class="ob-slot-time">12:00 PM</div>
+      </div>
+      <div class="ob-slot-card" id="obSlot-dinner" onclick="toggleObSlot('dinner')">
+        <span class="ob-slot-check">✓</span>
+        <span class="ob-slot-emoji">🌆</span>
+        <div class="ob-slot-name">Dinner</div>
+        <div class="ob-slot-time">6:00 PM</div>
+      </div>
+      <div class="ob-slot-card" id="obSlot-bedtime" onclick="toggleObSlot('bedtime')">
+        <span class="ob-slot-check">✓</span>
+        <span class="ob-slot-emoji">🌙</span>
+        <div class="ob-slot-name">Bedtime</div>
+        <div class="ob-slot-time">9:45 PM</div>
+      </div>
+    </div>
+    <button class="ob-btn ob-btn-primary disabled" id="ob3NextBtn" onclick="obStep3Next()">Set up my slots →</button>
+    <button class="ob-btn ob-btn-ghost" onclick="obGoTo(2)">← Back</button>
+  </div>
+
+  <!-- STEP 4 — Configure slot -->
+  <div class="ob-step" id="ob-4">
+    <div class="tk-logo tk-logo-md">
+      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+      <span class="tk-wordmark">Takenly</span>
+    </div>
+    <div class="ob-progress" id="ob-prog-4"></div>
+    <div class="ob-slot-config">
+      <div class="ob-slot-config-header">
+        <div class="ob-slot-config-emoji" id="ob4-emoji">🌅</div>
+        <div class="ob-slot-config-name" id="ob4-name">Morning</div>
+        <div class="ob-slot-config-count" id="ob4-count">Slot 1 of 2</div>
+      </div>
+      <div class="ob-input-group">
+        <div>
+          <label class="ob-label">Time</label>
+          <input class="ob-input" type="time" id="ob4-time" value="08:00">
+        </div>
+        <div>
+          <label class="ob-label" id="ob4-med-label">Medications (optional)</label>
+          <div class="ob-meds-list" id="ob4-meds-list"></div>
+          <button class="ob-add-med-btn" onclick="obAddMed()">+ Add medication</button>
+        </div>
+      </div>
+    </div>
+    <button class="ob-btn ob-btn-primary" id="ob4NextBtn" onclick="obStep4Next()">Next slot →</button>
+    <button class="ob-btn ob-btn-ghost" onclick="obStep4Back()">← Back</button>
+  </div>
+
+  <!-- STEP 4S — Simple path -->
+  <div class="ob-step" id="ob-4s">
+    <div class="tk-logo tk-logo-md">
+      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+      <span class="tk-wordmark">Takenly</span>
+    </div>
+    <div class="ob-progress" id="ob-prog-4s"></div>
+    <div class="ob-title" id="ob4s-title">When is the reminder?</div>
+    <div class="ob-body" id="ob4s-body">Set the daily reminder time and add your first medication.</div>
+    <div class="ob-input-group">
+      <div>
+        <label class="ob-label">Reminder time</label>
+        <input class="ob-input" type="time" id="obSimpleTime" value="21:45">
+      </div>
+      <div>
+        <label class="ob-label" id="ob4s-med-label">First medication (optional)</label>
+        <input class="ob-input" type="text" id="obSimpleMedName" placeholder="e.g. Metformin" maxlength="60">
+        <input class="ob-input" type="text" id="obSimpleMedDose" placeholder="e.g. 500mg, 1 tablet" maxlength="40" style="margin-top:8px">
+      </div>
+    </div>
+    <button class="ob-btn ob-btn-finish" onclick="finishSimpleOnboarding()">Let's go ✓</button>
+    <button class="ob-btn ob-btn-ghost" onclick="obGoTo(2)">← Back</button>
+  </div>
+
+  <!-- STEP 5 — Done -->
+  <div class="ob-step" id="ob-5">
+    <div class="ob-done-icon">✓</div>
+    <div class="ob-progress" id="ob-prog-5"></div>
+    <div class="ob-title" id="ob5-title">All set!</div>
+    <div class="ob-body" id="ob5-body">Your schedule is ready. Takenly will remind you at the right times each day.</div>
+    <div class="ob-done-slots" id="ob5-slots"></div>
+    <div class="ob-note">You can update medications, times and caregivers any time from the Settings tab.</div>
+    <button class="ob-btn ob-btn-finish" onclick="finishScheduledOnboarding()">Open Takenly →</button>
+  </div>
+
+</div>
+
+<!-- ══ PIN OVERLAY ══ -->
+<div class="pin-overlay" id="pinOverlay">
+  <button class="pin-close" onclick="closePinOverlay()">✕</button>
+  <div class="tk-logo tk-logo-md">
+      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+      <span class="tk-wordmark">Takenly</span>
+    </div>
+  <div class="pin-title">Caregiver Access</div>
+  <div class="pin-sub" id="pinSub">Enter your 4-digit code to view this schedule.</div>
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot"></div><div class="pin-dot"></div>
+    <div class="pin-dot"></div><div class="pin-dot"></div>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+  <div class="pin-pad">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <button class="pin-key pin-key-cancel" onclick="pinKey('cancel')">Cancel</button>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key pin-key-del" onclick="pinKey('del')">⌫</button>
+  </div>
+</div>
+
+<!-- ══ EARLY MODAL ══ -->
+<div class="modal-backdrop" id="earlyModal" onclick="handleEarlyBackdropClick(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-icon">⏰</div>
+    <div class="modal-title">Taking early?</div>
+    <div class="modal-body">Your next dose isn't due for <strong id="earlyTimeLeft">—</strong>. You can still take it now.</div>
+    <div class="modal-note-label">Reason (optional but helpful)</div>
+    <textarea class="modal-note-input" id="earlyNoteInput" placeholder="e.g. Going out this evening…" maxlength="200"></textarea>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-cancel" onclick="closeEarlyModal()">Cancel</button>
+      <button class="modal-btn modal-btn-confirm" onclick="confirmEarlyTake()">Take Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS OVERLAY + PANEL ══ -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+<div class="settings-panel" id="settingsPanel">
+  <div class="panel-handle"></div>
+  <div class="panel-title">Settings</div>
+  <div class="setting-section">
+    <div class="setting-section-label">Reminder time</div>
+    <input type="time" class="form-input" id="settingsTime" value="21:45">
+  </div>
+  <div class="setting-section">
+    <div class="setting-section-label">Early dose window</div>
+    <select class="form-input" id="settingsEarlyWindow">
+      <option value="15">15 minutes before due time</option>
+      <option value="30" selected>30 minutes before due time</option>
+      <option value="60">1 hour before due time</option>
+      <option value="120">2 hours before due time</option>
+      <option value="0">Always ask</option>
+    </select>
+  </div>
+  <div class="setting-section">
+    <div class="setting-section-label">Medications</div>
+    <div id="settingsMedList"></div>
+    <button class="ob-add-med-btn" style="margin-top:6px" onclick="addSettingsMed()">+ Add medication</button>
+  </div>
+  <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+  <div class="version-tag">Takenly v2.2</div>
+</div>
+
+<!-- ══ SLOT SETTINGS PANEL ══ -->
+<div class="settings-overlay" id="slotSettingsOverlay" onclick="closeSlotSettings()"></div>
+<div class="settings-panel" id="slotSettingsPanel">
+  <div class="panel-handle"></div>
+  <div class="panel-title">Dose Schedule</div>
+  <p style="font-size:13px;color:var(--ink-mid);margin-bottom:18px;line-height:1.5">Update each slot's time and medications.</p>
+  <div id="slotSettingsList"></div>
+  <button class="save-btn" onclick="saveSlotSettings()">Save Schedule</button>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div id="toast" style="position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--ink);color:#fff;border-radius:var(--radius);padding:12px 20px;font-size:13px;font-weight:600;z-index:9999;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);font-family:var(--font-body)"></div>
+
+<!-- ══ APP SHELL ══ -->
+<div class="app-shell" id="appShell">
+
+  <!-- Carer mode banner (shows when in carer mode) -->
+  <div class="carer-mode-banner" id="carerBanner" style="display:none">
+    <span style="font-size:14px">👁</span>
+    <div class="carer-mode-label" id="carerBannerLabel">Caregiver View</div>
+    <button class="carer-mode-exit" onclick="exitCarerMode()">Exit</button>
+  </div>
+
+  <!-- ── TODAY SCREEN ── -->
+  <div class="screen" id="screenToday">
+    <div class="screen-header">
+      <div class="tk-logo tk-logo-lg">
+      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+      <span class="tk-wordmark">Takenly</span>
+    </div>
+      <div style="font-size:11px;color:var(--ink-dim);font-family:var(--font-body)" id="todayDate"></div>
+    </div>
+
+    <!-- Today progress card -->
+    <div class="progress-bar-wrap">
+      <div class="today-card" id="todayCard">
+        <div class="today-card-inner">
+          <div class="today-pips" id="todayPips"></div>
+          <div class="today-text">
+            <div class="today-title" id="todayTitle">Loading…</div>
+            <div class="today-sub" id="todaySub"></div>
+          </div>
+          <div class="today-pct" id="todayPct"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carer notification (dismissible) -->
+    <div class="carer-notif" id="carerNotif" style="display:none">
+      <div class="carer-notif-icon">👁</div>
+      <div class="carer-notif-text">
+        <div class="carer-notif-title" id="carerNotifTitle">Caregiver viewed your schedule</div>
+        <div class="carer-notif-sub" id="carerNotifSub">Today via caregiver link</div>
+      </div>
+      <button class="carer-notif-close" onclick="dismissCarerNotif()">×</button>
+    </div>
+
+    <!-- Smart mode recommendation — shown when user is in Scheduled Mode but only uses one slot -->
+    <div id="smartModeBanner" style="display:none;margin:10px 22px 0;padding:12px 14px;background:var(--teal-dim);border:1px solid rgba(13,115,119,0.2);border-radius:var(--radius);display:none;align-items:center;gap:10px">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--teal);font-family:var(--font-body);margin-bottom:2px">Looks like one slot is doing the work</div>
+        <div style="font-size:12px;color:var(--ink-mid);font-family:var(--font-body);line-height:1.4">You're mostly using one dose time. Simple Mode might be all you need — it's easier to set up and still tracks everything.</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button onclick="switchToSimpleMode()" style="padding:6px 14px;border-radius:20px;border:none;background:var(--teal);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body)">Switch to Simple Mode</button>
+          <button onclick="dismissSmartModeBanner()" style="padding:6px 14px;border-radius:20px;border:1px solid rgba(13,115,119,0.25);background:transparent;color:var(--teal);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body)">Keep current</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <div class="timeline-header">
+        <div class="section-label">Today's schedule</div>
+      </div>
+      <div id="timelineSlots"></div>
+    </div>
+
+    <!-- Dev reset — only shown when URL contains ?dev=1 -->
+    <button class="dev-reset-btn" id="devResetBtn" onclick="devReset()" style="display:none">🔄 Reset &amp; restart onboarding (dev)</button>
+    <div class="version-tag">Takenly v2.2</div>
+  </div>
+
+  <!-- ── HISTORY SCREEN ── -->
+  <div class="screen" id="screenHistory" style="display:none">
+    <div class="screen-header">
+      <div class="screen-title">History</div>
+    </div>
+
+    <!-- Adherence ring + bar heatmap -->
+    <div class="adherence-card">
+      <div class="adherence-ring-row">
+        <div class="adherence-ring-wrap">
+          <svg width="100" height="100" style="transform:rotate(-90deg)">
+            <circle cx="50" cy="50" r="44" fill="none" stroke="var(--ink-faint)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="44" fill="none" id="adherenceArc"
+              stroke="var(--green)" stroke-width="6" stroke-linecap="round"
+              stroke-dasharray="276.46" stroke-dashoffset="276.46"
+              style="transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)"/>
+          </svg>
+          <div class="adherence-ring-num">
+            <div class="adherence-ring-pct" id="adherencePct">—</div>
+            <div class="adherence-ring-unit">%</div>
+          </div>
+        </div>
+        <div>
+          <div class="adherence-label" id="adherenceLabel">—</div>
+          <div class="adherence-sub" id="adherenceSub"></div>
+        </div>
+      </div>
+      <div class="section-label" style="margin-bottom:8px">Last 28 days</div>
+      <div class="bar-heatmap" id="barHeatmap"></div>
+      <div class="heatmap-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>All taken</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Partial</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Missed</div>
+      </div>
+    </div>
+
+    <!-- Streak -->
+    <div class="streak-card" id="streakCard">
+      <div class="streak-icon" id="streakIcon">💊</div>
+      <div>
+        <div class="streak-num" id="streakNum">—</div>
+        <div class="streak-sub" id="streakSub">No history yet</div>
+      </div>
+      <div class="streak-badge" id="streakBadge" style="display:none">Personal best →</div>
+    </div>
+
+    <!-- By slot -->
+    <div class="adherence-card" id="slotAdherenceCard">
+      <div class="section-label" style="margin-bottom:12px">By slot</div>
+      <div id="slotAdherenceList"></div>
+    </div>
+  </div>
+
+  <!-- ── CAREGIVERS SCREEN ── -->
+  <div class="screen" id="screenCaregivers" style="display:none">
+    <div class="carer-screen-header">
+      <div class="screen-title">Caregivers</div>
+      <button class="add-btn" id="addCarerBtn" onclick="toggleCarerForm()">+ Add</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="carer-stats">
+      <div class="carer-stat">
+        <div class="carer-stat-num" id="statActive" style="color:var(--green)">—</div>
+        <div class="carer-stat-label">Active</div>
+      </div>
+      <div class="carer-stat">
+        <div class="carer-stat-num" id="statUses" style="color:var(--teal)">—</div>
+        <div class="carer-stat-label">Total accesses</div>
+      </div>
+      <div class="carer-stat">
+        <div class="carer-stat-num" id="statBlocked" style="color:var(--ink-dim)">—</div>
+        <div class="carer-stat-label">Blocked</div>
+      </div>
+    </div>
+
+    <!-- Add form (hidden initially) -->
+    <div class="carer-add-form" id="carerAddForm" style="display:none">
+      <div class="form-field">
+        <label class="form-label">Caregiver name</label>
+        <input class="form-input" type="text" id="newCarerName" placeholder="e.g. Partner, Mum, Dr Chen" maxlength="40">
+      </div>
+      <div class="form-field">
+        <label class="form-label">4-digit PIN</label>
+        <div class="pin-wrap">
+          <input class="form-input" type="password" inputmode="numeric" maxlength="4"
+            id="newCarerPin" placeholder="••••"
+            style="text-align:center;letter-spacing:0.4em;padding-right:48px">
+          <button class="pin-toggle" id="newPinToggle" onclick="toggleNewPinPreview()">Show</button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Schedule access</label>
+        <div class="slot-grid" id="newCarerSlotToggles"></div>
+      </div>
+      <div class="form-field">
+        <div class="history-toggle-row" id="newCarerHistToggle" onclick="toggleNewCarerHist()">
+          <div class="history-toggle-text">
+            <div class="history-toggle-title">Can view history</div>
+            <div class="history-toggle-sub">Heatmap, streak, past doses</div>
+          </div>
+          <div class="toggle-switch" id="newCarerHistSwitch"></div>
+        </div>
+      </div>
+      <button class="create-btn disabled" id="createCarerBtn" onclick="saveNewCarer()">Create &amp; copy link</button>
+    </div>
+
+    <!-- Code list -->
+    <div id="carerCodeList">
+      <div class="empty-state">No caregivers yet.<br>Tap + Add to create a code.</div>
+    </div>
+
+    <div style="padding:12px 22px;font-size:11px;color:var(--ink-dim);line-height:1.6;text-align:center;font-family:var(--font-body)">
+      Each link works on any device.<br>PINs are never stored in plain text or visible in any URL.
+    </div>
+  </div>
+
+  <!-- ── SETTINGS SCREEN ── -->
+  <div class="screen" id="screenSettings" style="display:none">
+    <div class="screen-header">
+      <div class="screen-title">Settings</div>
+    </div>
+
+    <div style="padding:0 22px">
+      <!-- Appearance -->
+      <div class="setting-section">
+        <div class="setting-section-label">Appearance</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleDarkMode()">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--ink);font-family:var(--font-body)">Dark mode</div>
+            <div style="font-size:12px;color:var(--ink-dim);font-family:var(--font-body)" id="darkModeStatus">Light mode (default)</div>
+          </div>
+          <div class="toggle-switch" id="darkModeSwitch"></div>
+        </div>
+      </div>
+
+      <!-- Mode -->
+      <div class="setting-section">
+        <div class="setting-section-label">Schedule mode</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer" onclick="toggleAdvancedMode()">
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--ink);font-family:var(--font-body)">Scheduled dosing</div>
+              <div style="font-size:12px;color:var(--ink-dim);font-family:var(--font-body)">Morning, lunch, dinner, bedtime slots</div>
+            </div>
+            <div class="toggle-switch" id="advModeSwitch"></div>
+          </div>
+          <div id="slotSettingsLink" style="display:none;border-top:1px solid var(--border);padding:12px 16px;cursor:pointer" onclick="openSlotSettings()">
+            <div style="font-size:13px;color:var(--teal);font-weight:600;font-family:var(--font-body)">Edit dose schedule →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reminder time (simple mode) -->
+      <div class="setting-section" id="simpleTimeSection">
+        <div class="setting-section-label">Reminder time</div>
+        <input type="time" class="form-input" id="settingsSimpleTime" value="21:45">
+      </div>
+
+      <!-- Medications (simple mode) -->
+      <div class="setting-section" id="simpleMedSection">
+        <div class="setting-section-label">Medications</div>
+        <div id="settingsMedListInline"></div>
+        <button class="ob-add-med-btn" style="margin-top:6px" onclick="addSettingsMedInline()">+ Add medication</button>
+      </div>
+
+      <!-- Early window -->
+      <div class="setting-section">
+        <div class="setting-section-label">Early dose window</div>
+        <select class="form-input" id="settingsEarlyWindowInline">
+          <option value="15">15 minutes before</option>
+          <option value="30" selected>30 minutes before</option>
+          <option value="60">1 hour before</option>
+          <option value="120">2 hours before</option>
+          <option value="0">Always ask</option>
+        </select>
+      </div>
+
+      <!-- Notifications -->
+      <div class="setting-section">
+        <div class="setting-section-label">Notifications</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="enableNotifications()">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--ink);font-family:var(--font-body)">Push notifications</div>
+            <div style="font-size:12px;color:var(--ink-dim);font-family:var(--font-body)" id="notifStatus">Tap to enable</div>
+          </div>
+          <div class="toggle-switch" id="notifSwitch"></div>
+        </div>
+      </div>
+
+      <button class="save-btn" onclick="saveSettingsInline()">Save Settings</button>
+
+      <!-- Dev reset — only shown when URL contains ?dev=1 -->
+      <div id="devSection" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <div class="setting-section-label">Developer</div>
+        <button class="dev-reset-btn" style="margin:0;width:100%" onclick="devReset()">🔄 Reset &amp; restart onboarding</button>
+      </div>
+    </div>
+      <!-- Changelog -->
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+        <div class="setting-section-label" style="margin-bottom:10px">What's new</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-family:var(--font-head);font-size:14px;color:var(--ink)">v2.2</span>
+              <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(20,153,158,0.12);color:var(--teal)">Latest</span>
+            </div>
+            <div style="font-size:12px;color:var(--ink-mid);line-height:1.6">
+              Rebrand — MedTime → Takenly<br>
+              · New identity: Direction E mark (three stacked squares + TAKENLY wordmark)<br>
+              · Logo updated throughout all screens and onboarding<br>
+              · All copy, notifications, and toasts updated to Takenly<br>
+              · New repo: github.com/turnoverr/takenly
+            </div>
+          </div>
+          <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-family:var(--font-head);font-size:14px;color:var(--ink)">v2.1</span>
+              <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(30,37,48,0.5);color:var(--ink-dim)">Sprint 1</span>
+            </div>
+            <div style="font-size:12px;color:var(--ink-mid);line-height:1.6">
+              · Dark mode preference toggle<br>
+              · Dev reset gated behind ?dev=1<br>
+              · Accessibility: WCAG AA contrast, 11px labels<br>
+              · Smart mode recommendation banner (R-16)<br>
+              · Caregiver access count display improved
+            </div>
+          </div>
+          <div style="padding:12px 14px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-family:var(--font-head);font-size:14px;color:var(--ink)">v2.0.1</span>
+              <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(30,37,48,0.5);color:var(--ink-dim)">Fix</span>
+            </div>
+            <div style="font-size:12px;color:var(--ink-mid);line-height:1.6">
+              · Caregiver URL: onboarding no longer shown on friend's device after PIN entry<br>
+              · activateCarerMode forces scheduled view and hides onboarding overlay
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="version-tag" style="padding-bottom:16px">Takenly v2.2</div>
+  </div>
+
+  <!-- ── TAB BAR ── -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" id="tab-today" onclick="switchTab('today')">
+      <div class="tab-icon">⏱</div>
+      <div class="tab-label">Today</div>
+      <div class="tab-dot"></div>
+    </button>
+    <button class="tab-btn" id="tab-history" onclick="switchTab('history')">
+      <div class="tab-icon">📊</div>
+      <div class="tab-label">History</div>
+      <div class="tab-dot"></div>
+    </button>
+    <button class="tab-btn" id="tab-caregivers" onclick="switchTab('caregivers')">
+      <div class="tab-icon">👁</div>
+      <div class="tab-label">Caregivers</div>
+      <div class="tab-dot"></div>
+    </button>
+    <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')">
+      <div class="tab-icon">⚙️</div>
+      <div class="tab-label">Settings</div>
+      <div class="tab-dot"></div>
+    </button>
+  </nav>
+
+</div>
+<script>
+// ════════════════════════════════════════════════════════
+// TAKENLY v2.2
+// Architecture: all DOM access inside functions.
+// No code runs at top level except const/let declarations
+// and the final init() call.
+// ════════════════════════════════════════════════════════
+
+const STATE_KEY  = 'medtime_state';
+const HIST_KEY   = 'medtime_history';
+const ADV_KEY    = 'medtime_adv_state';
+const ADV_HIST   = 'medtime_adv_history';
+const CARER_KEY  = 'medtime_carer_codes';
+
+const SLOT_DEFAULTS = [
+  { id:'morning', name:'Morning', emoji:'🌅', time:'08:00', meds:[] },
+  { id:'lunch',   name:'Lunch',   emoji:'☀️',  time:'12:00', meds:[] },
+  { id:'dinner',  name:'Dinner',  emoji:'🌆', time:'18:00', meds:[] },
+  { id:'bedtime', name:'Bedtime', emoji:'🌙', time:'21:45', meds:[] },
+];
+const OB_SLOT_DEFS = {
+  morning: { name:'Morning', emoji:'🌅', defaultTime:'08:00' },
+  lunch:   { name:'Lunch',   emoji:'☀️',  defaultTime:'12:00' },
+  dinner:  { name:'Dinner',  emoji:'🌆', defaultTime:'18:00' },
+  bedtime: { name:'Bedtime', emoji:'🌙', defaultTime:'21:45' },
+};
+
+let state = {
+  reminderTime:'21:45',
+  meds:[{ id:1, name:'Example Med', dosage:'10mg', icon:'💊', notes:'', form:'', route:'', food:'', timing:'' }],
+  taken:false, takenAt:null, todayEvents:[], lastResetDate:'',
+  appIcon:'💊', notifEnabled:false, theme:'light',
+  advancedMode:false, earlyWindow:30,
+  onboardingDone:false, userName:'', whoFor:'self', patientName:''
+};
+
+let advState = { slots:JSON.parse(JSON.stringify(SLOT_DEFAULTS)), today:{}, lastResetDate:'' };
+let carerCodes = [];
+let activeCarer = null;
+let urlCarerCode = null;
+let notifTimer = null;
+let advCountdownInt = null;
+let pendingEarlySlot = null;
+let activeTab = 'today';
+
+// Onboarding state
+let obWhoChoice = 'self';
+let obScheduleType = null;
+let obSelectedSlots = new Set();
+let obSlotConfigs = [];
+let obSlotIndex = 0;
+let obTempMeds = [];
+
+// Caregiver form state
+let newCarerHistPerm = false;
+let newCarerSlots = new Set(['morning','lunch','dinner','bedtime']);
+let carerFormOpen = false;
+
+// Settings temp state
+let settingsTempMeds = [];
+let settingsTempMedsInline = [];
+
+// ════════════════════════════════════════════════════════
+// UTILITIES
+// ════════════════════════════════════════════════════════
+function todayStr() { return new Date().toLocaleDateString('en-CA'); }
+function fmt12(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`;
+}
+function fmtTime(d) { return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtMins(mins) {
+  const h=Math.floor(mins/60),m=mins%60;
+  if(h>0&&m>0) return `${h}h ${m}m`;
+  if(h>0) return `${h}h`;
+  return `${m}m`;
+}
+function hashPin(pin) {
+  let h=0x811c9dc5;
+  for(let i=0;i<pin.length;i++){h^=pin.charCodeAt(i);h=(h*0x01000193)>>>0;}
+  return h.toString(16);
+}
+function haptic(type) {
+  try{if(!navigator||!navigator.vibrate)return;navigator.vibrate({light:40,medium:80,success:[40,30,60],error:[80,40,80]}[type]||40);}catch(e){}
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{t.style.transform='translateX(-50%) translateY(-90px)';},3000);
+}
+
+// ════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════
+function loadState() {
+  try{const s=localStorage.getItem(STATE_KEY);if(s)state={...state,...JSON.parse(s)};if(!Array.isArray(state.todayEvents))state.todayEvents=[];}catch(e){}
+  state.lastResetDate=state.lastResetDate||todayStr();
+  if(state.lastResetDate!==todayStr()){archiveDay();state.taken=false;state.takenAt=null;state.todayEvents=[];state.lastResetDate=todayStr();saveState();}
+}
+function saveState(){localStorage.setItem(STATE_KEY,JSON.stringify(state));}
+function archiveDay(){const h=getHistory();h.unshift({date:state.lastResetDate,taken:state.taken,takenAt:state.takenAt,events:state.todayEvents||[]});localStorage.setItem(HIST_KEY,JSON.stringify(h.slice(0,30)));}
+function getHistory(){try{return JSON.parse(localStorage.getItem(HIST_KEY))||[];}catch{return[];}}
+function checkDailyReset(){if(state.lastResetDate!==todayStr()){archiveDay();state.taken=false;state.takenAt=null;state.todayEvents=[];state.lastResetDate=todayStr();saveState();renderTimeline();renderHistory();}}
+
+function loadAdvState() {
+  try{
+    const s=localStorage.getItem(ADV_KEY);
+    if(s){const p=JSON.parse(s);advState={...advState,...p};}
+    SLOT_DEFAULTS.forEach(def=>{
+      if(!advState.slots.find(sl=>sl.id===def.id))advState.slots.push({...def});
+      if(!advState.today[def.id])advState.today[def.id]={taken:false,takenAt:null,events:[]};
+    });
+  }catch(e){SLOT_DEFAULTS.forEach(def=>{advState.today[def.id]={taken:false,takenAt:null,events:[]};});}
+  advState.lastResetDate=advState.lastResetDate||todayStr();
+  if(advState.lastResetDate!==todayStr()){archiveAdvDay();advState.slots.forEach(sl=>{advState.today[sl.id]={taken:false,takenAt:null,events:[]};});advState.lastResetDate=todayStr();saveAdvState();}
+}
+function saveAdvState(){localStorage.setItem(ADV_KEY,JSON.stringify(advState));}
+function archiveAdvDay(){const h=getAdvHistory();h.unshift({date:advState.lastResetDate,today:JSON.parse(JSON.stringify(advState.today))});localStorage.setItem(ADV_HIST,JSON.stringify(h.slice(0,30)));}
+function getAdvHistory(){try{return JSON.parse(localStorage.getItem(ADV_HIST))||[];}catch{return[];}}
+function checkAdvDailyReset(){if(!state.advancedMode)return;if(advState.lastResetDate!==todayStr()){archiveAdvDay();advState.slots.forEach(sl=>{advState.today[sl.id]={taken:false,takenAt:null,events:[]};});advState.lastResetDate=todayStr();saveAdvState();renderTimeline();}}
+
+function loadCarerCodes(){try{carerCodes=JSON.parse(localStorage.getItem(CARER_KEY))||[];}catch{carerCodes=[];}}
+function saveCarerCodes(){localStorage.setItem(CARER_KEY,JSON.stringify(carerCodes));}
+
+// ════════════════════════════════════════════════════════
+// ONBOARDING
+// ════════════════════════════════════════════════════════
+function obQ(tpl) {
+  if(obWhoChoice==='self') {
+    return tpl.replace(/{name}/g,'you').replace(/{Name}/g,'You')
+              .replace(/{pronoun}/g,'your');
+  }
+  const n=(document.getElementById('obPatientName')&&document.getElementById('obPatientName').value.trim())||state.patientName||'them';
+  return tpl.replace(/{name}/g,n).replace(/{Name}/g,n.charAt(0).toUpperCase()+n.slice(1))
+            .replace(/{pronoun}/g,`${n}'s`);
+}
+
+function renderObProgress(elId, current, total) {
+  const el=document.getElementById(elId);
+  if(!el)return;
+  el.innerHTML=Array.from({length:total},(_,i)=>{
+    const cls=i<current-1?'ob-seg-done':i===current-1?'ob-seg-active':'ob-seg-todo';
+    return `<div class="ob-seg ${cls}"></div>`;
+  }).join('');
+}
+
+function obGoTo(step) {
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(`ob-${step}`);
+  if(el){el.classList.add('active');}
+  haptic('light');
+}
+
+function selectWho(who) {
+  obWhoChoice=who; haptic('light');
+  document.getElementById('obForSelf').classList.toggle('selected',who==='self');
+  document.getElementById('obForOther').classList.toggle('selected',who==='other');
+  document.getElementById('obPatientWrap').classList.toggle('show',who==='other');
+  document.getElementById('ob-name-label').textContent=
+    who==='other'?'Your name (the carer — optional)':'Your name (optional)';
+  if(who==='other')document.getElementById('obPatientName').focus();
+}
+
+function obStep1Next() {
+  const name=document.getElementById('obName').value.trim();
+  if(name)state.userName=name;
+  state.whoFor=obWhoChoice;
+  if(obWhoChoice==='other'){const pn=document.getElementById('obPatientName').value.trim();if(pn)state.patientName=pn;}
+  document.getElementById('ob2-title').textContent=obQ('What does {name} schedule look like?');
+  renderObProgress('ob-prog-1',1,5);
+  renderObProgress('ob-prog-2',2,5);
+  obGoTo(2);
+}
+
+function selectScheduleType(type) {
+  obScheduleType=type; haptic('light');
+  document.getElementById('obTypeScheduled').classList.toggle('selected',type==='scheduled');
+  document.getElementById('obTypeSimple').classList.toggle('selected',type==='simple');
+  const btn=document.getElementById('ob2NextBtn');
+  btn.classList.remove('disabled');
+}
+
+function obStep2Next() {
+  if(!obScheduleType)return;
+  if(obScheduleType==='scheduled'){
+    document.getElementById('ob3-title').textContent=obQ('Which slots apply to {name}?');
+    renderObProgress('ob-prog-3',3,5);
+    obGoTo(3);
+  } else {
+    document.getElementById('ob4s-title').textContent=obQ('When does {name} take medication?');
+    document.getElementById('ob4s-body').textContent='Set the daily reminder time and add any medications.';
+    document.getElementById('ob4s-med-label').textContent=obQ('First medication (optional)');
+    renderObProgress('ob-prog-4s',3,4);
+    obGoTo('4s');
+  }
+}
+
+function toggleObSlot(id) {
+  haptic('light');
+  const card=document.getElementById(`obSlot-${id}`);
+  if(obSelectedSlots.has(id)){obSelectedSlots.delete(id);card.classList.remove('selected');}
+  else{obSelectedSlots.add(id);card.classList.add('selected');}
+  document.getElementById('ob3NextBtn').classList.toggle('disabled',obSelectedSlots.size===0);
+}
+
+function obStep3Next() {
+  if(obSelectedSlots.size===0)return;
+  const order=['morning','lunch','dinner','bedtime'];
+  obSlotConfigs=order.filter(id=>obSelectedSlots.has(id)).map(id=>{
+    const def=OB_SLOT_DEFS[id];
+    return{id,name:def.name,emoji:def.emoji,time:def.defaultTime,meds:[]};
+  });
+  obSlotIndex=0; obTempMeds=[];
+  renderOb4();
+  renderObProgress('ob-prog-4',4,5);
+  obGoTo(4);
+}
+
+function renderOb4() {
+  const cfg=obSlotConfigs[obSlotIndex];
+  const isLast=obSlotIndex===obSlotConfigs.length-1;
+  document.getElementById('ob4-emoji').textContent=cfg.emoji;
+  document.getElementById('ob4-name').textContent=cfg.name;
+  document.getElementById('ob4-count').textContent=`Slot ${obSlotIndex+1} of ${obSlotConfigs.length}`;
+  document.getElementById('ob4-time').value=cfg.time;
+  document.getElementById('ob4-med-label').textContent=obQ(`Medications for {name} (optional)`);
+  document.getElementById('ob4NextBtn').textContent=isLast?'Done ✓':'Next slot →';
+  obTempMeds=JSON.parse(JSON.stringify(cfg.meds));
+  renderOb4MedList();
+}
+
+function renderOb4MedList() {
+  document.getElementById('ob4-meds-list').innerHTML=obTempMeds.map((m,i)=>`
+    <div class="ob-med-row">
+      <input class="ob-input" type="text" placeholder="Medication name" value="${esc(m.name)}" maxlength="60"
+        oninput="obTempMeds[${i}].name=this.value" style="flex:1">
+      <input class="ob-input" type="text" placeholder="Dosage" value="${esc(m.dosage||'')}" maxlength="40"
+        oninput="obTempMeds[${i}].dosage=this.value" style="max-width:110px">
+      <button class="ob-med-remove" onclick="obRemoveMed(${i})">✕</button>
+    </div>`).join('');
+}
+
+function obAddMed(){haptic('light');obTempMeds.push({icon:'💊',name:'',dosage:'',instructions:''});renderOb4MedList();}
+function obRemoveMed(i){haptic('light');obTempMeds.splice(i,1);renderOb4MedList();}
+
+function obStep4Next() {
+  for(const m of obTempMeds){if((m.dosage||m.instructions)&&!m.name.trim()){showToast('⚠ Please name each medication.');return;}}
+  const cfg=obSlotConfigs[obSlotIndex];
+  cfg.time=document.getElementById('ob4-time').value||cfg.time;
+  cfg.meds=obTempMeds.filter(m=>m.name.trim()).map(m=>({...m,icon:'💊'}));
+  if(obSlotIndex<obSlotConfigs.length-1){obSlotIndex++;obTempMeds=[];renderOb4();haptic('light');}
+  else{showObDoneScreen();}
+}
+
+function obStep4Back(){
+  if(obSlotIndex>0){obSlotIndex--;obTempMeds=[];renderOb4();haptic('light');}
+  else{renderObProgress('ob-prog-3',3,5);obGoTo(3);}
+}
+
+function showObDoneScreen() {
+  const slotsHtml=obSlotConfigs.map(cfg=>{
+    const mc=cfg.meds.length;
+    const ml=mc>0?`${mc} medication${mc>1?'s':''}`:'No medications set';
+    return`<div class="ob-done-slot-row">
+      <div class="ob-done-slot-emoji">${cfg.emoji}</div>
+      <div style="flex:1">
+        <div class="ob-done-slot-name">${cfg.name}</div>
+        <div class="ob-done-slot-meds">${ml}</div>
+      </div>
+      <div class="ob-done-slot-time">${fmt12(cfg.time)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('ob5-slots').innerHTML=slotsHtml;
+  const n=state.patientName||state.userName;
+  document.getElementById('ob5-title').textContent=n&&obWhoChoice==='other'?`All set for ${n}!`:'All set!';
+  document.getElementById('ob5-body').textContent=obQ('{Name} schedule is ready. Takenly will remind at the right times each day.');
+  renderObProgress('ob-prog-5',5,5);
+  obGoTo(5);
+  haptic('success');
+}
+
+function finishScheduledOnboarding() {
+  advState.slots=obSlotConfigs.map(cfg=>({id:cfg.id,name:cfg.name,emoji:cfg.emoji,time:cfg.time,meds:cfg.meds}));
+  advState.slots.forEach(sl=>{if(!advState.today[sl.id])advState.today[sl.id]={taken:false,takenAt:null,events:[]};});
+  state.advancedMode=true; state.onboardingDone=true;
+  saveState(); saveAdvState();
+  document.getElementById('obOverlay').style.display='none';
+  applyMode(); renderTimeline(); updateSettingsPanel();
+  haptic('success');
+  const n=state.patientName||state.userName;
+  showToast(n?`Takenly ready for ${n} ✓`:'Takenly ready ✓');
+}
+
+function finishSimpleOnboarding() {
+  const time=document.getElementById('obSimpleTime').value;
+  const medName=document.getElementById('obSimpleMedName').value.trim();
+  const medDose=document.getElementById('obSimpleMedDose').value.trim();
+  if(time)state.reminderTime=time;
+  if(medName)state.meds=[{id:Date.now(),name:medName,dosage:medDose,icon:'💊',notes:'',form:'',route:'',food:'',timing:''}];
+  state.advancedMode=false; state.onboardingDone=true;
+  saveState();
+  document.getElementById('obOverlay').style.display='none';
+  applyMode(); renderTimeline(); updateSettingsPanel();
+  haptic('success');
+  const n=state.patientName||state.userName;
+  showToast(n?`Takenly ready for ${n} ✓`:'Takenly ready ✓');
+}
+
+function skipOnboarding(){state.onboardingDone=true;saveState();document.getElementById('obOverlay').style.display='none';haptic('medium');}
+
+function checkOnboarding() {
+  // Never show onboarding on a caregiver URL — the friend has a fresh device
+  // with onboardingDone:false but they are not setting up their own schedule.
+  if(window.location.search.includes('carer=1')) return;
+  if(!state.onboardingDone){
+    renderObProgress('ob-prog-1',1,5);
+    document.getElementById('obOverlay').style.display='flex';
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// TAB NAVIGATION
+// ════════════════════════════════════════════════════════
+function switchTab(tab) {
+  activeTab=tab; haptic('light');
+  ['today','history','caregivers','settings'].forEach(t=>{
+    document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`).style.display=t===tab?'block':'none';
+    document.getElementById(`tab-${t}`).classList.toggle('active',t===tab);
+  });
+  if(tab==='history')renderHistory();
+  if(tab==='caregivers')renderCarerList();
+  if(tab==='settings')updateSettingsPanel();
+}
+
+// ════════════════════════════════════════════════════════
+// MODE
+// ════════════════════════════════════════════════════════
+function applyMode() {
+  const isAdv=!!state.advancedMode;
+  document.getElementById('advModeSwitch').classList.toggle('on',isAdv);
+  const slotLink=document.getElementById('slotSettingsLink');
+  if(slotLink)slotLink.style.display=isAdv?'block':'none';
+  const simpleTime=document.getElementById('simpleTimeSection');
+  const simpleMed=document.getElementById('simpleMedSection');
+  if(simpleTime)simpleTime.style.display=isAdv?'none':'block';
+  if(simpleMed)simpleMed.style.display=isAdv?'none':'block';
+  renderTimeline();
+}
+
+function toggleAdvancedMode() {
+  haptic('medium');
+  state.advancedMode=!state.advancedMode;
+  saveState(); applyMode();
+  showToast(state.advancedMode?'Scheduled mode on':'Simple mode on');
+}
+
+// ════════════════════════════════════════════════════════
+// TIMELINE RENDERING
+// ════════════════════════════════════════════════════════
+function renderTimeline() {
+  renderTodayHeader();
+  checkSmartModeRecommendation();
+  if(activeCarer){renderTimelineCarer();return;}
+  state.advancedMode ? renderTimelineAdvanced() : renderTimelineSimple();
+}
+
+function renderTodayHeader() {
+  const now=new Date();
+  const dateEl=document.getElementById('todayDate');
+  if(dateEl)dateEl.textContent=now.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'});
+}
+
+function renderTimelineSimple() {
+  const container=document.getElementById('timelineSlots');
+  const now=new Date();
+  const [rh,rm]=state.reminderTime.split(':').map(Number);
+  const nowMins=now.getHours()*60+now.getMinutes();
+  const remMins=rh*60+rm;
+  const diff=nowMins-remMins;
+  let status=state.taken?'taken':diff>=-30?'due':'future';
+  const slots=[{
+    id:'simple', name:'Daily dose', emoji:'💊',
+    time:state.reminderTime, timeMins:remMins,
+    meds:state.meds.map(m=>({name:m.name,dose:m.dosage,note:m.notes})),
+    status, takenAt:state.takenAt,
+    events:state.todayEvents||[],
+  }];
+  container.innerHTML=renderSlotsHTML(slots,false);
+  renderTodayPips([{status}]);
+  updateTodayCard([{status}]);
+}
+
+function renderTimelineAdvanced(slotsOverride) {
+  const container=document.getElementById('timelineSlots');
+  const now=new Date();
+  const nowMins=now.getHours()*60+now.getMinutes();
+  const slots=slotsOverride||advState.slots;
+  let nextId=null,bestKey=Infinity;
+  slots.forEach(sl=>{
+    const st=advState.today[sl.id]||{};
+    if(st.taken)return;
+    const[sh,sm]=sl.time.split(':').map(Number);
+    const diff=(sh*60+sm)-nowMins;
+    const key=diff<0?diff-100000:diff;
+    if(key<bestKey){bestKey=key;nextId=sl.id;}
+  });
+  const mapped=slots.map(sl=>{
+    const st=advState.today[sl.id]||{taken:false,takenAt:null,events:[]};
+    const[sh,sm]=sl.time.split(':').map(Number);
+    const diff=nowMins-(sh*60+sm);
+    let status=st.taken?'taken':diff>30?'overdue':diff>=-30?'due':sl.id===nextId?'next':'future';
+    if(status==='overdue')status='due';
+    return{id:sl.id,name:sl.name,emoji:sl.emoji,time:sl.time,
+      timeMins:sh*60+sm,meds:sl.meds.map(m=>({name:m.name,dose:m.dosage||m.dose,note:m.instructions})),
+      status,takenAt:st.takenAt,events:st.events||[]};
+  });
+  container.innerHTML=renderSlotsHTML(mapped,true);
+  renderTodayPips(mapped);
+  updateTodayCard(mapped);
+  startAdvCountdown();
+}
+
+function renderSlotsHTML(slots,isAdv) {
+  return slots.map((slot,i)=>{
+    const isLast=i===slots.length-1;
+    const isTaken=slot.status==='taken';
+    const isDue=slot.status==='due'||slot.status==='next';
+    const isFuture=slot.status==='future';
+    const now=new Date(),nowMins=now.getHours()*60+now.getMinutes();
+    const minsUntil=slot.timeMins-nowMins;
+    const minsAgo=nowMins-slot.timeMins;
+    const medStr=slot.meds.map(m=>`${m.name||''}${m.dose?' '+m.dose:''}`).filter(Boolean).join(' · ')||'No medications set';
+    const dotCls=isTaken?'dot-taken':isDue?'dot-due':'dot-future';
+    const lineCls=isTaken?'line-taken':isDue?'line-due':'';
+    const takeId=isAdv?slot.id:'simple';
+    let content='';
+    if(isTaken){
+      const takenStr=slot.takenAt?`at ${fmtTime(new Date(slot.takenAt))}`:'today';
+      const wasEarly=(slot.events||[]).some(e=>e.type==='taken'&&e.early);
+      content=`<div class="slot-taken-strip">
+        <div class="slot-taken-row">
+          <div class="slot-taken-name">${slot.emoji} ${slot.name}</div>
+          <div class="slot-taken-badge">✓ ${wasEarly?'taken early':takenStr}</div>
+          ${!activeCarer?`<button class="slot-undo-btn" onclick="undoSlot('${takeId}',${isAdv})">undo</button>`:''}
+        </div>
+        <div class="slot-taken-meds">${medStr}</div>
+      </div>`;
+    } else if(isDue){
+      const[th,tm]=slot.time.split(':');
+      const h=parseInt(th),m=String(tm).padStart(2,'0');
+      const ampm=h>=12?'PM':'AM';
+      const h12=h%12||12;
+      const missedLabel=minsAgo>30?`Overdue by ${fmtMins(minsAgo)}`:'Due now';
+      const medsHtml=slot.meds.length?slot.meds.map(m=>`
+        <div class="slot-due-med-row">
+          <div class="slot-due-med-icon">💊</div>
+          <div>
+            <div class="slot-due-med-name">${esc(m.name||'Medication')}</div>
+            <div class="slot-due-med-detail">${esc(m.dose||'')}${m.note?` · ${esc(m.note)}`:''}</div>
+          </div>
+        </div>`).join(''):`<div style="font-size:13px;color:var(--ink-dim);padding:8px 0;font-family:var(--font-body)">No medications set for this slot</div>`;
+      content=`<div class="slot-due-card">
+        <div class="slot-due-accent"></div>
+        <div class="slot-due-body">
+          <div class="slot-due-time-row">
+            <div class="slot-due-time">${h12}:${m}</div>
+            <div class="slot-due-ampm">${ampm}</div>
+          </div>
+          <div class="slot-due-label">${slot.emoji} ${slot.name} — ${missedLabel}</div>
+          <div class="slot-due-meds">${medsHtml}</div>
+          ${!activeCarer?`<button class="take-btn" onclick="handleTakeSlot('${takeId}',${isAdv})">
+            <span class="take-btn-icon">✓</span>Mark as taken
+          </button>`:'<div style="font-size:12px;color:var(--ink-dim);text-align:center;padding:4px;font-family:var(--font-body)">Read-only caregiver view</div>'}
+        </div>
+      </div>`;
+    } else {
+      const timeDisplay=fmt12(slot.time);
+      const cdStr=minsUntil>0?`in ${fmtMins(minsUntil)}`:'soon';
+      content=`<div class="slot-future-strip">
+        <div class="slot-future-time-row">
+          <div class="slot-future-time">${timeDisplay}</div>
+          <div class="slot-future-countdown" id="cd-${slot.id}">${cdStr}</div>
+        </div>
+        <div class="slot-future-label">${slot.emoji} ${slot.name}</div>
+        <div class="slot-future-meds">${medStr}</div>
+        ${!activeCarer?`<button style="background:none;border:none;font-size:11px;color:var(--ink-dim);cursor:pointer;font-family:var(--font-body);margin-top:4px;padding:2px 0" onclick="handleTakeSlot('${takeId}',${isAdv})">Taking early? Tap here…</button>`:''}
+      </div>`;
+    }
+    return`<div class="timeline-node">
+      <div class="timeline-spine">
+        <div class="timeline-dot ${dotCls}"></div>
+        ${!isLast?`<div class="timeline-line ${lineCls}"></div>`:''}
+      </div>
+      <div class="timeline-content">${content}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTodayPips(slots) {
+  const el=document.getElementById('todayPips');
+  if(!el)return;
+  el.innerHTML=slots.map(s=>{
+    const cls=s.status==='taken'?'pip-taken':s.status==='due'||s.status==='next'?'pip-due':'pip-future';
+    return`<div class="today-pip ${cls}"></div>`;
+  }).join('');
+}
+
+function updateTodayCard(slots) {
+  const title=document.getElementById('todayTitle');
+  const sub=document.getElementById('todaySub');
+  const pct=document.getElementById('todayPct');
+  if(!title)return;
+  const taken=slots.filter(s=>s.status==='taken').length;
+  const total=slots.length;
+  const allDone=taken===total;
+  if(allDone){
+    title.textContent='All doses taken today';
+    title.style.color='var(--green)';
+    sub.textContent='Next: tomorrow';
+    pct.textContent='';
+  } else {
+    title.textContent=`${taken} of ${total} taken`;
+    title.style.color='var(--ink)';
+    const next=slots.find(s=>s.status==='due'||s.status==='next');
+    sub.textContent=next?`${next.emoji} ${next.name} up now`:'';
+    pct.textContent=total>1?`${Math.round((taken/total)*100)}%`:'';
+  }
+}
+
+function startAdvCountdown() {
+  if(advCountdownInt)clearInterval(advCountdownInt);
+  advCountdownInt=setInterval(()=>{
+    if(!state.advancedMode){clearInterval(advCountdownInt);return;}
+    const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+    advState.slots.forEach(sl=>{
+      const el=document.getElementById(`cd-${sl.id}`);
+      if(!el)return;
+      const[sh,sm]=sl.time.split(':').map(Number);
+      const diff=(sh*60+sm)-nm;
+      if(diff<=0){renderTimeline();return;}
+      el.textContent=`in ${fmtMins(diff)}`;
+    });
+  },30000);
+}
+
+// ════════════════════════════════════════════════════════
+// TAKE ACTIONS
+// ════════════════════════════════════════════════════════
+function handleTakeSlot(id,isAdv) {
+  if(!isAdv){handleTakeSimple();return;}
+  const sl=advState.slots.find(s=>s.id===id);
+  if(!sl)return;
+  const st=advState.today[id]||{};
+  if(st.taken){showToast('✓ Already taken');return;}
+  const now=new Date(),nowMins=now.getHours()*60+now.getMinutes();
+  const[sh,sm]=sl.time.split(':').map(Number);
+  const diff=(sh*60+sm)-nowMins;
+  const ew=state.earlyWindow!==undefined?state.earlyWindow:30;
+  if(diff>ew){
+    pendingEarlySlot=id;
+    document.getElementById('earlyTimeLeft').textContent=fmtMins(diff);
+    document.getElementById('earlyNoteInput').value='';
+    document.getElementById('earlyModal').classList.add('open');
+    return;
+  }
+  confirmTakeSlot(id,false,null);
+}
+
+function handleTakeSimple() {
+  if(state.taken){showToast('✓ Already marked taken today');return;}
+  const now=new Date();
+  const[rh,rm]=state.reminderTime.split(':').map(Number);
+  const diff=(now.getHours()*60+now.getMinutes())-(rh*60+rm);
+  const ew=state.earlyWindow!==undefined?state.earlyWindow:30;
+  if(diff<-ew){
+    pendingEarlySlot=null;
+    document.getElementById('earlyTimeLeft').textContent=fmtMins(-diff);
+    document.getElementById('earlyNoteInput').value='';
+    document.getElementById('earlyModal').classList.add('open');
+    return;
+  }
+  confirmTakeSimple(false,null);
+}
+
+function handleEarlyBackdropClick(e){if(e.target===document.getElementById('earlyModal'))closeEarlyModal();}
+function closeEarlyModal(){document.getElementById('earlyModal').classList.remove('open');pendingEarlySlot=null;}
+
+function confirmEarlyTake() {
+  const note=document.getElementById('earlyNoteInput').value.trim();
+  closeEarlyModal();
+  if(pendingEarlySlot&&state.advancedMode){confirmTakeSlot(pendingEarlySlot,true,note||null);}
+  else{confirmTakeSimple(true,note||null);}
+}
+
+function confirmTakeSlot(id,isEarly,note) {
+  haptic(isEarly?'medium':'success');
+  const now=new Date(),iso=now.toISOString();
+  if(!advState.today[id])advState.today[id]={taken:false,takenAt:null,events:[]};
+  const ev={type:'taken',at:iso};
+  if(isEarly)ev.early=true;
+  if(note)ev.earlyNote=note;
+  advState.today[id].taken=true;
+  advState.today[id].takenAt=iso;
+  advState.today[id].events.push(ev);
+  saveAdvState();
+  renderTimeline();
+  const sl=advState.slots.find(s=>s.id===id);
+  showToast(`✓ ${sl?sl.emoji+' '+sl.name:''} taken${isEarly?' early':''}`);
+}
+
+function confirmTakeSimple(isEarly,note) {
+  haptic(isEarly?'medium':'success');
+  const now=new Date(),iso=now.toISOString();
+  state.taken=true; state.takenAt=iso;
+  const ev={type:'taken',at:iso};
+  if(isEarly)ev.early=true;
+  if(note)ev.earlyNote=note;
+  state.todayEvents.push(ev);
+  saveState(); renderTimeline(); scheduleNotif();
+  showToast(`✓ Medication taken${isEarly?' early':''}`);
+}
+
+function undoSlot(id,isAdv) {
+  haptic('light');
+  const iso=new Date().toISOString();
+  if(isAdv){
+    if(!advState.today[id])return;
+    advState.today[id].events.push({type:'undo',at:iso});
+    advState.today[id].taken=false;
+    advState.today[id].takenAt=null;
+    saveAdvState();
+  } else {
+    state.todayEvents.push({type:'undo',at:iso});
+    state.taken=false; state.takenAt=null;
+    saveState();
+  }
+  renderTimeline();
+  showToast('↩ Marked as not taken');
+}
+
+// ════════════════════════════════════════════════════════
+// HISTORY SCREEN
+// ════════════════════════════════════════════════════════
+function renderHistory() {
+  renderAdherence();
+  renderStreakCard();
+  renderSlotAdherence();
+}
+
+function buildHeatmapData() {
+  const hist=getHistory(),histMap={};
+  hist.forEach(h=>{histMap[h.date]={taken:h.taken,events:h.events||[]};});
+  histMap[todayStr()]={taken:state.taken,events:state.todayEvents||[]};
+  const today=new Date();
+  return Array.from({length:28},(_,i)=>{
+    const d=new Date(today);d.setDate(d.getDate()-(27-i));
+    const ds=d.toLocaleDateString('en-CA');
+    const isToday=ds===todayStr();
+    const rec=histMap[ds];
+    if(!rec)return{status:null,isToday};
+    const wasEarly=(rec.events||[]).some(e=>e.type==='taken'&&e.early);
+    return{status:rec.taken?(wasEarly?'partial':'full'):'missed',isToday};
+  });
+}
+
+function buildAdvHeatmapData() {
+  const hist=getAdvHistory(),histMap={};
+  hist.forEach(h=>{histMap[h.date]=h.today;});
+  histMap[todayStr()]=advState.today;
+  const today=new Date();
+  const total=advState.slots.length;
+  return Array.from({length:28},(_,i)=>{
+    const d=new Date(today);d.setDate(d.getDate()-(27-i));
+    const ds=d.toLocaleDateString('en-CA');
+    const isToday=ds===todayStr();
+    const dayData=histMap[ds];
+    if(!dayData)return{status:null,isToday};
+    const taken=advState.slots.filter(sl=>(dayData[sl.id]||{}).taken).length;
+    const status=taken===total&&total>0?'full':taken>0?'partial':'missed';
+    return{status,isToday};
+  });
+}
+
+function renderAdherence() {
+  const data=state.advancedMode?buildAdvHeatmapData():buildHeatmapData();
+  const valid=data.filter(d=>d.status!==null);
+  const fullCount=data.filter(d=>d.status==='full').length;
+  const pct=valid.length>0?Math.round((fullCount/valid.length)*100):0;
+  const arc=document.getElementById('adherenceArc');
+  const circ=2*Math.PI*44;
+  if(arc){
+    const col=pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+    arc.setAttribute('stroke',col);
+    arc.style.strokeDashoffset=String(circ*(1-pct/100));
+  }
+  const pctEl=document.getElementById('adherencePct');
+  const labelEl=document.getElementById('adherenceLabel');
+  const subEl=document.getElementById('adherenceSub');
+  if(pctEl)pctEl.textContent=valid.length?pct:'—';
+  if(labelEl)labelEl.textContent=pct>=80?'Great consistency':pct>=60?'Room to improve':valid.length?'Needs attention':'No history yet';
+  if(subEl)subEl.textContent=valid.length?`${fullCount} of ${valid.length} days — all doses taken`:'Start tracking to see your adherence';
+  const heatmap=document.getElementById('barHeatmap');
+  if(heatmap){
+    heatmap.innerHTML=data.map(d=>{
+      const h=d.status==='full'?32:d.status==='partial'?18:d.status==='missed'?6:4;
+      const bg=d.status==='full'?'var(--green)':d.status==='partial'?'var(--amber)':d.status==='missed'?'var(--red)':'var(--ink-faint)';
+      return`<div class="bar-day${d.isToday?' bar-today':''}" style="height:${h}px;background:${bg};opacity:${d.status?1:0.2}"></div>`;
+    }).join('');
+  }
+}
+
+function renderStreakCard() {
+  const hist=getHistory().slice(0,30);
+  const today={taken:state.taken,date:todayStr()};
+  const all=[today,...hist];
+  let streak=0;
+  for(const d of all){if(d.taken)streak++;else break;}
+  const icon=document.getElementById('streakIcon');
+  const num=document.getElementById('streakNum');
+  const sub=document.getElementById('streakSub');
+  const badge=document.getElementById('streakBadge');
+  if(!icon)return;
+  if(streak>=2){
+    icon.textContent='🔥';
+    num.textContent=`${streak}-day streak`;
+    sub.textContent='All doses taken every day';
+    if(badge)badge.style.display='block';
+  } else {
+    icon.textContent='💊';
+    num.textContent='No streak yet';
+    sub.textContent='Take consistently to build a streak';
+    if(badge)badge.style.display='none';
+  }
+}
+
+function renderSlotAdherence() {
+  const card=document.getElementById('slotAdherenceCard');
+  const list=document.getElementById('slotAdherenceList');
+  if(!card||!list)return;
+  if(!state.advancedMode){card.style.display='none';return;}
+  card.style.display='block';
+  const hist=getAdvHistory().slice(0,28);
+  list.innerHTML=advState.slots.map(sl=>{
+    let taken=0,total=hist.length;
+    hist.forEach(h=>{if((h.today[sl.id]||{}).taken)taken++;});
+    if(advState.today[sl.id]?.taken)taken++;
+    if(total===0&&!advState.today[sl.id]?.taken){list.innerHTML='<div class="empty-state">No history yet</div>';return'';}
+    const adjustedTotal=total+(advState.today[sl.id]!==undefined?1:0);
+    const pct=adjustedTotal>0?Math.round((taken/adjustedTotal)*100):0;
+    const col=pct>=85?'var(--green)':pct>=70?'var(--amber)':'var(--red)';
+    return`<div class="slot-adherence-row">
+      <div class="slot-adherence-emoji">${sl.emoji}</div>
+      <div class="slot-adherence-name">${sl.name}</div>
+      <div class="slot-adherence-bar-track">
+        <div class="slot-adherence-bar-fill" style="width:${pct}%;background:${col}"></div>
+      </div>
+      <div class="slot-adherence-pct" style="color:${col}">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════════
+// CAREGIVERS
+// ════════════════════════════════════════════════════════
+function buildCarerUrl(c) {
+  const base=window.location.href.split('?')[0];
+  const slots=(c.slots||['morning','lunch','dinner','bedtime']).join(',');
+  return`${base}?carer=1&n=${encodeURIComponent(c.name)}&h=${c.hashPin}&s=${encodeURIComponent(slots)}&v=${c.canViewHistory?'1':'0'}`;
+}
+
+function renderCarerStats() {
+  const active=carerCodes.filter(c=>!c.blocked).length;
+  const uses=carerCodes.reduce((a,c)=>a+(c.accessCount||0),0);
+  const blocked=carerCodes.filter(c=>c.blocked).length;
+  const sa=document.getElementById('statActive');
+  const su=document.getElementById('statUses');
+  const sb=document.getElementById('statBlocked');
+  if(sa)sa.textContent=active;
+  if(su)su.textContent=uses;
+  if(sb)sb.textContent=blocked;
+}
+
+function renderCarerList() {
+  renderCarerStats();
+  const list=document.getElementById('carerCodeList');
+  if(!list)return;
+  if(!carerCodes.length){
+    list.innerHTML='<div class="empty-state">No caregivers yet.<br>Tap + Add to create a code.</div>';
+    return;
+  }
+  list.innerHTML=carerCodes.map(c=>{
+    const slotNames=(c.slots||[]).includes('all')?'All slots':(c.slots||[]).map(id=>({morning:'Morning',lunch:'Lunch',dinner:'Dinner',bedtime:'Bedtime'}[id]||id)).join(', ');
+    const accessDisplay = c.accessCount > 0
+      ? `${c.accessCount} access${c.accessCount === 1 ? '' : 'es'}`
+      : 'Never accessed';
+    const lastUsed = c.lastUsed
+      ? `Last seen ${new Date(c.lastUsed).toLocaleDateString('en-AU',{day:'numeric',month:'short'})}`
+      : accessDisplay;
+    const url=buildCarerUrl(c);
+    const escaped=url.replace(/'/g,"\\'");
+    const shortUrl=url.replace(/https?:\/\//,'').substring(0,52)+'…';
+    return`<div class="code-card${c.blocked?' blocked':''}">
+      <div class="code-card-top">
+        <div class="code-avatar${c.blocked?' blocked':''}">${c.name.charAt(0)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="code-name">${esc(c.name)}</div>
+          <div class="code-meta">${slotNames} · ${c.canViewHistory?'History on':'History off'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          <div class="code-status ${c.blocked?'status-blocked':'status-active'}">${c.blocked?'Blocked':'Active'}</div>
+          <div class="code-meta">${lastUsed}</div>
+          ${c.accessCount>0?`<div class="code-meta" style="color:var(--teal);font-weight:600">${accessDisplay}</div>`:''}
+        </div>
+      </div>
+      ${!c.blocked?`<div class="code-url-strip">
+        <div class="code-url-text">${shortUrl}</div>
+        <button class="copy-btn" id="copy-${c.id}" onclick="copyCodeUrl('${escaped}','${c.id}')">Copy</button>
+      </div>`:''}
+      <div class="code-actions">
+        <button class="code-action-btn" onclick="editCarer('${c.id}')">✏ Edit</button>
+        <button class="code-action-btn" onclick="toggleBlockCarer('${c.id}')">${c.blocked?'Unblock':'Block'}</button>
+        <button class="code-action-btn danger" onclick="deleteCarer('${c.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyCodeUrl(url,id) {
+  haptic('light');
+  navigator.clipboard.writeText(url)
+    .then(()=>{
+      const btn=document.getElementById(`copy-${id}`);
+      if(btn){btn.textContent='✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);}
+    })
+    .catch(()=>showToast('Copy the URL manually'));
+}
+
+function toggleCarerForm() {
+  carerFormOpen=!carerFormOpen;
+  const form=document.getElementById('carerAddForm');
+  const btn=document.getElementById('addCarerBtn');
+  if(form)form.style.display=carerFormOpen?'block':'none';
+  if(btn){btn.textContent=carerFormOpen?'Cancel':'+ Add';btn.classList.toggle('cancel',carerFormOpen);}
+  if(carerFormOpen){buildNewCarerSlotToggles();resetNewCarerForm();}
+}
+
+function resetNewCarerForm() {
+  newCarerHistPerm=false; newCarerSlots=new Set(['morning','lunch','dinner','bedtime']);
+  const n=document.getElementById('newCarerName');const p=document.getElementById('newCarerPin');
+  if(n)n.value='';if(p){p.value='';p.type='password';}
+  const sw=document.getElementById('newCarerHistSwitch');if(sw)sw.classList.remove('on');
+  const ht=document.getElementById('newCarerHistToggle');if(ht)ht.classList.remove('on');
+  const tog=document.getElementById('newPinToggle');if(tog){tog.textContent='Show';}
+  updateCreateBtn();
+}
+
+function buildNewCarerSlotToggles() {
+  const cont=document.getElementById('newCarerSlotToggles');
+  if(!cont)return;
+  cont.innerHTML=[
+    {id:'morning',emoji:'🌅',label:'Morning'},
+    {id:'lunch',emoji:'☀️',label:'Lunch'},
+    {id:'dinner',emoji:'🌆',label:'Dinner'},
+    {id:'bedtime',emoji:'🌙',label:'Bedtime'},
+  ].map(sl=>`<div class="slot-toggle${newCarerSlots.has(sl.id)?' on':''}" onclick="toggleNewCarerSlot('${sl.id}',this)">
+    <span class="slot-toggle-emoji">${sl.emoji}</span>
+    <span class="slot-toggle-label">${sl.label}</span>
+    <span class="slot-toggle-check">✓</span>
+  </div>`).join('');
+}
+
+function toggleNewCarerSlot(id,el) {
+  haptic('light');
+  if(newCarerSlots.has(id))newCarerSlots.delete(id); else newCarerSlots.add(id);
+  el.classList.toggle('on',newCarerSlots.has(id));
+  updateCreateBtn();
+}
+
+function toggleNewCarerHist() {
+  haptic('light');
+  newCarerHistPerm=!newCarerHistPerm;
+  const sw=document.getElementById('newCarerHistSwitch');
+  const row=document.getElementById('newCarerHistToggle');
+  if(sw)sw.classList.toggle('on',newCarerHistPerm);
+  if(row)row.classList.toggle('on',newCarerHistPerm);
+}
+
+function toggleNewPinPreview() {
+  const inp=document.getElementById('newCarerPin');
+  const btn=document.getElementById('newPinToggle');
+  if(!inp)return;
+  inp.type=inp.type==='password'?'text':'password';
+  if(btn)btn.textContent=inp.type==='password'?'Show':'Hide';
+}
+
+function updateCreateBtn() {
+  const n=document.getElementById('newCarerName');
+  const p=document.getElementById('newCarerPin');
+  const btn=document.getElementById('createCarerBtn');
+  if(!btn)return;
+  const ready=n&&n.value.trim()&&p&&/^\d{4}$/.test(p.value.trim());
+  btn.classList.toggle('ready',!!ready);
+  btn.classList.toggle('disabled',!ready);
+}
+
+function saveNewCarer() {
+  const name=document.getElementById('newCarerName').value.trim();
+  const pin=document.getElementById('newCarerPin').value.trim();
+  if(!name){showToast('⚠ Please enter a name');return;}
+  if(!/^\d{4}$/.test(pin)){showToast('⚠ PIN must be 4 digits');return;}
+  const code={
+    id:Date.now().toString(), name, hashPin:hashPin(pin),
+    slots:newCarerSlots.size>0?Array.from(newCarerSlots):['morning','lunch','dinner','bedtime'],
+    canViewHistory:newCarerHistPerm, blocked:false,
+    createdAt:new Date().toISOString(), lastUsed:null, accessCount:0,
+  };
+  carerCodes.push(code); saveCarerCodes();
+  const url=buildCarerUrl(code);
+  navigator.clipboard.writeText(url).catch(()=>{});
+  toggleCarerForm();
+  renderCarerList();
+  showToast(`✓ ${name}'s link copied`);
+  haptic('success');
+}
+
+function toggleBlockCarer(id) {
+  haptic('light');
+  const c=carerCodes.find(x=>x.id===id);if(!c)return;
+  c.blocked=!c.blocked; saveCarerCodes(); renderCarerList();
+  showToast(c.blocked?`${c.name} blocked`:`${c.name} unblocked`);
+}
+
+function deleteCarer(id) {
+  haptic('light');
+  if(!confirm('Delete this caregiver code? This cannot be undone.'))return;
+  const idx=carerCodes.findIndex(x=>x.id===id);if(idx===-1)return;
+  const name=carerCodes[idx].name;
+  carerCodes.splice(idx,1); saveCarerCodes(); renderCarerList();
+  showToast(`${name}'s code deleted`);
+}
+
+function editCarer(id) {
+  const c=carerCodes.find(x=>x.id===id);
+  if(!c)return;
+  const newName=prompt('Caregiver name:',c.name);
+  if(!newName)return;
+  c.name=newName.trim();
+  saveCarerCodes(); renderCarerList();
+  showToast(`✓ ${c.name} updated`);
+}
+
+function dismissCarerNotif() {
+  const el=document.getElementById('carerNotif');
+  if(el)el.style.display='none';
+}
+
+// ════════════════════════════════════════════════════════
+// CAREGIVER PIN SYSTEM
+// ════════════════════════════════════════════════════════
+function checkCarerUrl() {
+  const params=new URLSearchParams(window.location.search);
+  if(!params.get('carer'))return;
+  const h=params.get('h');
+  if(h){
+    urlCarerCode={
+      id:'url', name:params.get('n')||'Caregiver', hashPin:h,
+      slots:params.get('s')?params.get('s').split(','):['morning','lunch','dinner','bedtime'],
+      canViewHistory:params.get('v')==='1', blocked:false,
+    };
+  }
+  const overlay=document.getElementById('pinOverlay');
+  if(overlay)overlay.style.display='flex';
+}
+
+let pinBuffer='';
+function pinKey(val) {
+  haptic('light');
+  if(val==='cancel'){closePinOverlay();return;}
+  if(val==='del'){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();return;}
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=val; updatePinDots();
+  if(pinBuffer.length===4)setTimeout(()=>attemptCarerAccess(pinBuffer),300);
+}
+
+function updatePinDots() {
+  document.querySelectorAll('.pin-dot').forEach((dot,i)=>dot.classList.toggle('filled',i<pinBuffer.length));
+}
+
+function attemptCarerAccess(pin) {
+  const h=hashPin(pin);
+  if(urlCarerCode&&urlCarerCode.hashPin===h){
+    activeCarer=urlCarerCode;
+    closePinOverlay();
+    activateCarerMode();
+    return;
+  }
+  const match=carerCodes.find(c=>c.hashPin===h&&!c.blocked);
+  if(match){
+    match.lastUsed=new Date().toISOString();
+    match.accessCount=(match.accessCount||0)+1;
+    saveCarerCodes(); activeCarer=match;
+    closePinOverlay(); activateCarerMode();
+    return;
+  }
+  haptic('error');
+  const errEl=document.getElementById('pinError');
+  if(errEl)errEl.textContent='Incorrect code. Try again.';
+  pinBuffer=''; updatePinDots();
+  setTimeout(()=>{if(errEl)errEl.textContent='';},2500);
+}
+
+function closePinOverlay() {
+  const overlay=document.getElementById('pinOverlay');
+  if(overlay)overlay.style.display='none';
+  pinBuffer=''; updatePinDots();
+  const err=document.getElementById('pinError');
+  if(err)err.textContent='';
+}
+
+function activateCarerMode() {
+  // Ensure onboarding overlay is hidden — the carer's device may be fresh
+  // with onboardingDone:false, but they are not setting up their own schedule.
+  const obOverlay = document.getElementById('obOverlay');
+  if(obOverlay) obOverlay.style.display = 'none';
+
+  // Force scheduled mode so the slot timeline renders correctly.
+  // The carer should always see the slot grid, never the simple orb,
+  // regardless of what advancedMode is set to on this device.
+  state.advancedMode = true;
+
+  document.getElementById('carerBanner').style.display = 'flex';
+  document.getElementById('carerBannerLabel').textContent =
+    `Caregiver View — ${activeCarer.name}`;
+  renderTimelineCarer();
+  haptic('success');
+}
+
+function renderTimelineCarer() {
+  if(!activeCarer)return;
+  const permitted=activeCarer.slots&&!activeCarer.slots.includes('all')?activeCarer.slots:null;
+  const origSlots=advState.slots;
+  advState.slots=permitted?origSlots.filter(sl=>permitted.includes(sl.id)):origSlots;
+  renderTimelineAdvanced();
+  advState.slots=origSlots;
+}
+
+function exitCarerMode() {
+  haptic('light');
+  activeCarer=null;
+  document.getElementById('carerBanner').style.display='none';
+  renderTimeline();
+  if(window.location.search.includes('carer=1'))
+    window.history.replaceState({},'',window.location.pathname);
+}
+
+// ════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ════════════════════════════════════════════════════════
+function enableNotifications() {
+  if(!('Notification'in window)){showToast('Not supported in this browser');return;}
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'){
+      state.notifEnabled=true; saveState(); scheduleNotif();
+      const sw=document.getElementById('notifSwitch');
+      const st=document.getElementById('notifStatus');
+      if(sw)sw.classList.add('on');
+      if(st)st.textContent='Enabled';
+      showToast('🔔 Notifications enabled');
+      haptic('success');
+    } else showToast('Notifications permission denied');
+  });
+}
+
+function scheduleNotif() {
+  if(!state.notifEnabled||Notification.permission!=='granted')return;
+  if(notifTimer)clearTimeout(notifTimer);
+  const now=new Date();
+  const[rh,rm]=state.reminderTime.split(':').map(Number);
+  let t=new Date(now); t.setHours(rh,rm,0,0);
+  if(t<=now||state.taken)t.setDate(t.getDate()+1);
+  notifTimer=setTimeout(()=>{
+    if(!state.taken)new Notification('Takenly',{body:`Time for your medication — due at ${fmt12(state.reminderTime)}`});
+    scheduleNotif();
+  },t-now);
+}
+
+// ════════════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════════════
+function updateSettingsPanel() {
+  applyTheme(state.theme || 'light');
+  const sw=document.getElementById('notifSwitch');
+  const st=document.getElementById('notifStatus');
+  if(sw)sw.classList.toggle('on',!!state.notifEnabled);
+  if(st)st.textContent=state.notifEnabled?'Enabled':'Tap to enable';
+  const et=document.getElementById('settingsEarlyWindowInline');
+  if(et)et.value=String(state.earlyWindow!==undefined?state.earlyWindow:30);
+  const st2=document.getElementById('settingsSimpleTime');
+  if(st2)st2.value=state.reminderTime;
+  applyMode();
+  renderSettingsMedListInline();
+}
+
+function renderSettingsMedListInline() {
+  settingsTempMedsInline=JSON.parse(JSON.stringify(state.meds));
+  const list=document.getElementById('settingsMedListInline');
+  if(!list)return;
+  rebuildInlineMedList();
+}
+
+function rebuildInlineMedList() {
+  const list=document.getElementById('settingsMedListInline');
+  if(!list)return;
+  list.innerHTML=settingsTempMedsInline.map((m,i)=>`
+    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+      <input class="form-input" type="text" placeholder="Medication name" value="${esc(m.name)}" maxlength="60"
+        oninput="settingsTempMedsInline[${i}].name=this.value" style="flex:1">
+      <input class="form-input" type="text" placeholder="Dosage" value="${esc(m.dosage||'')}" maxlength="40"
+        oninput="settingsTempMedsInline[${i}].dosage=this.value" style="max-width:110px">
+      <button class="ob-med-remove" onclick="removeSettingsMedInline(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addSettingsMedInline(){settingsTempMedsInline.push({id:Date.now(),name:'',dosage:'',icon:'💊',notes:'',form:'',route:'',food:'',timing:''});rebuildInlineMedList();}
+function removeSettingsMedInline(i){settingsTempMedsInline.splice(i,1);rebuildInlineMedList();}
+
+function saveSettingsInline() {
+  const t=document.getElementById('settingsSimpleTime');
+  const ew=document.getElementById('settingsEarlyWindowInline');
+  for(const m of settingsTempMedsInline)if(!m.name.trim()){showToast('⚠ Each medication needs a name');return;}
+  if(t)state.reminderTime=t.value;
+  if(ew)state.earlyWindow=parseInt(ew.value)||30;
+  state.meds=settingsTempMedsInline.filter(m=>m.name.trim());
+  saveState(); scheduleNotif(); renderTimeline();
+  showToast('✓ Settings saved');
+  haptic('success');
+}
+
+// Slot settings panel
+function openSlotSettings() {
+  buildSlotSettingsList();
+  document.getElementById('slotSettingsOverlay').classList.add('open');
+  document.getElementById('slotSettingsPanel').classList.add('open');
+}
+function closeSlotSettings() {
+  document.getElementById('slotSettingsOverlay').classList.remove('open');
+  document.getElementById('slotSettingsPanel').classList.remove('open');
+}
+
+let tempSlots=[];
+function buildSlotSettingsList() {
+  tempSlots=JSON.parse(JSON.stringify(advState.slots));
+  const list=document.getElementById('slotSettingsList');
+  if(!list)return;
+  list.innerHTML=tempSlots.map((sl,si)=>{
+    const medsHtml=sl.meds.map((m,mi)=>`
+      <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+        <input class="form-input" type="text" placeholder="Name" value="${esc(m.name)}" maxlength="60"
+          oninput="tempSlots[${si}].meds[${mi}].name=this.value" style="flex:1">
+        <input class="form-input" type="text" placeholder="Dose" value="${esc(m.dosage||m.dose||'')}" maxlength="40"
+          oninput="tempSlots[${si}].meds[${mi}].dosage=this.value" style="max-width:100px">
+        <button class="ob-med-remove" onclick="removeSlotMed(${si},${mi})">✕</button>
+      </div>`).join('');
+    return`<div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span style="font-size:22px">${sl.emoji}</span>
+        <span style="font-family:var(--font-head);font-size:17px;color:var(--ink)">${sl.name}</span>
+      </div>
+      <div class="setting-section-label" style="margin-bottom:8px">Time</div>
+      <input type="time" class="form-input" value="${sl.time}" oninput="tempSlots[${si}].time=this.value" style="margin-bottom:12px">
+      <div class="setting-section-label" style="margin-bottom:8px">Medications</div>
+      ${medsHtml}
+      <button class="ob-add-med-btn" onclick="addSlotMed(${si})">+ Add medication to ${sl.name}</button>
+    </div>`;
+  }).join('');
+}
+
+function addSlotMed(si){haptic('light');tempSlots[si].meds.push({icon:'💊',name:'',dosage:'',instructions:''});buildSlotSettingsList();}
+function removeSlotMed(si,mi){haptic('light');tempSlots[si].meds.splice(mi,1);buildSlotSettingsList();}
+
+function saveSlotSettings(){
+  for(const sl of tempSlots){
+    if(!sl.time){showToast('⚠ Each slot needs a time');return;}
+    for(const m of sl.meds)if(!m.name.trim()){showToast('⚠ Each medication needs a name');return;}
+  }
+  advState.slots=tempSlots; saveAdvState(); renderTimeline(); closeSlotSettings();
+  showToast('✓ Schedule saved'); haptic('success');
+}
+
+// ════════════════════════════════════════════════════════
+// DEV RESET
+// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// THEME — dark mode preference
+// Light is the default (v2.0 design system).
+// Dark is the user preference, stored in state.theme.
+// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// SMART MODE RECOMMENDATION (R-16)
+// If user is in Scheduled Mode but has only been taking
+// doses from one slot over the last 14 days, suggest
+// Simple Mode. Shown once — dismissed permanently.
+// ════════════════════════════════════════════════════════
+function checkSmartModeRecommendation() {
+  const banner = document.getElementById('smartModeBanner');
+  if (!banner) return;
+  // Only relevant in scheduled mode
+  if (!state.advancedMode) { banner.style.display = 'none'; return; }
+  // Don't show if already dismissed
+  if (localStorage.getItem('smartModeDismissed') === '1') { banner.style.display = 'none'; return; }
+  // Need at least 7 days of history to have a meaningful signal
+  const hist = getAdvHistory().slice(0, 14);
+  if (hist.length < 7) { banner.style.display = 'none'; return; }
+  // Find which slots have been taken over the last 14 days
+  const usedSlots = new Set();
+  hist.forEach(h => {
+    advState.slots.forEach(sl => {
+      if ((h.today[sl.id] || {}).taken) usedSlots.add(sl.id);
+    });
+  });
+  // Also include today
+  advState.slots.forEach(sl => {
+    if ((advState.today[sl.id] || {}).taken) usedSlots.add(sl.id);
+  });
+  // Show banner if only one slot has ever been used
+  banner.style.display = usedSlots.size === 1 ? 'flex' : 'none';
+}
+
+function dismissSmartModeBanner() {
+  haptic('light');
+  localStorage.setItem('smartModeDismissed', '1');
+  const banner = document.getElementById('smartModeBanner');
+  if (banner) banner.style.display = 'none';
+}
+
+function switchToSimpleMode() {
+  haptic('medium');
+  localStorage.setItem('smartModeDismissed', '1');
+  state.advancedMode = false;
+  saveState(); applyMode();
+  const banner = document.getElementById('smartModeBanner');
+  if (banner) banner.style.display = 'none';
+  showToast('Switched to Simple Mode');
+}
+
+function applyTheme(t) {
+  const isDark = t === 'dark';
+  document.body.classList.toggle('dark', isDark);
+  const sw = document.getElementById('darkModeSwitch');
+  const st = document.getElementById('darkModeStatus');
+  if (sw) sw.classList.toggle('on', isDark);
+  if (st) st.textContent = isDark ? 'Dark mode active' : 'Light mode (default)';
+}
+
+function toggleDarkMode() {
+  haptic('light');
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(state.theme);
+  saveState();
+}
+
+function showDevTools() {
+  const isDev = new URLSearchParams(window.location.search).has('dev');
+  const btn = document.getElementById('devResetBtn');
+  const sec = document.getElementById('devSection');
+  if (btn) btn.style.display = isDev ? 'block' : 'none';
+  if (sec) sec.style.display = isDev ? 'block' : 'none';
+}
+
+function devReset() {
+  if (!confirm('Reset all data and restart onboarding?')) return;
+  [STATE_KEY,HIST_KEY,ADV_KEY,ADV_HIST,CARER_KEY].forEach(k=>localStorage.removeItem(k));
+  haptic('medium'); window.location.reload();
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+function init() {
+  loadState(); loadAdvState(); loadCarerCodes();
+  applyTheme(state.theme || 'light');
+  checkCarerUrl();
+  checkOnboarding();
+  applyMode();
+  renderTimeline();
+  renderTodayHeader();
+  showDevTools();
+
+  if(state.notifEnabled&&Notification.permission==='granted'){
+    scheduleNotif();
+    const sw=document.getElementById('notifSwitch');
+    const st=document.getElementById('notifStatus');
+    if(sw)sw.classList.add('on');
+    if(st)st.textContent='Enabled';
+  }
+
+  setInterval(()=>{checkDailyReset();checkAdvDailyReset();},60000);
+  setInterval(()=>{renderTodayHeader();},30000);
+
+  // Input listeners for create carer form
+  const carerNameInput=document.getElementById('newCarerName');
+  const carerPinInput=document.getElementById('newCarerPin');
+  if(carerNameInput)carerNameInput.addEventListener('input',updateCreateBtn);
+  if(carerPinInput)carerPinInput.addEventListener('input',updateCreateBtn);
+}
+
+init();
+</script>
+</body>
+</html>
