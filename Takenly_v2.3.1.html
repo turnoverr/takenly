@@ -2419,7 +2419,7 @@ html, body {
               Hotfix — Sprint 2 errors<br>
               · Removed dead settings panel calling undefined closeSettings / addSettingsMed / saveSettings<br>
               · Fixed closeDayDetail event guard logic (× button and backdrop now both work)<br>
-              · Fixed animateTakeSlot to use data-slot-id instead of fragile onclick querySelector
+              · Fixed duplicate const sl in confirmTakeSlot — hard syntax error killing entire script
             </div>
           </div>
           <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
@@ -3144,13 +3144,13 @@ function confirmTakeSlot(id,isEarly,note) {
   advState.today[id].taken=true;
   advState.today[id].takenAt=iso;
   advState.today[id].events.push(ev);
-  // Decrement stock for each medication in this slot
+  // Decrement stock and get slot for toast — single declaration
   const sl=advState.slots.find(s=>s.id===id);
   if(sl)sl.meds.forEach(m=>{if(m.stockCount!==undefined&&m.stockCount>0)m.stockCount--;});
   saveAdvState();
+  showToast('✓ '+(sl?sl.emoji+' '+sl.name:'')+' taken'+(isEarly?' early':''));
   animateTakeSlot(id, () => {
     renderTimeline();
-    // Animate the new taken strip in
     setTimeout(() => {
       document.querySelectorAll('.slot-taken-strip').forEach(s => {
         s.classList.add('animating-in');
@@ -3158,8 +3158,6 @@ function confirmTakeSlot(id,isEarly,note) {
       });
     }, 30);
   });
-  const sl=advState.slots.find(s=>s.id===id);
-  showToast(`✓ ${sl?sl.emoji+' '+sl.name:''} taken${isEarly?' early':''}`);
 }
 
 function confirmTakeSimple(isEarly,note) {
