@@ -3312,7 +3312,8 @@ function openDayDetail(dateStr) {
         const sd=dayData[sl.id]||{};
         const taken=sd.taken;
         const wasEarly=(sd.events||[]).some(e=>e.type==='taken'&&e.early);
-        const earlyNote=(sd.events||[]).find(e=>e.type==='taken'&&e.earlyNote)?.earlyNote;
+        const earlyNoteEv=(sd.events||[]).find(function(e){return e.type==='taken'&&e.earlyNote;});
+        const earlyNote=earlyNoteEv?earlyNoteEv.earlyNote:null;
         const takenAt=sd.takenAt?fmtTime(new Date(sd.takenAt)):'—';
         const col=taken?'var(--green)':'var(--red)';
         const badge=taken?(wasEarly?'Taken early':'Taken'):'Missed';
@@ -3334,7 +3335,8 @@ function openDayDetail(dateStr) {
       content.innerHTML=`<div style="text-align:center;padding:24px;color:var(--ink-dim);font-size:13px">No data recorded for this day.</div>`;
     } else {
       const wasEarly=(dayRec.events||[]).some(e=>e.type==='taken'&&e.early);
-      const earlyNote=(dayRec.events||[]).find(e=>e.type==='taken'&&e.earlyNote)?.earlyNote;
+      const earlyNoteEv=(dayRec.events||[]).find(function(e){return e.type==='taken'&&e.earlyNote;});
+      const earlyNote=earlyNoteEv?earlyNoteEv.earlyNote:null;
       const takenAt=dayRec.takenAt?fmtTime(new Date(dayRec.takenAt)):'—';
       const col=dayRec.taken?'var(--green)':'var(--red)';
       const badge=dayRec.taken?(wasEarly?'Taken early':'Taken'):'Missed';
@@ -3418,8 +3420,8 @@ function renderSlotAdherence() {
   list.innerHTML=advState.slots.map(sl=>{
     let taken=0,total=hist.length;
     hist.forEach(h=>{if((h.today[sl.id]||{}).taken)taken++;});
-    if(advState.today[sl.id]?.taken)taken++;
-    if(total===0&&!advState.today[sl.id]?.taken){list.innerHTML='<div class="empty-state">No history yet</div>';return'';}
+    if(advState.today[sl.id]&&advState.today[sl.id].taken)taken++;
+    if(total===0&&!(advState.today[sl.id]&&advState.today[sl.id].taken)){list.innerHTML='<div class="empty-state">No history yet</div>';return'';}
     const adjustedTotal=total+(advState.today[sl.id]!==undefined?1:0);
     const pct=adjustedTotal>0?Math.round((taken/adjustedTotal)*100):0;
     const col=pct>=85?'var(--green)':pct>=70?'var(--amber)':'var(--red)';
