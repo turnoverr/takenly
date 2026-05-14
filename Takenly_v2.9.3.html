@@ -1330,8 +1330,8 @@ body.dark .tab-btn.active {
 .ob-body {
   font-size: 15px;
   color: var(--ink-mid);
-  line-height: 1.65;
-  font-weight: 400;
+  line-height: 1.6;
+  font-weight: 300;
   max-width: 300px;
 }
 .ob-input-group {
@@ -2050,29 +2050,6 @@ body.dark .tab-btn.active {
   font-family: var(--font-body);
 }
 
-/* ── SCREEN TRANSITIONS — crossfade ── */
-
-/* ── ONBOARDING STEP TRANSITIONS ── */
-.ob-step {
-  transition: none;
-}
-.ob-step.slide-out-left {
-  animation: obOutLeft 0.18s ease forwards;
-}
-.ob-step.slide-out-right {
-  animation: obOutRight 0.18s ease forwards;
-}
-.ob-step.slide-in-left {
-  animation: obInLeft 0.22s ease forwards;
-}
-.ob-step.slide-in-right {
-  animation: obInRight 0.22s ease forwards;
-}
-@keyframes obOutLeft  { to { opacity:0; transform:translateX(-16px); } }
-@keyframes obOutRight { to { opacity:0; transform:translateX(16px); } }
-@keyframes obInLeft   { from { opacity:0; transform:translateX(-16px); } to { opacity:1; transform:translateX(0); } }
-@keyframes obInRight  { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:translateX(0); } }
-
 /* ── ALL-DONE ANIMATION ── */
 #allDoneState.animating-in {
   animation: allDoneAppear 0.4s cubic-bezier(0.34,1.3,0.64,1) both;
@@ -2082,105 +2059,21 @@ body.dark .tab-btn.active {
   to   { opacity:1; transform:scale(1); }
 }
 
-/* ── PATIENT CONFIRMATION FLASH ── */
-#patientFlash {
-  position:fixed; inset:0; z-index:9999;
-  background:var(--green);
-  display:none; flex-direction:column;
-  align-items:center; justify-content:center;
-  opacity:0; pointer-events:none;
-  transition:opacity 0.15s ease;
-}
-#patientFlash.show { display:flex; opacity:1; }
-#patientFlash .flash-label {
-  font-family:var(--font-body); font-size:22px;
-  font-weight:700; color:#fff; margin-top:18px;
-  letter-spacing:0.01em;
-}
-#patientFlash svg { stroke:#fff; }
-
-/* ── PATIENT VIEW CSS CLASSES ── */
-.patient-slot-taken {
-  display:flex; align-items:center; gap:10px; padding:10px 0;
-}
-.patient-slot-taken-icon {
-  width:36px; height:36px; border-radius:50%;
-  background:var(--green-dim);
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; color:var(--green);
-}
-.patient-slot-taken-name {
-  font-size:14px; font-weight:600; color:var(--ink);
-  font-family:var(--font-body);
-}
-.patient-slot-taken-time {
-  font-size:11px; color:var(--dim); font-family:var(--font-body);
-}
-.patient-slot-taken-badge {
-  width:22px; height:22px; border-radius:50%; background:var(--green);
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; color:#fff; margin-left:auto;
-}
-.patient-due-card {
-  background:var(--surface); border:2px solid var(--teal);
-  border-radius:var(--radius-lg); padding:18px;
-  margin:4px 0 8px; box-shadow:0 4px 20px rgba(13,115,119,0.1);
-}
-.patient-due-time {
-  font-family:var(--font-head); font-size:48px; font-weight:300;
-  letter-spacing:-0.03em; color:var(--ink); line-height:1;
-  display:flex; align-items:baseline; gap:6px;
-}
-.patient-due-ampm {
-  font-size:16px; color:var(--teal); font-weight:600;
-  font-family:var(--font-body);
-}
-.patient-due-label {
-  font-size:10px; font-weight:700; letter-spacing:0.1em;
-  text-transform:uppercase; color:var(--teal);
-  margin:8px 0 10px; font-family:var(--font-body);
-}
-.patient-due-meds {
-  font-size:13px; color:var(--mid); margin-bottom:16px;
-  line-height:1.6; font-family:var(--font-body);
-}
-.patient-take-btn {
-  width:100%; padding:16px; border-radius:var(--radius);
-  border:none; background:var(--teal); color:#fff;
-  font-size:16px; font-weight:700; cursor:pointer;
-  font-family:var(--font-body);
-  display:flex; align-items:center; justify-content:center;
-  gap:10px; letter-spacing:0.01em;
-  transition:opacity 0.15s; -webkit-tap-highlight-color:transparent;
-}
-.patient-take-btn:active { opacity:0.8; }
-.patient-future-row {
-  display:flex; align-items:center; gap:10px; padding:10px 0;
-}
-.patient-future-icon {
-  width:36px; height:36px; border-radius:50%; background:var(--faint);
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; color:var(--dim);
-}
-.patient-future-name {
-  font-size:14px; font-weight:500; color:var(--mid);
-  font-family:var(--font-body);
-}
-.patient-future-time {
-  font-size:11px; color:var(--dim); font-family:var(--font-body);
-}
-.patient-future-cd {
-  margin-left:auto; font-size:11px; font-weight:600;
-  color:var(--teal); background:var(--teal-dim);
-  padding:3px 9px; border-radius:var(--radius-sm);
-  font-family:var(--font-body); white-space:nowrap;
-}
+/* ── ONBOARDING STEP TRANSITIONS ── */
+.ob-step.slide-out-left { animation: obOutLeft 0.18s ease forwards; }
+.ob-step.slide-out-right { animation: obOutRight 0.18s ease forwards; }
+.ob-step.slide-in-left { animation: obInLeft 0.22s ease forwards; }
+.ob-step.slide-in-right { animation: obInRight 0.22s ease forwards; }
+@keyframes obOutLeft  { to { opacity:0; transform:translateX(-16px); } }
+@keyframes obOutRight { to { opacity:0; transform:translateX(16px); } }
+@keyframes obInLeft   { from { opacity:0; transform:translateX(-16px); } to { opacity:1; transform:translateX(0); } }
+@keyframes obInRight  { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:translateX(0); } }
 </style>
 </head>
 <body>
 
 <!-- ══ ONBOARDING ══ -->
-<div class="ob-overlay" id="obOverlay" style="display:none">
+<div class="ob-overlay" id="obOverlay">
 
   <!-- STEP 1 — Welcome -->
   <div class="ob-step active" id="ob-1">
@@ -2222,87 +2115,6 @@ body.dark .tab-btn.active {
     </div>
     <button class="ob-btn ob-btn-primary" onclick="obStep1Next()">Continue →</button>
     <button class="ob-btn ob-btn-skip" onclick="skipOnboarding()">Skip setup</button>
-  </div>
-
-  <!-- STEP 2C — Carer-primary: configure patient schedule -->
-  <div class="ob-step" id="ob-2c">
-    <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
-    </div>
-    <div class="ob-progress" id="ob-prog-2c"></div>
-    <div class="ob-title" id="ob2c-title">Set up their schedule</div>
-    <div class="ob-body">Choose which dose slots apply. You can add medications to each slot next.</div>
-    <div class="ob-slot-grid" id="ob2c-slot-grid" style="margin-top:16px">
-      <button class="ob-slot-btn selected" data-slot="morning" onclick="toggleCarerSlot(this,'morning')">
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5.22 5.22l1.42 1.42"/><path d="M3 12h2"/><path d="M19 12h2"/><path d="M17.36 6.64l1.42-1.42"/><path d="M6 17h12"/><path d="M8.5 13.5A4 4 0 0 1 12 9a4 4 0 0 1 4 4"/></svg></span>
-        <span>Morning</span>
-      </button>
-      <button class="ob-slot-btn" data-slot="lunch" onclick="toggleCarerSlot(this,'lunch')">
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>
-        <span>Lunch</span>
-      </button>
-      <button class="ob-slot-btn" data-slot="dinner" onclick="toggleCarerSlot(this,'dinner')">
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v2"/><path d="M5.22 18.78l1.42-1.42"/><path d="M3 12h2"/><path d="M19 12h2"/><path d="M17.36 17.36l1.42 1.42"/><path d="M6 7h12"/><path d="M8.5 10.5A4 4 0 0 1 12 15a4 4 0 0 1 4-4"/></svg></span>
-        <span>Dinner</span>
-      </button>
-      <button class="ob-slot-btn" data-slot="bedtime" onclick="toggleCarerSlot(this,'bedtime')">
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-        <span>Bedtime</span>
-      </button>
-    </div>
-    <button class="ob-btn ob-btn-primary" onclick="obCarerStep2Next()" style="margin-top:20px">Set up times &amp; medications →</button>
-    <button class="ob-btn ob-btn-ghost" onclick="obGoTo(1)">← Back</button>
-  </div>
-
-  <!-- STEP 3C — Carer-primary: slot times and medications -->
-  <div class="ob-step" id="ob-3c">
-    <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
-    </div>
-    <div class="ob-progress" id="ob-prog-3c"></div>
-    <div class="ob-title" id="ob3c-slot-name">Morning</div>
-    <div class="ob-body" id="ob3c-slot-body">Set the time and add medications for this slot.</div>
-    <div class="ob-input-group">
-      <div>
-        <label class="ob-label">Time</label>
-        <input class="ob-input" type="time" id="ob3c-time" value="08:00">
-      </div>
-      <div>
-        <label class="ob-label">Medications (optional)</label>
-        <div id="ob3c-med-list"></div>
-        <button class="ob-add-med-btn" onclick="addCarerSlotMed()" style="margin-top:6px">+ Add medication</button>
-      </div>
-    </div>
-    <button class="ob-btn ob-btn-primary" id="ob3c-next-btn" onclick="obCarerStep3Next()">Next slot →</button>
-    <div style="font-size:11px;color:var(--ink-dim);text-align:center;margin-top:8px;font-family:var(--font-body)" id="ob3c-progress-label"></div>
-  </div>
-
-  <!-- STEP 4C — Carer-primary: generate patient link -->
-  <div class="ob-step" id="ob-4c">
-    <div class="ob-done-icon" style="color:var(--teal)">
-      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.5"/><path d="M3 20c0-3.5 3.134-6.25 7-6.25s7 2.75 7 6.25"/><circle cx="18" cy="8" r="2.5"/><path d="M22 20c0-2.5-1.8-4.5-4-4.5"/></svg>
-    </div>
-    <div class="ob-progress" id="ob-prog-4c"></div>
-    <div class="ob-title" id="ob4c-title">Schedule ready</div>
-    <div class="ob-body" id="ob4c-body">Share this link with your patient. They'll see a simple view — just their schedule and a button to mark each dose taken.</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin:16px 0">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:6px">Patient link</div>
-      <div style="font-size:11px;color:var(--mid);font-family:monospace;word-break:break-all;line-height:1.6" id="ob4c-patient-url"></div>
-    </div>
-    <div style="display:flex;gap:8px;margin-bottom:16px">
-      <button class="ob-btn ob-btn-primary" style="flex:1" onclick="copyPatientLink()">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copy link
-      </button>
-      <button class="ob-btn" style="flex:1;background:var(--surface);border:1px solid var(--border);color:var(--ink);padding:12px" onclick="sharePatientLink()">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        Share
-      </button>
-    </div>
-    <div class="ob-note" style="margin-bottom:16px">The patient can bookmark the link or add it to their home screen. Their doses log back to your dashboard in real time once Firebase is enabled (coming in a future update — for now both devices share the same browser).</div>
-    <button class="ob-btn ob-btn-finish" onclick="finishCarerPrimaryOnboarding()">Open my dashboard →</button>
   </div>
 
   <!-- STEP 2 — Schedule type -->
@@ -2563,46 +2375,6 @@ body.dark .tab-btn.active {
 <!-- ══ TOAST ══ -->
 <div id="toast" style="position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--ink);color:#fff;border-radius:var(--radius);padding:12px 20px;font-size:13px;font-weight:600;z-index:9999;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);font-family:var(--font-body)"></div>
 
-<!-- ══ PATIENT CONFIRMATION FLASH ══ -->
-<div id="patientFlash">
-  <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
-  <div class="flash-label">Taken ✓</div>
-</div>
-
-<!-- ══ PATIENT VIEW — shown when ?patient=1 ══ -->
-<div id="patientOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:var(--bg);overflow-y:auto;display:none;flex-direction:column">
-  <!-- Patient header -->
-  <div style="padding:16px 20px 8px;display:flex;align-items:flex-start;justify-content:space-between">
-    <div>
-      <div style="font-family:var(--font-head);font-size:22px;font-weight:300;color:var(--ink);letter-spacing:-0.01em;margin-bottom:3px" id="patientGreeting">Good morning</div>
-      <div style="font-size:11px;color:var(--dim);font-family:var(--font-body)" id="patientDate"></div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:10px;color:var(--dim);font-family:var(--font-body);line-height:1.4">Schedule by<br><span style="color:var(--teal);font-weight:600" id="patientCarerName">your carer</span></div>
-    </div>
-  </div>
-
-  <!-- Progress card -->
-  <div style="margin:4px 16px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px">
-    <div style="flex:1">
-      <div style="font-size:13px;font-weight:600;color:var(--ink);font-family:var(--font-body);margin-bottom:6px" id="patientProgressLabel">Loading...</div>
-      <div style="display:flex;gap:5px" id="patientPips"></div>
-    </div>
-    <div style="font-family:var(--font-head);font-size:28px;font-weight:300;color:var(--teal);line-height:1" id="patientPct"></div>
-  </div>
-
-  <!-- Timeline -->
-  <div style="flex:1;padding:0 16px" id="patientTimeline"></div>
-
-  <!-- Footer -->
-  <div style="padding:14px 20px 28px;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--dim);font-size:11px;font-family:var(--font-body);border-top:1px solid var(--faint);margin-top:auto">
-    <div class="tk-logo tk-logo-sm">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark" style="font-size:10px">TAKENLY</span>
-    </div>
-  </div>
-</div>
-
 <!-- ══ APP SHELL ══ -->
 <div class="app-shell" id="appShell">
 
@@ -2692,7 +2464,7 @@ body.dark .tab-btn.active {
 
     <!-- Dev reset — only shown when URL contains ?dev=1 -->
     <button class="dev-reset-btn" id="devResetBtn" onclick="devReset()" style="display:none">Reset &amp; restart onboarding (dev)</button>
-    <div class="version-tag">Takenly v2.9.3</div>
+    <div class="version-tag">Takenly v2.9.3.2</div>
   </div>
 
   <!-- ── HISTORY SCREEN ── -->
@@ -2943,16 +2715,8 @@ body.dark .tab-btn.active {
         </div>
       </div>
     </div>
-      <!-- Version tap — changelog now hidden behind version number -->
+      <!-- Changelog -->
       <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
-        <button onclick="toggleChangelog()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:4px 0;font-family:var(--font-body)">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim)">What's new</div>
-            <div style="font-size:11px;color:var(--ink-dim)" id="changelogVersionTap">v2.9.1 ›</div>
-          </div>
-        </button>
-        <div id="changelogBody" style="display:none;margin-top:10px">
-<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
         <div class="setting-section-label" style="margin-bottom:10px">What's new</div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
           <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
@@ -3056,7 +2820,7 @@ body.dark .tab-btn.active {
         </div>
       </div>
 
-      <div class="version-tag" style="padding-bottom:16px">Takenly v2.9.3</div>
+      <div class="version-tag" style="padding-bottom:16px">Takenly v2.9.3.2</div>
   </div>
 
   <!-- ── TAB BAR ── -->
@@ -3252,9 +3016,8 @@ function renderObProgress(elId, current, total) {
   }).join('');
 }
 
-const OB_STEP_ORDER=['1','2c','2','3','4','4s','5s','5','3c','4c'];
+const OB_STEP_ORDER=['1','2','3','4','4s','5s','5'];
 let obCurrentStep='1';
-
 function obGoTo(step) {
   haptic('light');
   const current=document.querySelector('.ob-step.active');
@@ -3505,62 +3268,52 @@ function openTakenly() {
 function skipOnboarding(){state.onboardingDone=true;saveState();document.getElementById('obOverlay').style.display='none';haptic('medium');}
 
 function checkOnboarding() {
+  // Never show onboarding on a caregiver URL — the friend has a fresh device
+  // with onboardingDone:false but they are not setting up their own schedule.
   if(window.location.search.includes('carer=1')) return;
   if(!state.onboardingDone){
+    // Reset onboarding flow state
     obFrequency = 'once';
     obWhoChoice = 'self';
     obScheduleType = null;
     obSelectedSlots = new Set();
     renderObProgress('ob-prog-1',1,5);
-    document.getElementById('obOverlay').style.display = 'flex';
+    document.getElementById('obOverlay').style.display='flex';
   }
-  // No else needed — overlay starts as display:none in HTML
 }
 
 // ════════════════════════════════════════════════════════
 // TAB NAVIGATION
 // ════════════════════════════════════════════════════════
 function switchTab(tab) {
-  activeTab = tab; haptic('light');
-  const tabs = ['today','history','caregivers','settings'];
-  tabs.forEach(t => {
-    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
-  });
-  const inEl = document.getElementById(`screen${tab.charAt(0).toUpperCase()+tab.slice(1)}`);
-  // Find whichever screen is currently visible (inline style display block)
-  const outEl = tabs
-    .filter(t => t !== tab)
-    .map(t => document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`))
-    .find(el => el && el.style.display === 'block');
-
-  if(outEl) {
-    // Crossfade: fade out then show new
-    outEl.style.transition = 'opacity 0.15s ease';
-    outEl.style.opacity = '0';
-    setTimeout(() => {
-      outEl.style.display = 'none';
-      outEl.style.opacity = '';
-      outEl.style.transition = '';
-      inEl.style.opacity = '0';
-      inEl.style.display = 'block';
-      requestAnimationFrame(() => {
-        inEl.style.transition = 'opacity 0.18s ease';
-        inEl.style.opacity = '1';
-        setTimeout(() => { inEl.style.transition = ''; inEl.style.opacity = ''; }, 200);
-      });
-      if(tab==='history') renderHistory();
-      if(tab==='caregivers') renderCarerList();
-      if(tab==='settings') updateSettingsPanel();
-    }, 150);
+  activeTab=tab; haptic('light');
+  const tabs=['today','history','caregivers','settings'];
+  // Always set active classes
+  tabs.forEach(t=>document.getElementById(`tab-${t}`).classList.toggle('active',t===tab));
+  // Find outgoing screen (currently visible via inline style)
+  const outEl=tabs.filter(t=>t!==tab)
+    .map(t=>document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`))
+    .find(el=>el&&el.style.display==='block');
+  const inEl=document.getElementById(`screen${tab.charAt(0).toUpperCase()+tab.slice(1)}`);
+  if(outEl){
+    // Crossfade
+    outEl.style.opacity='0';
+    setTimeout(()=>{
+      outEl.style.display='none';
+      outEl.style.opacity='';
+      inEl.style.display='block';
+      if(tab==='history')renderHistory();
+      if(tab==='caregivers')renderCarerList();
+      if(tab==='settings')updateSettingsPanel();
+    },150);
   } else {
-    // No outgoing screen — direct show (first call, or same tab)
-    tabs.forEach(t => {
-      const el = document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`);
-      if(el) el.style.display = t === tab ? 'block' : 'none';
+    // First call or no outgoing — set all screens directly (same as v2.8)
+    tabs.forEach(t=>{
+      document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`).style.display=t===tab?'block':'none';
     });
-    if(tab==='history') renderHistory();
-    if(tab==='caregivers') renderCarerList();
-    if(tab==='settings') updateSettingsPanel();
+    if(tab==='history')renderHistory();
+    if(tab==='caregivers')renderCarerList();
+    if(tab==='settings')updateSettingsPanel();
   }
 }
 
@@ -5540,396 +5293,18 @@ function generatePDF() {
   haptic('success');
 }
 
-// ════════════════════════════════════════════════════════
-// CARER-PRIMARY MODE (R-22 Phase 1)
-// Two separate flows:
-//   Carer:   sets up patient schedule → generates patient link → monitors dashboard
-//   Patient: opens link → simplified view → marks doses taken
-// ════════════════════════════════════════════════════════
-
-// Storage key for carer-primary patient state
-const PATIENT_KEY = 'takenly_patient_state';
-
-let carerSelectedSlots = new Set(['morning']); // default one slot
-let carerSlotConfigs   = {}; // id → { time, meds[] }
-let carerSlotOrder     = ['morning','lunch','dinner','bedtime'];
-let carerSlotIndex     = 0; // which slot we're configuring in step 3c
-let carerTempMeds      = []; // meds being edited for current slot
-
-const CARER_SLOT_DEFAULTS = {
-  morning: { name:'Morning', time:'08:00' },
-  lunch:   { name:'Lunch',   time:'12:00' },
-  dinner:  { name:'Dinner',  time:'18:00' },
-  bedtime: { name:'Bedtime', time:'21:45' },
-};
-
-// ── Onboarding routing ──────────────────────────────────
-
-function toggleCarerSlot(btn, slotId) {
-  haptic('light');
-  if(carerSelectedSlots.has(slotId) && carerSelectedSlots.size === 1) return; // keep at least one
-  if(carerSelectedSlots.has(slotId)) {
-    carerSelectedSlots.delete(slotId);
-    btn.classList.remove('selected');
-  } else {
-    carerSelectedSlots.add(slotId);
-    btn.classList.add('selected');
-  }
-}
-
-function obCarerStep2Next() {
-  if(carerSelectedSlots.size === 0) return;
-  // Build ordered list of selected slots
-  carerSlotOrder = ['morning','lunch','dinner','bedtime'].filter(id => carerSelectedSlots.has(id));
-  carerSlotConfigs = {};
-  carerSlotOrder.forEach(id => {
-    carerSlotConfigs[id] = {
-      name: CARER_SLOT_DEFAULTS[id].name,
-      time: CARER_SLOT_DEFAULTS[id].time,
-      meds: []
-    };
-  });
-  carerSlotIndex = 0;
-  renderCarerSlotConfig();
-  obGoTo('3c');
-}
-
-function renderCarerSlotConfig() {
-  const id   = carerSlotOrder[carerSlotIndex];
-  const cfg  = carerSlotConfigs[id];
-  const total = carerSlotOrder.length;
-  const step  = carerSlotIndex + 1;
-
-  document.getElementById('ob3c-slot-name').textContent = cfg.name;
-  document.getElementById('ob3c-slot-body').textContent =
-    `Slot ${step} of ${total} — set the time and add any medications.`;
-  document.getElementById('ob3c-time').value = cfg.time;
-  document.getElementById('ob3c-progress-label').textContent =
-    step < total ? `${total - step} more slot${total - step > 1 ? 's' : ''} after this` : 'Last slot';
-  document.getElementById('ob3c-next-btn').textContent =
-    step < total ? 'Next slot →' : 'Review & generate link →';
-
-  renderObProgress('ob-prog-3c', step + 2, total + 3);
-  carerTempMeds = cfg.meds.slice();
-  renderCarerMedList();
-}
-
-function renderCarerMedList() {
-  const list = document.getElementById('ob3c-med-list');
-  if(!list) return;
-  list.innerHTML = carerTempMeds.map((m, i) => `
-    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
-      <input class="ob-input" type="text" placeholder="Medication name" value="${esc(m.name)}" maxlength="60"
-        oninput="carerTempMeds[${i}].name=this.value" style="flex:1">
-      <input class="ob-input" type="text" placeholder="Dose" value="${esc(m.dosage||'')}" maxlength="40"
-        oninput="carerTempMeds[${i}].dosage=this.value" style="width:90px">
-      <button class="ob-med-remove" onclick="removeCarerMed(${i})">✕</button>
-    </div>`).join('');
-}
-
-function addCarerSlotMed() {
-  carerTempMeds.push({ name:'', dosage:'' });
-  renderCarerMedList();
-}
-
-function removeCarerMed(i) {
-  carerTempMeds.splice(i, 1);
-  renderCarerMedList();
-}
-
-function obCarerStep3Next() {
-  const id  = carerSlotOrder[carerSlotIndex];
-  const cfg = carerSlotConfigs[id];
-  cfg.time  = document.getElementById('ob3c-time').value || cfg.time;
-  cfg.meds  = carerTempMeds.filter(m => m.name.trim());
-
-  carerSlotIndex++;
-  if(carerSlotIndex < carerSlotOrder.length) {
-    renderCarerSlotConfig();
-  } else {
-    // All slots configured — generate patient link and show step 4c
-    buildAndShowPatientLink();
-  }
-}
-
-function buildAndShowPatientLink() {
-  // Build advState from carer config
-  advState.slots = carerSlotOrder.map(id => ({
-    id, name: CARER_SLOT_DEFAULTS[id].name,
-    emoji: { morning:'🌅', lunch:'☀️', dinner:'🌆', bedtime:'🌙' }[id],
-    time: carerSlotConfigs[id].time,
-    meds: carerSlotConfigs[id].meds
-  }));
-  advState.today = {};
-  advState.slots.forEach(sl => {
-    advState.today[sl.id] = { taken: false, takenAt: null, events: [] };
-  });
-  advState.lastResetDate = todayStr();
-  state.advancedMode = true;
-  state.onboardingDone = true;
-  saveAdvState(); saveState();
-
-  // Build patient URL
-  const patientUrl = buildPatientUrl();
-  const urlEl = document.getElementById('ob4c-patient-url');
-  if(urlEl) urlEl.textContent = patientUrl;
-  const titleEl = document.getElementById('ob4c-title');
-  if(titleEl) titleEl.textContent = state.patientName
-    ? `${state.patientName}'s schedule is ready`
-    : 'Schedule ready';
-  const bodyEl = document.getElementById('ob4c-body');
-  if(bodyEl && state.patientName) bodyEl.textContent =
-    `Share this link with ${state.patientName}. They'll see only their schedule — just what to take and when, with a button to mark each dose taken.`;
-
-  renderObProgress('ob-prog-4c', carerSlotOrder.length + 3, carerSlotOrder.length + 3);
-  obGoTo('4c');
-  haptic('success');
-}
-
-function buildPatientUrl() {
-  const base = window.location.href.split('?')[0];
-  const name = encodeURIComponent(state.patientName || state.userName || 'Patient');
-  // Simple hash of slot ids + timestamp for patient identification
-  const slots = carerSlotOrder.join(',');
-  const h = fnv1a(slots + (state.patientName || '') + Date.now().toString().slice(-6));
-  return `${base}?patient=1&n=${name}&h=${h}&s=${encodeURIComponent(slots)}`;
-}
-
-function copyPatientLink() {
-  const url = document.getElementById('ob4c-patient-url').textContent;
-  if(navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => showToast('Link copied'));
-  } else {
-    const ta = document.createElement('textarea');
-    ta.value = url; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    showToast('Link copied');
-  }
-  haptic('light');
-}
-
-function sharePatientLink() {
-  const url = document.getElementById('ob4c-patient-url').textContent;
-  const name = state.patientName || 'your schedule';
-  if(navigator.share) {
-    navigator.share({ title: 'Takenly', text: `Here's your medication schedule for ${name}`, url });
-  } else {
-    copyPatientLink();
-  }
-}
-
-function finishCarerPrimaryOnboarding() {
-  document.getElementById('obOverlay').style.display = 'none';
-  applyMode(); renderTimeline(); updateSettingsPanel();
-  haptic('success');
-  showToast(state.patientName ? `Managing ${state.patientName}'s schedule` : 'Carer dashboard ready');
-}
-
-// ── Patient view ────────────────────────────────────────
-function checkPatientView() {
-  const params = new URLSearchParams(window.location.search);
-  if(!params.has('patient') || params.get('patient') !== '1') return false;
-
-  // Parse patient params
-  const name  = decodeURIComponent(params.get('n') || 'Patient');
-  const slots = (params.get('s') || 'morning').split(',');
-
-  // Show patient overlay, hide everything else
-  const overlay = document.getElementById('patientOverlay');
-  if(overlay) {
-    overlay.style.display = 'flex';
-    document.getElementById('obOverlay').style.display = 'none';
-  }
-
-  // Populate header
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  const greetEl = document.getElementById('patientGreeting');
-  if(greetEl) greetEl.innerHTML = `${greeting},<br><em style="font-style:italic;color:var(--teal)">${esc(name)}</em>`;
-
-  const dateEl = document.getElementById('patientDate');
-  if(dateEl) dateEl.textContent = new Date().toLocaleDateString('en-AU', {weekday:'long', day:'numeric', month:'long'});
-
-  // Check for carer name in shared state
-  const carerName = state.userName || 'your carer';
-  const carerEl = document.getElementById('patientCarerName');
-  if(carerEl) carerEl.textContent = carerName;
-
-  renderPatientTimeline(slots);
-  return true;
-}
-
-function renderPatientTimeline(slotIds) {
-  // Load advState to get the configured slots and today's taken state
-  const now = new Date();
-  const nowMins = now.getHours() * 60 + now.getMinutes();
-  let taken = 0;
-  let total = 0;
-
-  // Build slot data from advState
-  const slots = advState.slots.filter(sl => slotIds.includes(sl.id));
-  if(slots.length === 0) {
-    // Fallback: create slots from URL params
-    slotIds.forEach(id => {
-      const d = CARER_SLOT_DEFAULTS[id];
-      if(d) slots.push({ id, name: d.name, time: d.time, meds: [], emoji: '' });
-    });
-  }
-
-  total = slots.length;
-  taken = slots.filter(sl => (advState.today[sl.id] || {}).taken).length;
-
-  // Update progress
-  const pLabel = document.getElementById('patientProgressLabel');
-  const pPips  = document.getElementById('patientPips');
-  const pPct   = document.getElementById('patientPct');
-  if(pLabel) pLabel.textContent = taken === total
-    ? 'All done for today ✓'
-    : `${taken} of ${total} taken`;
-  if(pPct) pPct.textContent = total > 0 ? Math.round(taken/total*100) + '%' : '';
-  if(pPips) pPips.innerHTML = slots.map(sl => {
-    const st = (advState.today[sl.id] || {}).taken;
-    const col = st ? 'var(--green)' : sl.id === findNextPatientSlot(slots, nowMins) ? 'var(--teal)' : 'var(--faint)';
-    return `<div style="width:10px;height:10px;border-radius:50%;background:${col}"></div>`;
-  }).join('');
-
-  // Render timeline
-  const tl = document.getElementById('patientTimeline');
-  if(!tl) return;
-  tl.innerHTML = slots.map((sl, idx) => {
-    const st      = advState.today[sl.id] || {};
-    const isTaken = !!st.taken;
-    const [sh,sm] = sl.time.split(':').map(Number);
-    const slotMins = sh * 60 + sm;
-    const minsUntil = slotMins - nowMins;
-    const isDue    = !isTaken && minsUntil <= 30 && minsUntil > -60;
-    const isLast   = idx === slots.length - 1;
-
-    if(isTaken) {
-      const takenTime = st.takenAt ? fmtTime(new Date(st.takenAt)) : 'today';
-      const wasEarly  = (st.events||[]).some(e=>e.type==='taken'&&e.early);
-      return `<div style="display:flex;gap:0;position:relative;padding:4px 0">
-        <div style="display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0">
-          <div style="width:12px;height:12px;border-radius:50%;background:var(--green);margin-top:6px;position:relative;z-index:2"></div>
-          ${!isLast?'<div style="width:1.5px;flex:1;background:rgba(26,122,74,0.2);min-height:16px;margin-top:2px"></div>':''}
-        </div>
-        <div style="flex:1;padding-left:8px;padding-bottom:${isLast?0:8}px">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 0">
-            <div style="width:36px;height:36px;border-radius:50%;background:var(--green-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green)">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <div style="flex:1">
-              <div style="font-size:14px;font-weight:600;color:var(--ink);font-family:var(--font-body)">${esc(sl.name)}</div>
-              <div style="font-size:11px;color:var(--dim);font-family:var(--font-body)">${wasEarly?'Taken early · ':''} at ${takenTime}</div>
-            </div>
-            <div style="width:22px;height:22px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>`;
-    }
-
-    if(isDue) {
-      const [th,tm] = sl.time.split(':');
-      const h=parseInt(th), m=String(tm).padStart(2,'0');
-      const ampm=h>=12?'PM':'AM'; const h12=h%12||12;
-      const medList = sl.meds && sl.meds.length
-        ? sl.meds.map(md => `<div>${esc(md.name||'Medication')}${md.dosage?' · '+esc(md.dosage):''}</div>`).join('')
-        : '<div style="color:var(--dim)">No medications set</div>';
-      return `<div style="display:flex;gap:0;position:relative;padding:4px 0">
-        <div style="display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0">
-          <div style="width:16px;height:16px;border-radius:50%;background:var(--teal);margin-top:4px;z-index:2;box-shadow:0 0 0 5px rgba(13,115,119,0.12)"></div>
-          ${!isLast?'<div style="width:1.5px;flex:1;background:var(--faint);min-height:16px;margin-top:2px"></div>':''}
-        </div>
-        <div style="flex:1;padding-left:8px;padding-bottom:${isLast?0:12}px">
-          <div class="patient-due-card">
-            <div class="patient-due-time">${h12}:${m}<span class="patient-due-ampm">${ampm}</span></div>
-            <div class="patient-due-label">${esc(sl.name)} — TIME TO TAKE</div>
-            <div class="patient-due-meds">${medList}</div>
-            <button class="patient-take-btn" onclick="patientMarkTaken('${sl.id}')">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-              Mark as taken
-            </button>
-          </div>
-        </div>
-      </div>`;
-    }
-
-    // Future / upcoming
-    const cdStr = minsUntil > 0 ? `in ${fmtMins(minsUntil)}` : 'later';
-    return `<div style="display:flex;gap:0;position:relative;padding:4px 0">
-      <div style="display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0">
-        <div style="width:10px;height:10px;border-radius:50%;background:transparent;border:1.5px solid var(--faint);margin-top:8px;z-index:2"></div>
-        ${!isLast?'<div style="width:1.5px;flex:1;background:var(--faint);min-height:16px;margin-top:2px"></div>':''}
-      </div>
-      <div style="flex:1;padding-left:8px;padding-bottom:${isLast?0:8}px">
-        <div class="patient-future-row">
-          <div class="patient-future-icon">${slotIcon(sl.id)}</div>
-          <div style="flex:1">
-            <div class="patient-future-name">${esc(sl.name)}</div>
-            <div class="patient-future-time">${fmt12(sl.time)}</div>
-          </div>
-          <div class="patient-future-cd">${cdStr}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function findNextPatientSlot(slots, nowMins) {
-  let best = null, bestDiff = Infinity;
-  slots.forEach(sl => {
-    if((advState.today[sl.id]||{}).taken) return;
-    const [sh,sm] = sl.time.split(':').map(Number);
-    const diff = (sh*60+sm) - nowMins;
-    if(diff >= 0 && diff < bestDiff) { bestDiff = diff; best = sl.id; }
-  });
-  return best;
-}
-
-function patientMarkTaken(slotId) {
-  haptic('success');
-  const now = new Date(), iso = now.toISOString();
-  if(!advState.today[slotId]) advState.today[slotId] = { taken:false, takenAt:null, events:[] };
-  advState.today[slotId].taken   = true;
-  advState.today[slotId].takenAt = iso;
-  advState.today[slotId].events.push({ type:'taken', at:iso });
-  saveAdvState();
-  // Full-screen green flash
-  const flash = document.getElementById('patientFlash');
-  if(flash) {
-    flash.style.display = 'flex';
-    setTimeout(() => { flash.classList.add('show'); }, 10);
-    setTimeout(() => {
-      flash.classList.remove('show');
-      setTimeout(() => { flash.style.display = 'none'; }, 200);
-    }, 800);
-  }
-  // Re-render after flash settles
-  const params  = new URLSearchParams(window.location.search);
-  const slotIds = (params.get('s') || '').split(',').filter(Boolean);
-  setTimeout(() => {
-    renderPatientTimeline(slotIds.length ? slotIds : advState.slots.map(s=>s.id));
-  }, 300);
-  showToast('Marked as taken ✓');
-}
-
 
 function toggleChangelog() {
-  const body = document.getElementById('changelogBody');
-  if(!body) return;
-  const isOpen = body.style.display !== 'none';
-  body.style.display = isOpen ? 'none' : 'block';
-  const tap = document.getElementById('changelogVersionTap');
-  if(tap) tap.textContent = isOpen ? 'v2.9.1 ›' : 'v2.9.1 ↓';
+  const body=document.getElementById('changelogBody');
+  if(!body)return;
+  const isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  const tap=document.getElementById('changelogVersionTap');
+  if(tap)tap.textContent=isOpen?'v2.9.3 ›':'v2.9.3 ↓';
 }
-
 function init() {
   loadState(); loadAdvState(); loadCarerCodes();
   applyTheme(state.theme || 'light');
-  // Patient view check runs first — if this is a patient URL, render patient view and stop
-  if(checkPatientView()) return;
   checkCarerUrl();
   checkOnboarding();
   applyMode();
@@ -5953,9 +5328,6 @@ function init() {
   const carerPinInput=document.getElementById('newCarerPin');
   if(carerNameInput)carerNameInput.addEventListener('input',updateCreateBtn);
   if(carerPinInput)carerPinInput.addEventListener('input',updateCreateBtn);
-
-  // Ensure tab bar is correctly initialised on every load
-  switchTab('today');
 }
 
 init();
