@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Takenly — Pitch & Roadmap</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a08;--surf:#111110;--surf2:#1a1a17;--border:rgba(255,255,255,0.07);
+  --ink:#f0ede8;--mid:#a09b94;--dim:#605c57;--faint:rgba(255,255,255,0.04);
+  --teal:#0D9BA0;--teal-dim:rgba(13,155,160,0.1);--teal-border:rgba(13,155,160,0.25);
+  --green:#2ECC71;--green-dim:rgba(46,204,113,0.1);
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.1);
+  --red:#E74C3C;--red-dim:rgba(231,76,60,0.1);
+  --r:12px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,8,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nm{display:flex;flex-direction:column;gap:2px}
+.ns{width:7px;height:7px;border-radius:1.5px;background:var(--teal)}
+.ns:nth-child(2){opacity:0.5}.ns:nth-child(3){opacity:0.2}
+.nw{font-family:Arial,sans-serif;font-weight:700;letter-spacing:0.17em;font-size:11px;color:var(--ink)}
+.nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nl{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;color:var(--mid);cursor:pointer;white-space:nowrap;background:none;border:none;font-family:inherit;transition:color .15s}
+.nl:hover{color:var(--ink)}
+.nl.on{background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border)}
+
+/* SECTIONS */
+section{display:none;max-width:860px;margin:0 auto;padding:40px 24px 100px}
+section.on{display:block}
+
+/* HERO */
+.hero{padding:64px 0 48px;border-bottom:1px solid var(--border);margin-bottom:48px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.hero-title{font-family:'Fraunces',serif;font-size:clamp(40px,6vw,64px);font-weight:300;letter-spacing:-0.03em;line-height:1.05;color:var(--ink);margin-bottom:20px}
+.hero-title em{font-style:italic;color:var(--teal)}
+.hero-sub{font-size:17px;color:var(--mid);line-height:1.7;max-width:580px}
+
+/* STAT ROW */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:32px 0}
+.stat{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:18px 16px}
+.stat-n{font-family:'Fraunces',serif;font-size:36px;font-weight:300;letter-spacing:-0.03em;line-height:1;color:var(--ink);margin-bottom:4px}
+.stat-l{font-size:11px;color:var(--dim);letter-spacing:0.04em;line-height:1.4}
+
+/* CARDS */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:12px}
+.card-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.card-body{font-size:13px;color:var(--mid);line-height:1.65}
+.card-body b{color:var(--ink)}
+.card.teal{border-left:3px solid var(--teal)}
+.card.green{border-left:3px solid var(--green)}
+.card.amber{border-left:3px solid var(--amber)}
+
+/* SECTION TITLES */
+.sh{font-family:'Fraunces',serif;font-size:26px;font-weight:300;letter-spacing:-0.02em;color:var(--ink);margin-bottom:6px;margin-top:40px}
+.sh:first-child{margin-top:0}
+.sb{font-size:13px;color:var(--dim);margin-bottom:20px;line-height:1.6}
+
+/* QUOTE */
+.quote{border-left:3px solid var(--teal);padding:16px 20px;background:var(--teal-dim);border-radius:0 var(--r) var(--r) 0;margin:24px 0}
+.quote-text{font-family:'Fraunces',serif;font-size:20px;font-weight:300;font-style:italic;color:var(--ink);line-height:1.4;margin-bottom:8px}
+.quote-attr{font-size:12px;color:var(--dim)}
+
+/* PERSONA */
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.persona{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.persona-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.persona-role{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.persona-body{font-size:12px;color:var(--mid);line-height:1.6}
+.persona-body b{color:var(--ink)}
+
+/* COMPARE */
+.comp{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin:20px 0}
+.comp-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+.comp-row:last-child{border-bottom:none}
+.cc{padding:10px 14px;font-size:12px;color:var(--mid);border-right:1px solid var(--border);line-height:1.4}
+.cc:last-child{border-right:none}
+.cc.hd{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);background:var(--surf2)}
+.cc.hl{font-weight:600;color:var(--ink)}
+.cc.win{color:var(--green)}
+.cc.lose{color:var(--red)}
+.cc.part{color:var(--amber)}
+
+/* SPRINT TABLE */
+.sprint-table{width:100%;border-collapse:collapse;margin:16px 0}
+.sprint-table th{text-align:left;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);padding:8px 12px;border-bottom:2px solid var(--border);background:var(--surf2)}
+.sprint-table td{padding:11px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--mid);vertical-align:top;line-height:1.5}
+.sprint-table tr:last-child td{border-bottom:none}
+.sprint-table td b{color:var(--ink);font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.b-done{background:var(--green-dim);color:var(--green)}
+.b-live{background:var(--teal-dim);color:var(--teal)}
+.b-next{background:var(--amber-dim);color:var(--amber)}
+.b-later{background:var(--faint);color:var(--dim)}
+.b-blocked{background:var(--red-dim);color:var(--red)}
+
+/* FEATURE LIST */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.feat{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+.feat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.feat-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.feat-body{font-size:11px;color:var(--dim);line-height:1.5}
+
+/* DIFFERENTIATOR */
+.diff{background:linear-gradient(135deg,rgba(13,155,160,0.08),rgba(13,155,160,0.02));border:1px solid var(--teal-border);border-radius:var(--r);padding:24px;margin:24px 0;text-align:center}
+.diff-title{font-family:'Fraunces',serif;font-size:22px;font-weight:300;font-style:italic;color:var(--teal);margin-bottom:10px}
+.diff-body{font-size:14px;color:var(--mid);max-width:500px;margin:0 auto;line-height:1.7}
+
+/* ISSUE TRACKER */
+.issue{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.issue:last-child{border-bottom:none}
+.issue-sev{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px}
+.is-1{background:var(--red-dim);color:var(--red)}
+.is-2{background:var(--amber-dim);color:var(--amber)}
+.is-ok{background:var(--green-dim);color:var(--green)}
+.issue-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.issue-body{font-size:12px;color:var(--dim);line-height:1.5}
+
+@media(max-width:560px){
+  .stats{grid-template-columns:1fr 1fr}
+  .persona-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
+  .comp-row{grid-template-columns:2fr 1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nm"><div class="ns"></div><div class="ns"></div><div class="ns"></div></div>
+    <span class="nw">TAKENLY</span>
+  </div>
+  <div class="nav-links">
+    <button class="nl on" onclick="show('story')">User Story</button>
+    <button class="nl" onclick="show('product')">Product</button>
+    <button class="nl" onclick="show('market')">Market</button>
+    <button class="nl" onclick="show('roadmap')">Roadmap</button>
+    <button class="nl" onclick="show('issues')">Open Items</button>
+  </div>
+</nav>
+
+<!-- ══ USER STORY ══ -->
+<section id="sec-story" class="on">
+  <div class="hero">
+    <div class="eyebrow">The problem we're solving</div>
+    <div class="hero-title">Medication adherence<br>is a <em>care coordination</em> problem</div>
+    <div class="hero-sub">The people who need reminders most are rarely the ones setting them up. Takenly is the first medication app designed from the carer's perspective — not the patient's.</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-n" style="color:var(--red)">50%</div><div class="stat-l">of patients with chronic illness don't take medication as prescribed</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--amber)">125K</div><div class="stat-l">Australians hospitalised annually due to medication non-adherence</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--teal)">3.7M</div><div class="stat-l">MedAdvisor users in Australia — pharmacy-first, not carer-first</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--green)">0</div><div class="stat-l">Competitors with a carer-primary configuration model</div></div>
+  </div>
+
+  <div class="sh">The user stories</div>
+  <div class="sb">Two distinct journeys that Takenly is built to serve simultaneously</div>
+
+  <div class="persona-grid">
+    <div class="persona">
+      <div class="persona-name">Margaret, 71</div>
+      <div class="persona-role">The Patient</div>
+      <div class="persona-body">
+        Takes 4 medications across 3 daily slots. Her daughter lives interstate. She has an iPhone but rarely uses apps. She sometimes forgets morning meds, occasionally doubles up on evening ones.<br><br>
+        <b>What she needs:</b> Something that works without any setup. A big button. A clear confirmation. Nothing complicated.<br><br>
+        <b>What she currently uses:</b> A paper chart stuck to the fridge. It works until it doesn't.
+      </div>
+    </div>
+    <div class="persona">
+      <div class="persona-name">Sarah, 41</div>
+      <div class="persona-role">The Carer</div>
+      <div class="persona-body">
+        Margaret's daughter. She calls every evening to check. She's set up three different reminder apps for her mum — none have lasted more than a week. She can't see whether meds were actually taken.<br><br>
+        <b>What she needs:</b> To configure everything herself, remotely. To know it happened. To stop worrying.<br><br>
+        <b>What she currently uses:</b> Phone calls. Anxiety.
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <div class="quote-text">"The app needs to be configured by a carer and used by a patient. No competitor has this model."</div>
+    <div class="quote-attr">Core product insight — Takenly design retro, May 2026</div>
+  </div>
+
+  <div class="sh">The Takenly journey</div>
+  <div class="sb">How Sarah and Margaret use the product together</div>
+
+  <div class="card teal">
+    <div class="card-title">Step 1 — Sarah sets up Margaret's schedule (5 minutes)</div>
+    <div class="card-body">Sarah opens Takenly on her own phone. Selects "Someone I care for." Chooses morning, lunch, and bedtime slots. Enters Margaret's medications and doses for each slot. Sets the times. Gets a shareable link.</div>
+  </div>
+  <div class="card teal">
+    <div class="card-title">Step 2 — Margaret receives the link</div>
+    <div class="card-body">Sarah sends the link via iMessage. Margaret taps it. She sees a simple view — just her name, today's schedule, and one big "Mark as taken" button per slot. <b>No setup. No account. No decisions.</b></div>
+  </div>
+  <div class="card teal">
+    <div class="card-title">Step 3 — Margaret marks doses taken</div>
+    <div class="card-body">When it's time, Margaret sees the slot highlighted. She taps the button. The screen flashes green — unmissable confirmation. The dose is logged.</div>
+  </div>
+  <div class="card green">
+    <div class="card-title">Step 4 — Sarah sees it happened (coming Sprint 9)</div>
+    <div class="card-body">Sarah's dashboard shows Margaret's adherence in real time. She gets a push notification when a dose is marked. She stops calling every evening to check.</div>
+  </div>
+</section>
+
+<!-- ══ PRODUCT ══ -->
+<section id="sec-product">
+  <div class="hero">
+    <div class="eyebrow">What's built</div>
+    <div class="hero-title">A medication app that<br>works for <em>both</em> people</div>
+    <div class="hero-sub">v3.1 — installed as a PWA on iPhone. Firebase push notifications wired. Carer-primary onboarding live. Patient view shipped.</div>
+  </div>
+
+  <div class="sh">Core features — live today</div>
+  <div class="feat-grid">
+    <div class="feat"><div class="feat-dot" style="background:var(--green)"></div><div><div class="feat-title">Four-state timeline</div><div class="feat-body">Due/next/upcoming/future with distinct visual weights. Original design, no competitor equivalent.</div></div></div>
+    <div class="feat"><div class="feat-dot" style="background:var(--green)"></div><div><div class="feat-title">Carer-primary onboarding</div><div class="feat-body">Full fork at step 1. Carer configures slots, times, medications. Patient gets zero-setup view.</div></div></div>
+    <div class="feat"><div class="feat-dot" style="background:var(--green)"></div><div><div class="feat-title">Patient view</div><div class="feat-body">URL-based shareable view. Large take button, full-screen confirmation flash, no navigation.</div></div></div>
+    <div class="feat"><div class="feat-dot" style="background:var(--green)"></div><div><div class="feat-title">Adherence history</div><div class="feat-body">30-day heatmap, day-level drill-down, early/late/on-time classification.</div></div></div>
+    <div class="feat"><div class="feat-dot" style="background:var(--green)"></div><div><div class="feat-title">Clinical export</div><div class="feat-body">CSV + PDF (MAR format) for GP and hospital handover.</div></div></div>
+    <div class="feat"><div class="feat-dot" style="background:var(--green)"></div><div><div class="feat-title">Smart adherence mode</div><div class="feat-body">Pattern analysis across 7 and 30 days. Recommends schedule adjustments.</div></div></div>
+    <div class="feat"><div class="feat-dot" style="background:var(--green)"></div><div><div class="feat-title">PWA — installed on iPhone</div><div class="feat-body">Home screen icon, full-screen launch, offline support via service worker. No App Store required.</div></div></div>
+    <div class="feat"><div class="feat-dot" style="background:var(--teal)"></div><div><div class="feat-title">Push notifications</div><div class="feat-body">Firebase FCM wired. Permission flow live in Settings. Dose-time scheduling in Sprint 6b.</div></div></div>
+  </div>
+
+  <div class="diff">
+    <div class="diff-title">The only app designed to be configured by a carer and used by a patient</div>
+    <div class="diff-body">Medisafe's Medfriend is notification-only — the patient still configures everything. MedAdvisor is a pharmacy platform. No competitor has separated the configuration role from the usage role.</div>
+  </div>
+
+  <div class="sh">Design principles — non-negotiable</div>
+  <div class="card">
+    <div class="card-title">Colour discipline</div>
+    <div class="card-body">Teal = interactive only. Green = taken/success. Red = missed. Amber = early/partial/late. Held consistently across all 30+ versions with zero semantic bleed.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Fraunces serif — used in exactly three places</div>
+    <div class="card-body">The 52px due-time display. The adherence ring percentage. The streak count. Everything else is DM Sans. This discipline is what makes the due-time card the most memorable moment in the app.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">No complexity for the patient</div>
+    <div class="card-body">The patient view has no tab bar, no settings, no history, no navigation. One action per slot. Full-screen confirmation. Works for a 75-year-old who rarely uses apps.</div>
+  </div>
+</section>
+
+<!-- ══ MARKET ══ -->
+<section id="sec-market">
+  <div class="hero">
+    <div class="eyebrow">Competitive position</div>
+    <div class="hero-title">A gap in the market<br><em>nobody has filled</em></div>
+    <div class="hero-sub">Every existing medication app assumes the patient is also the one setting it up. Takenly doesn't.</div>
+  </div>
+
+  <div class="comp">
+    <div class="comp-row">
+      <div class="cc hd">Feature</div>
+      <div class="cc hd">Takenly</div>
+      <div class="cc hd">Medisafe</div>
+      <div class="cc hd">MedAdvisor</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Carer configures schedule</div>
+      <div class="cc win">✓ Full</div>
+      <div class="cc lose">✗ None</div>
+      <div class="cc lose">✗ None</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Patient view — zero setup</div>
+      <div class="cc win">✓ URL-based</div>
+      <div class="cc lose">✗ None</div>
+      <div class="cc lose">✗ None</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Carer sees patient status</div>
+      <div class="cc part">◑ Sprint 9</div>
+      <div class="cc part">◑ Notification only</div>
+      <div class="cc lose">✗ None</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Clinical PDF export</div>
+      <div class="cc win">✓ MAR format</div>
+      <div class="cc part">◑ Premium</div>
+      <div class="cc part">◑ Via pharmacy</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Push notifications</div>
+      <div class="cc win">✓ FCM wired</div>
+      <div class="cc win">✓ Full</div>
+      <div class="cc win">✓ Full</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Installable PWA</div>
+      <div class="cc win">✓ v3.0</div>
+      <div class="cc lose">Native app only</div>
+      <div class="cc lose">Native app only</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Adherence pattern analysis</div>
+      <div class="cc win">✓ 7/30 day</div>
+      <div class="cc part">◑ Basic</div>
+      <div class="cc lose">✗ None</div>
+    </div>
+    <div class="comp-row">
+      <div class="cc hl">Australian market focus</div>
+      <div class="cc win">✓ en-AU</div>
+      <div class="cc lose">US-first</div>
+      <div class="cc win">✓ AU-native</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ROADMAP ══ -->
+<section id="sec-roadmap">
+  <div class="hero">
+    <div class="eyebrow">Sprint roadmap — updated 14 May 2026</div>
+    <div class="hero-title">Where we are,<br><em>where we're going</em></div>
+    <div class="hero-sub">v3.1 shipped today. Firebase push notifications wired. PWA live on iPhone. Next: dose-time notification scheduling, then Firebase cloud sync.</div>
+  </div>
+
+  <div class="sh">Completed — v1.0 through v3.1</div>
+
+  <table class="sprint-table">
+    <thead><tr><th>Sprint</th><th>What shipped</th><th>Version</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><b>Sprint 1–3</b></td><td>Core app — simple mode, timeline, adherence ring, history heatmap, CSV/PDF export, snooze</td><td>v1.0–v2.6</td><td><span class="badge b-done">✓ Done</span></td></tr>
+      <tr><td><b>Sprint 4</b></td><td>Advanced mode — morning/lunch/dinner/bedtime slots, per-slot medications, early/late detection</td><td>v2.7</td><td><span class="badge b-done">✓ Done</span></td></tr>
+      <tr><td><b>Sprint 4b</b></td><td>Smart mode — pattern analysis, 7-day and 30-day milestones, adaptive recommendations</td><td>v2.8</td><td><span class="badge b-done">✓ Done</span></td></tr>
+      <tr><td><b>Sprint 4c</b></td><td>Finish work — tab crossfades, ob step transitions, type scale, all-done animation, patient CSS classes, changelog → version tap</td><td>v2.9.3</td><td><span class="badge b-done">✓ Done</span></td></tr>
+      <tr><td><b>R-22 Phase 1</b></td><td>Carer-primary mode — onboarding fork, carer slot config, patient link generation, patient view with take button + flash</td><td>v2.9</td><td><span class="badge b-done">✓ Done</span></td></tr>
+      <tr><td><b>Sprint 5</b></td><td>PWA — manifest.json, service worker, app icons, Apple meta tags, installed on iPhone home screen</td><td>v3.0</td><td><span class="badge b-done">✓ Done</span></td></tr>
+      <tr><td><b>Sprint 6a</b></td><td>Firebase setup — FCM initialised, VAPID key configured, permission flow in Settings, foreground message handler, firebase-messaging-sw.js</td><td>v3.1</td><td><span class="badge b-live">● Live</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="sh" style="margin-top:32px">Next — v3.x sprint plan</div>
+
+  <table class="sprint-table">
+    <thead><tr><th>Sprint</th><th>What ships</th><th>Depends on</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><b>Sprint 6b</b></td><td><b>Dose-time notification scheduling</b> — Cloud Function that sends FCM push at each slot time. Carer and patient both receive alerts.</td><td>Firebase Blaze plan</td><td><span class="badge b-next">→ Next</span></td></tr>
+      <tr><td><b>Sprint 7</b></td><td><b>Firebase cloud sync</b> — Firestore replaces localStorage. State persists across devices. Carer sees patient's taken doses in real time.</td><td>Sprint 6b</td><td><span class="badge b-later">Later</span></td></tr>
+      <tr><td><b>Sprint 8</b></td><td><b>Household pairing</b> — Multiple patients per carer account. Multiple carers per patient. Invite flow.</td><td>Sprint 7</td><td><span class="badge b-later">Later</span></td></tr>
+      <tr><td><b>Sprint 9</b></td><td><b>Carer dashboard</b> — Real-time patient adherence view. Audit log. Nudge notifications. R-22 Phase 2 complete.</td><td>Sprint 8</td><td><span class="badge b-later">Later</span></td></tr>
+      <tr><td><b>Sprint 10</b></td><td><b>eScript QR scan</b> — Camera scans Australian NPDS QR code, auto-imports prescription into slot. R-14.</td><td>Sprint 7</td><td><span class="badge b-later">Later</span></td></tr>
+      <tr><td><b>Sprint 11</b></td><td><b>App Store submission</b> — iOS native wrapper (WKWebView), TestFlight, App Store review. Icon refinement before submission.</td><td>Sprint 9</td><td><span class="badge b-later">Later</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="sh" style="margin-top:32px">v3.x architecture — what Firebase unlocks</div>
+  <div class="card teal">
+    <div class="card-title">The architecture shift</div>
+    <div class="card-body">v1–v2 were localStorage-only — all state lived in the browser, one device, no sync. v3.x adds the cloud layer. Firebase Firestore becomes the source of truth. The patient link goes from "same browser only" to "any device, real time." This is the most important architectural change in the product's history — it's what makes the carer-primary model actually work across two different iPhones.</div>
+  </div>
+</section>
+
+<!-- ══ OPEN ITEMS ══ -->
+<section id="sec-issues">
+  <div class="hero">
+    <div class="eyebrow">Open items — end of day 14 May 2026</div>
+    <div class="hero-title">Known issues<br><em>and polish tasks</em></div>
+    <div class="hero-sub">Tracked honestly. Prioritised by user impact. Nothing blocking Sprint 6b.</div>
+  </div>
+
+  <div class="sh">Active issues</div>
+
+  <div style="background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:4px 16px;margin-bottom:24px">
+    <div class="issue">
+      <div class="issue-sev is-2">2</div>
+      <div>
+        <div class="issue-title">Onboarding step blink during transitions</div>
+        <div class="issue-body">Brief flash of background between ob steps because outgoing step hides before incoming step animation starts. Fix: overlap period where both steps coexist during transition. Low user impact — affects onboarding only (one-time flow).</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-2">2</div>
+      <div>
+        <div class="issue-title">PWA app icon — bar proportions don't match in-app mark</div>
+        <div class="issue-body">The home screen icon shows three horizontal bars which read differently from the stacked-square mark in the app header. Needs refinement before App Store submission. Low priority now, mandatory before Sprint 11.</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-2">2</div>
+      <div>
+        <div class="issue-title">Safe area sizing — pending iPhone 16 Pro Max verification</div>
+        <div class="issue-body">Safe area inset fix shipped in v3.1 — env(safe-area-inset-top) added to app-shell. Needs confirmation that TAKENLY logo and date no longer overlap the Dynamic Island after upload.</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-2">2</div>
+      <div>
+        <div class="issue-title">Patient-carer sync — same browser only (pre-Firebase)</div>
+        <div class="issue-body">Patient marking doses taken writes to localStorage. Carer sees this only if on the same device/browser. This is the intended temporary state until Sprint 7 (Firestore sync). Documented in the patient link UI.</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-2">2</div>
+      <div>
+        <div class="issue-title">Push notification dose scheduling — not yet wired</div>
+        <div class="issue-body">FCM token registration works (Sprint 6a). Actual dose-time notification sending requires a Cloud Function (Sprint 6b) and Firebase Blaze plan upgrade.</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-1">!</div>
+      <div>
+        <div class="issue-title">GitHub secret scan alert — Firebase API key</div>
+        <div class="issue-body">GitHub flagged the Firebase API key in index.html. This is a false positive — Firebase web API keys are designed to be public. Action required: dismiss the alert in GitHub Security tab, and restrict the key to takenly.app/* in Google Cloud Console.</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-2">2</div>
+      <div>
+        <div class="issue-title">R-31 Dev reset — needs ?dev=1 gate before public launch</div>
+        <div class="issue-body">The developer reset button is currently visible to all users in Settings. Should be gated behind ?dev=1 URL parameter before any public-facing promotion.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh">Resolved today</div>
+  <div style="background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:4px 16px">
+    <div class="issue">
+      <div class="issue-sev is-ok">✓</div>
+      <div>
+        <div class="issue-title">Tab bar invisible on all devices — RESOLVED v2.9.3</div>
+        <div class="issue-body">Root cause: .ob-overlay CSS class defaulted to display:flex, covering the tab bar for returning users. Fix: HTML element now has style="display:none". Also added switchTab('today') to init().</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-ok">✓</div>
+      <div>
+        <div class="issue-title">Status bar / Dynamic Island overlap — RESOLVED v3.1</div>
+        <div class="issue-body">No safe-area-inset-top token or usage. Added --safe-t: env(safe-area-inset-top) and padding-top: var(--safe-t) to app-shell.</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-ok">✓</div>
+      <div>
+        <div class="issue-title">PWA icon showing "T" instead of teal squares — RESOLVED</div>
+        <div class="issue-body">iOS caching of apple-touch-icon. Fixed by embedding icon as base64 data URI directly in HTML, bypassing file-level cache. Delete + re-add from home screen required to pick up new icon.</div>
+      </div>
+    </div>
+    <div class="issue">
+      <div class="issue-sev is-ok">✓</div>
+      <div>
+        <div class="issue-title">Version string showing v2.9.3.2 / v3.0.2 — RESOLVED</div>
+        <div class="issue-body">Hotfix version numbers compounding incorrectly during sed replace. Fixed with regex replace across all version refs.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function show(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.nl').forEach(b => b.classList.remove('on'));
+  document.getElementById('sec-' + id).classList.add('on');
+  event.target.classList.add('on');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
