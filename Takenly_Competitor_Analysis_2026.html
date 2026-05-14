@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Takenly — Competitor Analysis 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a08;--surf:#111110;--surf2:#181816;--border:rgba(255,255,255,0.07);
+  --ink:#f0ede8;--mid:#a09b94;--dim:#605c57;--faint:rgba(255,255,255,0.04);
+  --teal:#0D9BA0;--teal-dim:rgba(13,155,160,0.08);--teal-b:rgba(13,155,160,0.22);
+  --green:#2ECC71;--green-dim:rgba(46,204,113,0.08);
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.08);
+  --red:#E74C3C;--red-dim:rgba(231,76,60,0.08);
+  --blue:#3B82F6;--blue-dim:rgba(59,130,246,0.08);
+  --r:12px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,8,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nm{display:flex;flex-direction:column;gap:2px}
+.ns{width:7px;height:7px;border-radius:1.5px;background:var(--teal)}
+.ns:nth-child(2){opacity:.5}.ns:nth-child(3){opacity:.2}
+.nw{font-family:Arial,sans-serif;font-weight:700;letter-spacing:.17em;font-size:11px}
+.nav-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.nav-title{font-size:12px;color:var(--dim);flex-shrink:0}
+.nav-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
+.ntab{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;color:var(--mid);cursor:pointer;white-space:nowrap;background:none;border:none;font-family:inherit}
+.ntab.on{background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-b)}
+
+section{display:none;max-width:960px;margin:0 auto;padding:40px 24px 100px}
+section.on{display:block}
+
+.hero{padding:56px 0 40px;border-bottom:1px solid var(--border);margin-bottom:40px}
+.ey{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:14px}
+.ht{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,56px);font-weight:300;letter-spacing:-.03em;line-height:1.05;color:var(--ink);margin-bottom:18px}
+.ht em{font-style:italic;color:var(--teal)}
+.hs{font-size:16px;color:var(--mid);line-height:1.7;max-width:600px}
+
+.sh{font-family:'Fraunces',serif;font-size:24px;font-weight:300;letter-spacing:-.02em;color:var(--ink);margin-bottom:6px;margin-top:40px}
+.sh:first-child{margin-top:0}
+.sb{font-size:13px;color:var(--dim);margin-bottom:20px;line-height:1.5}
+
+/* APP CARDS */
+.apps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
+.app-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;position:relative}
+.app-card.highlight{border-color:var(--teal-b);background:var(--teal-dim)}
+.app-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.app-maker{font-size:11px;color:var(--dim);margin-bottom:10px}
+.app-body{font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:12px}
+.app-body b{color:var(--ink)}
+.tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.t-ios{background:rgba(0,122,255,.12);color:#4da3ff}
+.t-android{background:rgba(61,220,132,.12);color:#3ddc84}
+.t-web{background:var(--teal-dim);color:var(--teal)}
+.t-free{background:var(--green-dim);color:var(--green)}
+.t-paid{background:var(--amber-dim);color:var(--amber)}
+.t-freemium{background:var(--blue-dim);color:var(--blue)}
+.t-au{background:rgba(255,255,255,.06);color:var(--mid)}
+.app-rating{position:absolute;top:18px;right:18px;font-size:12px;font-weight:700;color:var(--amber)}
+.app-verdict{font-size:11px;padding:8px 10px;border-radius:8px;border-left:2px solid var(--border);background:var(--surf2);color:var(--mid);line-height:1.5;margin-top:4px}
+.app-verdict b{color:var(--ink)}
+
+/* FEATURE MATRIX */
+.matrix-wrap{overflow-x:auto;margin:16px 0 32px}
+.matrix{border-collapse:collapse;width:100%;min-width:780px}
+.matrix th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:8px 12px;border-bottom:2px solid var(--border);background:var(--surf2);white-space:nowrap}
+.matrix th.takenly{color:var(--teal)}
+.matrix td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--mid);vertical-align:middle;line-height:1.4}
+.matrix tr:last-child td{border-bottom:none}
+.matrix td.feat{font-weight:600;color:var(--ink);font-size:12px}
+.matrix td.cat{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:var(--surf2);padding:6px 12px;border-bottom:1px solid var(--border)}
+.win{color:var(--green);font-weight:600}
+.part{color:var(--amber);font-weight:600}
+.lose{color:var(--red);opacity:.7}
+.na{color:var(--dim);opacity:.5}
+.highlight-col{background:rgba(13,155,160,.04)}
+
+/* POSITIONING MAP */
+.pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 32px}
+.pos-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
+.pos-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.pos-body{font-size:12px;color:var(--mid);line-height:1.6}
+.pos-body b{color:var(--ink)}
+
+/* INSIGHT CALLOUTS */
+.insight{border-left:3px solid var(--teal);padding:14px 18px;background:var(--teal-dim);border-radius:0 var(--r) var(--r) 0;margin:16px 0}
+.insight-title{font-size:13px;font-weight:700;color:var(--teal);margin-bottom:4px}
+.insight-body{font-size:13px;color:var(--mid);line-height:1.6}
+.insight-body b{color:var(--ink)}
+.insight.amber{border-color:var(--amber);background:var(--amber-dim)}
+.insight.amber .insight-title{color:var(--amber)}
+.insight.green{border-color:var(--green);background:var(--green-dim)}
+.insight.green .insight-title{color:var(--green)}
+
+/* TREND LIST */
+.trend{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.trend:last-child{border-bottom:none}
+.trend-num{font-family:'Fraunces',serif;font-size:24px;font-weight:300;color:var(--teal);flex-shrink:0;line-height:1;width:32px}
+.trend-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.trend-body{font-size:12px;color:var(--mid);line-height:1.6}
+.trend-body b{color:var(--ink)}
+
+@media(max-width:600px){
+  .apps{grid-template-columns:1fr}
+  .pos-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nm"><div class="ns"></div><div class="ns"></div><div class="ns"></div></div>
+    <span class="nw">TAKENLY</span>
+  </div>
+  <div class="nav-sep"></div>
+  <span class="nav-title">Competitor Analysis · May 2026</span>
+  <div class="nav-tabs">
+    <button class="ntab on" onclick="show('landscape')">Landscape</button>
+    <button class="ntab" onclick="show('matrix')">Feature Matrix</button>
+    <button class="ntab" onclick="show('positioning')">Positioning</button>
+    <button class="ntab" onclick="show('trends')">Trends</button>
+    <button class="ntab" onclick="show('verdict')">Verdict</button>
+  </div>
+</nav>
+
+<!-- ══ LANDSCAPE ══ -->
+<section id="sec-landscape" class="on">
+  <div class="hero">
+    <div class="ey">Market landscape · 2026</div>
+    <div class="ht">10 competitors.<br><em>None like Takenly.</em></div>
+    <div class="hs">After researching every significant medication management app across iOS, Android, and web — the carer-primary model remains uncontested. Every competitor assumes the patient is the one setting up the app.</div>
+  </div>
+
+  <div class="sh">Tier 1 — Market leaders</div>
+  <div class="sb">Apps with significant user bases and brand recognition</div>
+  <div class="apps">
+    <div class="app-card">
+      <div class="app-rating">★ 4.7</div>
+      <div class="app-name">Medisafe</div>
+      <div class="app-maker">Medisafe · US · iOS + Android</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-freemium">Freemium · $4.99/mo</span></div>
+      <div class="app-body">The market leader for medication adherence. Known for Medfriend — a caregiver who gets notified if the patient misses a dose. <b>Critical change: moved to paid subscription in Jan 2026</b>, limiting free users to 2 medications. This has caused significant user backlash and created a gap in the market.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> Reactive only. Medfriend gets an alert after a missed dose — the patient still sets everything up. Carer has no configuration capability. Premium needed for more than 1 dependent.</div>
+    </div>
+    <div class="app-card">
+      <div class="app-rating">★ 4.5</div>
+      <div class="app-name">MyTherapy</div>
+      <div class="app-maker">smartpatient GmbH · Germany · iOS + Android</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-free">Free</span></div>
+      <div class="app-body">Strongest free competitor. Combines medication reminders with health journalling — mood, blood pressure, weight, symptoms. Available in 29 languages. Trusted by people managing chronic conditions.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> Family member can be invited to view the health journal — passive read access only. Cannot configure or set up schedule remotely. No carer-primary model.</div>
+    </div>
+    <div class="app-card">
+      <div class="app-rating">★ 3.7M</div>
+      <div class="app-name">MedAdvisor</div>
+      <div class="app-maker">MedAdvisor · Australia · iOS + Android</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-free">Free</span><span class="tag t-au">AU-native</span></div>
+      <div class="app-body">3.7 million Australian users — by far the largest AU market presence. Pharmacy-first: integrates directly with dispensing systems to auto-import prescriptions. Refill reminders, health articles, PBS integration.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> None. Entirely patient-self-managed. No carer view, no remote configuration, no adherence dashboard for carers. The pharmacy platform that's missing the care layer.</div>
+    </div>
+    <div class="app-card">
+      <div class="app-rating">★ 4.4</div>
+      <div class="app-name">CareClinic</div>
+      <div class="app-maker">CareClinic · Canada · iOS + Android + Web</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-web">Web</span><span class="tag t-freemium">Freemium · $59.99/yr</span></div>
+      <div class="app-body">Health diary platform rather than pure medication reminder. Tracks medications alongside meals, exercise, sleep, symptoms, appointments. Widely used by health coaches. Caregiver or partner can view records.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> Caregiver can view patient records (read-only). Cannot configure medications or schedule. Patient-initiated sharing only. Premium required for advanced caregiver features.</div>
+    </div>
+  </div>
+
+  <div class="sh">Tier 2 — Established players</div>
+  <div class="sb">Solid products with loyal audiences but narrower scope</div>
+  <div class="apps">
+    <div class="app-card">
+      <div class="app-rating">★ 4.2</div>
+      <div class="app-name">Dosecast</div>
+      <div class="app-maker">Montuno Software · US · iOS + Android</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-freemium">Freemium · $2.99/mo</span></div>
+      <div class="app-body">Best-in-class for complex scheduling. Handles tapered doses, variable intervals, cross-timezone adjustments. Loyal following among users with complex regimens. Data and privacy focused — no personal info collected.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> Supports multiple family member profiles. Data can be shared with caregiver. No active carer configuration — patient-managed with sharing capability.</div>
+    </div>
+    <div class="app-card">
+      <div class="app-rating">★ 4.5</div>
+      <div class="app-name">RoundHealth</div>
+      <div class="app-maker">Round Health · US · iOS only</div>
+      <div class="tag-row"><span class="tag t-ios">iOS only</span><span class="tag t-free">Free</span></div>
+      <div class="app-body">Deliberately minimal. Focuses only on reminders — no health tracking, no extra features. Sends three push notifications per dose to create urgency. Strong user reviews praising simplicity.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> None. Explicitly prioritises simplicity over caregiver connectivity. iOS only limits reach. Strong design ethos but no family or care features whatsoever.</div>
+    </div>
+    <div class="app-card">
+      <div class="app-rating">★ 4.4</div>
+      <div class="app-name">EveryDose</div>
+      <div class="app-maker">EveryDose · US · iOS + Android</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-freemium">Freemium</span></div>
+      <div class="app-body">Includes "Maxwell" — an AI chatbot that answers medication questions. Adherence tracking and progress charts. Family members can track progress through the app. Free plan covers most features.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> Family members can track patient progress — passive view. Patient-configured with family visibility. No carer-primary setup flow.</div>
+    </div>
+    <div class="app-card">
+      <div class="app-rating">★ 4.6</div>
+      <div class="app-name">DoseMed</div>
+      <div class="app-maker">DoseMed · US · iOS + Android</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-free">Free</span></div>
+      <div class="app-body">2025's highest-profile new entrant. Privacy-first: all data stored locally, no accounts, no cloud sync. GPT-4.1 powered AI assistant for drug interactions and medication questions. Strong design.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> None — the privacy-first, no-account model makes remote caregiver access architecturally impossible. Targeted at individuals, not care relationships.</div>
+    </div>
+  </div>
+
+  <div class="sh">Tier 3 — Specialists and hardware</div>
+  <div class="sb">Niche products addressing specific use cases</div>
+  <div class="apps">
+    <div class="app-card">
+      <div class="app-rating">★ Apple</div>
+      <div class="app-name">Apple Health Medications</div>
+      <div class="app-maker">Apple · Built into iOS 16+ · Free</div>
+      <div class="tag-row"><span class="tag t-ios">iOS only</span><span class="tag t-free">Free · Built-in</span></div>
+      <div class="app-body">Native iOS medication tracker. Scan prescription barcodes, set reminders, log doses, Apple Watch integration. Drug interaction checking. Shares data with Apple Health ecosystem.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> None. Single-user, device-bound. No sharing, no remote configuration. US-only for drug interaction features. Platform lock-in is its biggest limitation.</div>
+    </div>
+    <div class="app-card">
+      <div class="app-rating">★ Hardware</div>
+      <div class="app-name">Hero Smart Dispenser</div>
+      <div class="app-maker">Hero Health · US · Hardware + App</div>
+      <div class="tag-row"><span class="tag t-ios">iOS</span><span class="tag t-android">Android</span><span class="tag t-paid">$99.99/mo incl. device</span></div>
+      <div class="app-body">Coffee-maker-sized automatic pill dispenser. Holds 90-day supply of up to 10 medications. App tracks dispensing and sends missed-dose alerts. HIPAA compliant. Premium price point.</div>
+      <div class="app-verdict"><b>Caregiver model:</b> Best hardware caregiver solution — physical certainty that the right pill was dispensed. But $100/month and requires the device on-site. Not scalable for remote carer-patient relationships.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURE MATRIX ══ -->
+<section id="sec-matrix">
+  <div class="hero">
+    <div class="ey">Feature comparison</div>
+    <div class="ht">Where every app<br><em>stands and falls</em></div>
+    <div class="hs">Comprehensive feature-by-feature comparison across the 8 most significant competitors. Green = full feature. Amber = partial/limited/paid. Red = absent.</div>
+  </div>
+
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th style="min-width:180px">Feature</th>
+          <th class="takenly">Takenly</th>
+          <th>Medisafe</th>
+          <th>MyTherapy</th>
+          <th>MedAdvisor</th>
+          <th>CareClinic</th>
+          <th>Dosecast</th>
+          <th>DoseMed</th>
+          <th>Apple Health</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="cat" colspan="9">Core reminders</td></tr>
+        <tr>
+          <td class="feat">Push notifications</td>
+          <td class="highlight-col win">✓ FCM</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+        </tr>
+        <tr>
+          <td class="feat">Multiple daily slots</td>
+          <td class="highlight-col win">✓ 4 slots</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+        </tr>
+        <tr>
+          <td class="feat">Per-medication dosage</td>
+          <td class="highlight-col win">✓</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+        </tr>
+        <tr>
+          <td class="feat">Complex schedules (tapered, PRN)</td>
+          <td class="highlight-col lose">✗ v4.x</td>
+          <td class="win">✓</td><td class="part">◑</td><td class="part">◑</td>
+          <td class="win">✓</td><td class="win">✓ Best-in-class</td><td class="part">◑</td><td class="part">◑</td>
+        </tr>
+        <tr>
+          <td class="feat">Refill reminders</td>
+          <td class="highlight-col lose">✗ v4.x</td>
+          <td class="win">✓</td><td class="part">◑</td><td class="win">✓</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Drug interaction warnings</td>
+          <td class="highlight-col lose">✗</td>
+          <td class="part">◑ US only</td><td class="lose">✗</td><td class="lose">✗</td>
+          <td class="lose">✗</td><td class="lose">✗</td><td class="win">✓ AI</td><td class="part">◑ US only</td>
+        </tr>
+
+        <tr><td class="cat" colspan="9">Caregiver features</td></tr>
+        <tr>
+          <td class="feat">Carer configures patient schedule</td>
+          <td class="highlight-col win">✓ Full</td>
+          <td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+          <td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Patient gets zero-setup view</td>
+          <td class="highlight-col win">✓ URL-based</td>
+          <td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+          <td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Carer notified on missed dose</td>
+          <td class="highlight-col part">◑ Sprint 9</td>
+          <td class="win">✓ Medfriend</td><td class="part">◑ Invite only</td><td class="lose">✗</td>
+          <td class="part">◑ View only</td><td class="part">◑ Share only</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Carer sees real-time adherence</td>
+          <td class="highlight-col part">◑ Sprint 7</td>
+          <td class="part">◑ Premium</td><td class="part">◑ Journal view</td><td class="lose">✗</td>
+          <td class="part">◑ Premium</td><td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Multiple patients per carer</td>
+          <td class="highlight-col part">◑ Sprint 8</td>
+          <td class="part">◑ Premium</td><td class="lose">✗</td><td class="lose">✗</td>
+          <td class="part">◑ Premium</td><td class="part">◑ Profiles</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+
+        <tr><td class="cat" colspan="9">Data and history</td></tr>
+        <tr>
+          <td class="feat">Adherence history view</td>
+          <td class="highlight-col win">✓ 30-day heatmap</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="part">◑</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="part">◑</td><td class="part">◑</td>
+        </tr>
+        <tr>
+          <td class="feat">Clinical export (PDF/CSV)</td>
+          <td class="highlight-col win">✓ MAR format</td>
+          <td class="part">◑ Premium</td><td class="win">✓ Health report</td><td class="part">◑ Via pharmacy</td>
+          <td class="part">◑ Premium</td><td class="win">✓</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Pattern / smart analysis</td>
+          <td class="highlight-col win">✓ 7 + 30 day</td>
+          <td class="part">◑ AI · Premium</td><td class="part">◑ Basic</td><td class="lose">✗</td>
+          <td class="part">◑</td><td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Health metric tracking</td>
+          <td class="highlight-col lose">✗</td>
+          <td class="part">◑ Premium</td><td class="win">✓ Best-in-class</td><td class="lose">✗</td>
+          <td class="win">✓</td><td class="lose">✗</td><td class="lose">✗</td><td class="part">◑</td>
+        </tr>
+
+        <tr><td class="cat" colspan="9">Platform and access</td></tr>
+        <tr>
+          <td class="feat">iOS</td>
+          <td class="highlight-col win">✓ PWA</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+        </tr>
+        <tr>
+          <td class="feat">Android</td>
+          <td class="highlight-col win">✓ PWA</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">Web / browser</td>
+          <td class="highlight-col win">✓ takenly.app</td>
+          <td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+          <td class="win">✓</td><td class="lose">✗</td><td class="lose">✗</td><td class="lose">✗</td>
+        </tr>
+        <tr>
+          <td class="feat">No account required</td>
+          <td class="highlight-col win">✓</td>
+          <td class="win">✓ Optional</td><td class="part">◑</td><td class="part">◑</td>
+          <td class="part">◑</td><td class="win">✓</td><td class="win">✓</td><td class="win">✓ Apple ID</td>
+        </tr>
+        <tr>
+          <td class="feat">Australian market focus</td>
+          <td class="highlight-col win">✓ en-AU</td>
+          <td class="lose">✗ US-first</td><td class="part">◑ Global</td><td class="win">✓ AU-native</td>
+          <td class="part">◑ Canadian</td><td class="lose">✗ US-first</td><td class="lose">✗ US-first</td><td class="part">◑ US features</td>
+        </tr>
+        <tr>
+          <td class="feat">Offline capable</td>
+          <td class="highlight-col win">✓ Service worker</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="part">◑</td>
+          <td class="win">✓</td><td class="win">✓</td><td class="win">✓ Local-only</td><td class="win">✓</td>
+        </tr>
+        <tr>
+          <td class="feat">Base price</td>
+          <td class="highlight-col win">Free</td>
+          <td class="part">$4.99/mo</td><td class="win">Free</td><td class="win">Free</td>
+          <td class="part">$59.99/yr</td><td class="part">$2.99/mo</td><td class="win">Free</td><td class="win">Free</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight">
+    <div class="insight-title">The carer row tells the whole story</div>
+    <div class="insight-body">Every caregiver feature across every competitor is <b>reactive and patient-initiated</b>. The patient sets up the app, the patient grants access, and the carer watches. Takenly is the only product where the carer is the <b>primary actor</b> — configuring the schedule and the patient simply marking doses taken.</div>
+  </div>
+</section>
+
+<!-- ══ POSITIONING ══ -->
+<section id="sec-positioning">
+  <div class="hero">
+    <div class="ey">Strategic positioning</div>
+    <div class="ht">The gap nobody<br><em>has claimed</em></div>
+    <div class="hs">The medication app market segments cleanly into four quadrants. Takenly occupies the only one that is both underserved and growing.</div>
+  </div>
+
+  <div class="sh">The four quadrants</div>
+  <div class="pos-grid">
+    <div class="pos-card" style="border-color:var(--teal-b);background:var(--teal-dim)">
+      <div class="pos-title" style="color:var(--teal)">✓ Carer-primary + Simple patient UX <br><small style="font-weight:400;color:var(--mid)">← Takenly</small></div>
+      <div class="pos-body"><b>Occupants: Takenly only.</b> The carer configures, the patient operates a stripped-down view. No account needed for the patient. Zero cognitive load on the person who least wants it. This quadrant is uncontested.</div>
+    </div>
+    <div class="pos-card">
+      <div class="pos-title">Patient-primary + Rich features</div>
+      <div class="pos-body"><b>Occupants: Medisafe, MyTherapy, CareClinic.</b> Full-featured apps where the patient sets everything up. Carer access is a secondary feature — added on top of a patient-first architecture. Medisafe's move to paid in Jan 2026 has weakened the leader here.</div>
+    </div>
+    <div class="pos-card">
+      <div class="pos-title">Patient-primary + Simple</div>
+      <div class="pos-body"><b>Occupants: RoundHealth, DoseMed, Apple Health.</b> Deliberately minimal. Great for tech-comfortable individuals on simple regimens. No caregiver features by design. RoundHealth explicitly states it prioritises simplicity over connectivity.</div>
+    </div>
+    <div class="pos-card">
+      <div class="pos-title">Pharmacy/clinical integration</div>
+      <div class="pos-body"><b>Occupants: MedAdvisor, GoodRx.</b> Platform plays — medication management is a feature within a broader healthcare commerce or pharmacy system. Strong in refills and drug pricing, weak in adherence and care relationships. MedAdvisor's 3.7M AU users are a potential acquisition risk if they build a carer layer.</div>
+    </div>
+  </div>
+
+  <div class="sh">The single most important competitive fact</div>
+  <div class="insight green">
+    <div class="insight-title">Medisafe went paid in January 2026</div>
+    <div class="insight-body">Medisafe — the market leader — limited its free tier to 2 medications and introduced a $4.99/month subscription. User backlash has been significant, with reviews describing features being "taken away." <b>This is the most important competitive development in the market's recent history.</b> Medisafe's user base is actively looking for alternatives right now. Takenly's free, no-account model is a direct counter-positioning opportunity.</div>
+  </div>
+
+  <div class="sh">The MedAdvisor risk</div>
+  <div class="insight amber">
+    <div class="insight-title">MedAdvisor has 3.7M Australian users and no carer layer</div>
+    <div class="insight-body">MedAdvisor is the largest medication platform in Australia by user count — nearly 20× any other Australian health app. They have the distribution. They don't have the carer-primary model or the UX quality. <b>If they build what Takenly has, the market changes.</b> The window to establish the carer-primary category before MedAdvisor builds it is 12–18 months, based on typical enterprise feature development cycles. Takenly should move fast on Sprint 9 (carer dashboard) and consider a partnership or B2B channel approach with pharmacies before MedAdvisor closes the gap.</div>
+  </div>
+</section>
+
+<!-- ══ TRENDS ══ -->
+<section id="sec-trends">
+  <div class="hero">
+    <div class="ey">Market trends · 2025–2026</div>
+    <div class="ht">What's shifting<br><em>in the market</em></div>
+    <div class="hs">Five trends reshaping the medication adherence app landscape. All five favour Takenly's direction.</div>
+  </div>
+
+  <div style="background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:8px 20px;margin-bottom:32px">
+    <div class="trend">
+      <div class="trend-num">1</div>
+      <div>
+        <div class="trend-title">Freemium is breaking down</div>
+        <div class="trend-body">Medisafe's shift to paid subscription in Jan 2026 is the clearest signal: the market's assumption that health apps can sustain free tiers on advertising revenue is being challenged. <b>Users are looking for trustworthy free alternatives.</b> Takenly's free, no-account, no-ads model is a direct counter-positioning. The question is monetisation — Takenly needs a sustainable revenue model before reaching scale. The B2B carer/clinical route (hospital, aged care) is more viable than consumer subscriptions.</div>
+      </div>
+    </div>
+    <div class="trend">
+      <div class="trend-num">2</div>
+      <div>
+        <div class="trend-title">Ageing population driving carer-directed tech demand</div>
+        <div class="trend-body">Australia's over-65 population will reach 22% by 2066, up from 16% today. The number of informal carers (family members managing an elderly relative's health) is growing faster than the population of people who want to self-manage apps. <b>The carer is becoming the primary technology user in medication management</b>, but no app has been built for them. This is the structural tailwind behind Takenly's entire product direction.</div>
+      </div>
+    </div>
+    <div class="trend">
+      <div class="trend-num">3</div>
+      <div>
+        <div class="trend-title">AI integration is becoming table stakes</div>
+        <div class="trend-body">DoseMed launched with GPT-4.1 in 2025. EveryDose has Maxwell (AI chatbot). Medisafe is adding AI-powered behavioural analysis in its premium tier. <b>An AI assistant for medication questions is becoming an expected feature, not a differentiator.</b> Takenly doesn't have this yet. The carer-primary model remains the real differentiator — but an AI layer (drug interactions, schedule suggestions, clinical summary generation) should be on the v4.x roadmap.</div>
+      </div>
+    </div>
+    <div class="trend">
+      <div class="trend-num">4</div>
+      <div>
+        <div class="trend-title">PWA vs native app — the gap is closing</div>
+        <div class="trend-body">iOS 17+ has significantly improved PWA capabilities — background sync, improved push notification support, better home screen integration. The argument that "PWA can't compete with native" is weaker in 2026 than it was in 2022. <b>Takenly's PWA-first approach is now a genuine distribution advantage</b> — no App Store review delays, instant deployment, no 30% Apple commission. The risk is that iOS PWA support remains inconsistently implemented across Safari versions. The service worker Takenly shipped in v3.0 is the right foundation.</div>
+      </div>
+    </div>
+    <div class="trend">
+      <div class="trend-num">5</div>
+      <div>
+        <div class="trend-title">Clinical integration is the next frontier</div>
+        <div class="trend-body">Medisafe has a "PATHWAYS" platform for healthcare providers. MyTherapy promotes sharing health reports with doctors. CareClinic is used by health coaches and therapists. <b>The most valuable adjacency for a medication adherence app is connecting to the clinical system</b> — not just reminding, but closing the loop with the prescribing GP or hospital. Takenly's clinical PDF export (MAR format) is the first step. eScript QR scan (R-14, Sprint 10) is the second. A genuine FHIR/HL7 integration is the long-term play.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VERDICT ══ -->
+<section id="sec-verdict">
+  <div class="hero">
+    <div class="ey">Strategic verdict</div>
+    <div class="ht">The honest<br><em>competitive picture</em></div>
+    <div class="hs">Where Takenly genuinely wins, where it's behind, and what matters most.</div>
+  </div>
+
+  <div class="sh">Where Takenly wins — unconditionally</div>
+  <div class="insight green">
+    <div class="insight-title">Carer-primary model — uncontested</div>
+    <div class="insight-body">After researching 10 competitors across iOS, Android, web, and hardware — <b>no other app has a carer-primary configuration model</b>. Every competitor assumes the patient is the one setting up the app. Takenly's onboarding fork (Myself / Someone I care for) leading to a shareable, zero-setup patient view is genuinely novel. This is the product's most defensible position and the claim to own: "the only medication app designed to be configured by a carer and used by a patient."</div>
+  </div>
+  <div class="insight green">
+    <div class="insight-title">Free, no-account model at exactly the right time</div>
+    <div class="insight-body">Medisafe went paid in January 2026. Users are actively searching for alternatives. Takenly's free, no-account, no-ads model is a direct counter-positioning opportunity that didn't exist 12 months ago.</div>
+  </div>
+
+  <div class="sh">Where Takenly is behind — honestly</div>
+  <div class="insight amber">
+    <div class="insight-title">Complex scheduling and refill reminders</div>
+    <div class="insight-body">Dosecast handles tapered doses, variable intervals, and cross-timezone scheduling better than Takenly. Refill reminders are absent. These features matter for users managing complex chronic conditions. They're not blocking for the carer-primary use case, but they're a gap for broader adoption. Target: v4.x roadmap.</div>
+  </div>
+  <div class="insight amber">
+    <div class="insight-title">Health metric tracking and drug interactions</div>
+    <div class="insight-body">MyTherapy and CareClinic offer blood pressure, mood, weight, and symptom tracking alongside medication reminders. Takenly doesn't. Drug interaction checking (US-only in Medisafe and Apple Health, AI-powered in DoseMed) is becoming expected. Neither of these is the carer-primary differentiator, but they matter for depth of engagement.</div>
+  </div>
+  <div class="insight amber">
+    <div class="insight-title">Real-time carer-patient sync — still pre-Firebase</div>
+    <div class="insight-body">The patient marking doses taken currently only syncs to the carer if they're on the same device. Sprint 7 (Firestore) is the fix. Until then, the carer-primary model is architecturally correct but functionally incomplete for a two-device household.</div>
+  </div>
+
+  <div class="sh">The bottom line</div>
+  <div class="insight">
+    <div class="insight-title">A genuine gap, a genuine product, a clear sprint path</div>
+    <div class="insight-body">The competitive analysis confirms the product thesis. The carer-primary quadrant is unoccupied. Medisafe's pricing change has created user exodus. The ageing population tailwind is structural and growing. Takenly has the right model, the right positioning, and a clear sprint path to the features (real-time sync, carer dashboard, push notifications) that make the model actually work end-to-end. <b>The window to establish the category before MedAdvisor or a well-funded US competitor builds into it is approximately 12–18 months.</b> Sprint 7 (Firestore sync) is the most important deliverable in that window.</div>
+  </div>
+</section>
+
+<script>
+function show(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b => b.classList.remove('on'));
+  document.getElementById('sec-' + id).classList.add('on');
+  event.target.classList.add('on');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
