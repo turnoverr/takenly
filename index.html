@@ -2693,7 +2693,7 @@ body.dark .tab-btn.active {
 
     <!-- Dev reset — only shown when URL contains ?dev=1 -->
     <button class="dev-reset-btn" id="devResetBtn" onclick="devReset()" style="display:none">Reset &amp; restart onboarding (dev)</button>
-    <div class="version-tag">Takenly v2.9.1.2</div>
+    <div class="version-tag">Takenly v2.9.1</div>
   </div>
 
   <!-- ── HISTORY SCREEN ── -->
@@ -3057,7 +3057,7 @@ body.dark .tab-btn.active {
         </div>
       </div>
 
-      <div class="version-tag" style="padding-bottom:16px">Takenly v2.9.1.2</div>
+      <div class="version-tag" style="padding-bottom:16px">Takenly v2.9.1</div>
   </div>
 
   <!-- ── TAB BAR ── -->
@@ -3524,38 +3524,46 @@ function checkOnboarding() {
 // TAB NAVIGATION
 // ════════════════════════════════════════════════════════
 function switchTab(tab) {
-  activeTab=tab; haptic('light');
-  const tabs=['today','history','caregivers','settings'];
-  const outId=tabs.find(t=>{
-    const el=document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`);
-    return el&&el.style.display!=='none';
+  activeTab = tab; haptic('light');
+  const tabs = ['today','history','caregivers','settings'];
+  tabs.forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
   });
-  tabs.forEach(t=>document.getElementById(`tab-${t}`).classList.toggle('active',t===tab));
-  const inEl=document.getElementById(`screen${tab.charAt(0).toUpperCase()+tab.slice(1)}`);
-  const outEl=outId?document.getElementById(`screen${outId.charAt(0).toUpperCase()+outId.slice(1)}`):null;
-  if(outEl&&outEl!==inEl){
-    outEl.style.opacity='0';
-    outEl.style.transition='opacity 0.15s ease';
-    setTimeout(()=>{
-      outEl.style.display='none';
-      outEl.style.opacity='';
-      outEl.style.transition='';
-      inEl.style.opacity='0';
-      inEl.style.display='block';
-      requestAnimationFrame(()=>{
-        inEl.style.transition='opacity 0.18s ease';
-        inEl.style.opacity='1';
-        setTimeout(()=>{inEl.style.transition='';inEl.style.opacity='';},200);
+  const inEl = document.getElementById(`screen${tab.charAt(0).toUpperCase()+tab.slice(1)}`);
+  // Find whichever screen is currently visible (inline style display block)
+  const outEl = tabs
+    .filter(t => t !== tab)
+    .map(t => document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`))
+    .find(el => el && el.style.display === 'block');
+
+  if(outEl) {
+    // Crossfade: fade out then show new
+    outEl.style.transition = 'opacity 0.15s ease';
+    outEl.style.opacity = '0';
+    setTimeout(() => {
+      outEl.style.display = 'none';
+      outEl.style.opacity = '';
+      outEl.style.transition = '';
+      inEl.style.opacity = '0';
+      inEl.style.display = 'block';
+      requestAnimationFrame(() => {
+        inEl.style.transition = 'opacity 0.18s ease';
+        inEl.style.opacity = '1';
+        setTimeout(() => { inEl.style.transition = ''; inEl.style.opacity = ''; }, 200);
       });
-      if(tab==='history')renderHistory();
-      if(tab==='caregivers')renderCarerList();
-      if(tab==='settings')updateSettingsPanel();
-    },150);
+      if(tab==='history') renderHistory();
+      if(tab==='caregivers') renderCarerList();
+      if(tab==='settings') updateSettingsPanel();
+    }, 150);
   } else {
-    if(inEl)inEl.style.display='block';
-    if(tab==='history')renderHistory();
-    if(tab==='caregivers')renderCarerList();
-    if(tab==='settings')updateSettingsPanel();
+    // No outgoing screen — direct show (first call, or same tab)
+    tabs.forEach(t => {
+      const el = document.getElementById(`screen${t.charAt(0).toUpperCase()+t.slice(1)}`);
+      if(el) el.style.display = t === tab ? 'block' : 'none';
+    });
+    if(tab==='history') renderHistory();
+    if(tab==='caregivers') renderCarerList();
+    if(tab==='settings') updateSettingsPanel();
   }
 }
 
