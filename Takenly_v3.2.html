@@ -4790,21 +4790,16 @@ function showDevTools() {
 }
 
 function devReset() {
-  document.getElementById('resetConfirmModal').style.display = 'flex';
-  haptic('light');
-}
-
-function closeResetModal(e) {
-  if(e && e.target !== document.getElementById('resetConfirmModal')) return;
-  document.getElementById('resetConfirmModal').style.display = 'none';
-}
-
-function confirmReset() {
-  document.getElementById('resetConfirmModal').style.display = 'none';
-  [STATE_KEY, HIST_KEY, ADV_KEY, ADV_HIST, CARER_KEY, 'takenly_demo', 'smartModeDismissed', 'milestoneDismissed'].forEach(k => localStorage.removeItem(k));
+  [STATE_KEY, HIST_KEY, ADV_KEY, ADV_HIST, CARER_KEY, 'takenly_demo', 'smartModeDismissed', 'milestoneDismissed', PATIENT_KEY].forEach(k => {
+    try { localStorage.removeItem(k); } catch(e) {}
+  });
   haptic('medium');
-  window.location.reload();
+  showToast('Reset complete — reloading…');
+  setTimeout(() => window.location.reload(), 600);
 }
+
+function closeResetModal(e) {}
+function confirmReset() { devReset(); }
 
 // ════════════════════════════════════════════════════════
 // SVG ICON SYSTEM

@@ -2088,6 +2088,168 @@ body.dark .tab-btn.active {
 @keyframes obOutRight { to { opacity:0; transform:translateX(16px); } }
 @keyframes obInLeft   { from { opacity:0; transform:translateX(-16px); } to { opacity:1; transform:translateX(0); } }
 @keyframes obInRight  { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:translateX(0); } }
+
+/* ── NEW ONBOARDING CSS v3.2 ── */
+
+/* Progress dots — D style */
+.ob-prog-d { display:flex; gap:5px; margin-bottom:24px; }
+.opd {
+  height:3px; border-radius:3px; background:var(--faint);
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.opd.on   { background:var(--teal); }
+.opd.done { background:rgba(13,115,119,0.35); width:14px !important; }
+
+/* Pill toggle */
+.pill-toggle {
+  position:relative; display:flex;
+  background:var(--faint); border:1px solid var(--border);
+  border-radius:14px; padding:4px; margin-bottom:14px;
+  cursor:pointer; user-select:none;
+}
+.pill-slider {
+  position:absolute; top:4px; bottom:4px;
+  border-radius:11px;
+  background:var(--surface);
+  box-shadow:0 2px 8px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+  transition: left 0.32s cubic-bezier(0.4,0,0.2,1),
+              width 0.32s cubic-bezier(0.4,0,0.2,1);
+  z-index:1; pointer-events:none;
+}
+.pill-opt {
+  flex:1; position:relative; z-index:2;
+  padding:10px 8px; border-radius:11px;
+  text-align:center; cursor:pointer;
+}
+.pill-opt-label {
+  font-size:13px; font-weight:700;
+  color:var(--ink-dim);
+  transition:color 0.22s ease;
+  white-space:nowrap;
+}
+.pill-opt.sel .pill-opt-label { color:var(--teal); }
+
+/* Explain card */
+.ob-explain-card {
+  background:var(--surface2,#F5F5F5);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px 14px; margin-bottom:18px;
+}
+.ob-explain-label {
+  font-size:9px; font-weight:700; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--ink-dim);
+  margin-bottom:4px;
+}
+.ob-explain-text {
+  font-size:12px; color:var(--mid);
+  line-height:1.55;
+}
+
+/* Path pill badge */
+.ob-path-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--teal-dim); color:var(--teal);
+  font-size:10px; font-weight:700; letter-spacing:0.08em;
+  padding:3px 9px; border-radius:var(--radius-full);
+  text-transform:uppercase; margin-bottom:10px;
+}
+
+/* Fields */
+.ob-field { margin-bottom:14px; }
+.ob-field-label {
+  font-size:11px; font-weight:700; letter-spacing:0.07em;
+  text-transform:uppercase; color:var(--ink-dim);
+  margin-bottom:6px; display:flex; align-items:center; gap:6px;
+}
+.ob-required-dot {
+  width:5px; height:5px; border-radius:50%;
+  background:var(--teal); display:inline-block; flex-shrink:0;
+}
+.ob-field-error {
+  font-size:11px; color:var(--red);
+  margin-top:5px; display:none; padding-left:2px;
+}
+.ob-field-error.show { display:block; }
+.ob-input.ob-input-error { border-color:var(--red) !important; }
+
+/* Slot rows */
+.ob-slot-list { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; }
+.ob-slot-row {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 14px; border-radius:var(--radius);
+  border:1.5px solid var(--border); background:var(--surface);
+  cursor:pointer; transition:all 0.15s;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04);
+  user-select:none;
+}
+.ob-slot-row.sel {
+  border-color:var(--teal);
+  background:var(--teal-dim);
+}
+.ob-slot-icon {
+  display:flex; align-items:center; justify-content:center;
+  width:22px; flex-shrink:0; color:var(--ink-dim);
+}
+.ob-slot-row.sel .ob-slot-icon { color:var(--teal); }
+.ob-slot-name { font-size:13px; font-weight:700; color:var(--ink); flex:1; }
+.ob-slot-time { font-size:11px; color:var(--ink-dim); }
+.ob-slot-check {
+  width:20px; height:20px; border-radius:6px;
+  border:1.5px solid var(--border); background:var(--surface);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all 0.15s;
+}
+.ob-slot-row.sel .ob-slot-check { background:var(--teal); border-color:var(--teal); }
+.ob-slot-check svg { display:none; }
+.ob-slot-row.sel .ob-slot-check svg { display:block; }
+
+/* Done screen */
+.ob-done-screen {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  flex:1; padding:32px 28px 28px;
+  text-align:center; gap:16px;
+}
+.ob-done-ring-wrap { margin-bottom:4px; }
+.ob-done-svg { width:120px; height:120px; display:block; }
+
+/* Ring draw animation */
+.ob-done-circle {
+  stroke-dasharray: 339.3;
+  stroke-dashoffset: 339.3;
+}
+.ob-done-tick {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+}
+/* Animations fire when step becomes active */
+.ob-step.active .ob-done-circle {
+  animation: obDrawCircle 0.65s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
+}
+.ob-step.active .ob-done-tick {
+  animation: obDrawTick 0.4s cubic-bezier(0.4,0,0.2,1) 0.62s forwards;
+}
+.ob-step.active .ob-done-text {
+  animation: obFadeUp 0.4s ease 0.88s both;
+}
+.ob-step.active .ob-done-btn {
+  animation: obFadeUp 0.4s ease 1.0s both;
+}
+@keyframes obDrawCircle {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes obDrawTick {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes obFadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.ob-done-text { display:flex; flex-direction:column; gap:8px; }
+.ob-done-title { margin-bottom:0 !important; }
+.ob-done-body  { margin-bottom:0 !important; }
+.ob-done-btn   { width:auto !important; padding:13px 28px !important; margin-top:8px; }
 </style>
 </head>
 <body>
@@ -2095,303 +2257,199 @@ body.dark .tab-btn.active {
 <!-- ══ ONBOARDING ══ -->
 <div class="ob-overlay" id="obOverlay">
 
-  <!-- STEP 1 — Welcome -->
+  <!-- ══ NEW ONBOARDING v3.2 — D REFINED ══ -->
+
+  <!-- STEP 1 — WHO + CARER NAME -->
   <div class="ob-step active" id="ob-1">
     <div class="ob-logo-wrap">
       <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
-    </div>
-    </div>
-    <div class="ob-progress" id="ob-prog-1"></div>
-    <div class="ob-title">Welcome</div>
-    <div class="ob-body">A medication reminder built around you. Let's get set up in a few steps.</div>
-    <div class="ob-input-group">
-      <div>
-        <label class="ob-label" id="ob-name-label">Your name (optional)</label>
-        <input class="ob-input" type="text" id="obName" placeholder="e.g. Sarah" maxlength="40" autocomplete="given-name">
-      </div>
-      <div>
-        <label class="ob-label">Setting this up for…</label>
-        <div class="ob-who-grid">
-          <button class="ob-who-btn selected" id="obForSelf" onclick="selectWho('self')">
-            <span class="ob-who-emoji">
-              <!-- Person silhouette -->
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7"/></svg>
-            </span>Myself
-          </button>
-          <button class="ob-who-btn" id="obForOther" onclick="selectWho('other')">
-            <span class="ob-who-emoji">
-              <!-- Two people / care -->
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.5"/><path d="M2 20c0-3.5 3.134-6.25 7-6.25s7 2.75 7 6.25"/><circle cx="18" cy="8" r="2.5"/><path d="M22 20c0-2.5-1.8-4.5-4-4.5"/></svg>
-            </span>Someone else
-          </button>
-        </div>
-      </div>
-      <div class="ob-patient-wrap" id="obPatientWrap">
-        <label class="ob-label">Who are you caring for?</label>
-        <input class="ob-input" type="text" id="obPatientName" placeholder="e.g. Mum, David, Mrs Chen" maxlength="40">
+        <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+        <span class="tk-wordmark">TAKENLY</span>
       </div>
     </div>
-    <button class="ob-btn ob-btn-primary" onclick="obStep1Next()">Continue →</button>
-    <button class="ob-btn ob-btn-skip" onclick="skipOnboarding()">Skip setup</button>
+    <div class="ob-prog-d" id="ob-prog-d-1">
+      <div class="opd on" style="width:36px"></div>
+      <div class="opd" style="width:20px"></div>
+      <div class="opd" style="width:20px"></div>
+      <div class="opd" style="width:20px"></div>
+    </div>
+    <div class="ob-title">Setting this up for…</div>
+    <div class="ob-body">Tell us who you're helping — we'll configure the experience around them.</div>
+
+    <!-- Pill toggle -->
+    <div class="pill-toggle" id="pill-toggle">
+      <div class="pill-slider" id="pill-slider"></div>
+      <div class="pill-opt" id="pill-carer" onclick="setPillMode('carer')">
+        <div class="pill-opt-label">Someone I care for</div>
+      </div>
+      <div class="pill-opt" id="pill-self" onclick="setPillMode('self')">
+        <div class="pill-opt-label">Myself</div>
+      </div>
+    </div>
+
+    <!-- Explanation card -->
+    <div class="ob-explain-card">
+      <div class="ob-explain-label" id="ob-explain-label">CARER SETUP</div>
+      <div class="ob-explain-text" id="ob-explain-text">You'll configure everything — medications, times, and dose slots. The person you care for gets a simple view with just one button to tap.</div>
+    </div>
+
+    <!-- Carer name (always shown, label changes) -->
+    <div class="ob-field">
+      <div class="ob-field-label"><span id="ob1-name-label">Your name</span> <span class="ob-required-dot"></span></div>
+      <input class="ob-input" id="ob1-name-input" type="text" placeholder="e.g. Belle, Sarah" autocomplete="given-name">
+      <div class="ob-field-error" id="ob1-name-error">Please enter your name to continue</div>
+    </div>
+
+    <button class="ob-btn ob-btn-primary" onclick="ob1Next()">Continue →</button>
   </div>
 
-  <!-- STEP 2 — Schedule type -->
-  <div class="ob-step" id="ob-2">
-    <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
+  <!-- STEP 2A — PATIENT NAME (carer path) -->
+  <div class="ob-step" id="ob-2a">
+    <div class="ob-logo-wrap">
+      <div class="tk-logo tk-logo-md">
+        <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+        <span class="tk-wordmark">TAKENLY</span>
+      </div>
     </div>
-    <div class="ob-progress" id="ob-prog-2"></div>
-    <div class="ob-title" id="ob2-title">What does the schedule look like?</div>
-    <div class="ob-body">This helps Takenly set up the right reminders from the start.</div>
-    <div class="ob-type-list">
-      <button class="ob-type-btn" id="obTypeScheduled" onclick="selectScheduleType('scheduled')">
-        <span class="ui-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></span>
-        <div>
-          <div class="ob-type-label">Doctor's schedule</div>
-          <div class="ob-type-sub">Morning, lunch, dinner or bedtime — I'll configure each slot</div>
-        </div>
-      </button>
-      <button class="ob-type-btn" id="obTypeSimple" onclick="selectScheduleType('simple')">
-        <span class="ui-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-        <div>
-          <div class="ob-type-label">Just a daily reminder</div>
-          <div class="ob-type-sub">One notification at a set time each day</div>
-        </div>
-      </button>
+    <div class="ob-prog-d" id="ob-prog-d-2a">
+      <div class="opd done" style="width:14px"></div>
+      <div class="opd on" style="width:36px"></div>
+      <div class="opd" style="width:20px"></div>
+      <div class="opd" style="width:20px"></div>
     </div>
-    <button class="ob-btn ob-btn-primary disabled" id="ob2NextBtn" onclick="obStep2Next()">Continue →</button>
-    <button class="ob-btn ob-btn-ghost" onclick="obGoTo(1)">← Back</button>
+    <div class="ob-path-pill">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3 2.7-5.5 6-5.5s6 2.5 6 5.5"/><circle cx="17" cy="8" r="2.5"/><path d="M21 20c0-2.2-1.8-4-4-4"/></svg>
+      Carer setup
+    </div>
+    <div class="ob-title">Who are you caring for?</div>
+    <div class="ob-body">Their name appears on their personal schedule. No account needed on their end.</div>
+
+    <div class="ob-field">
+      <div class="ob-field-label">Their name <span class="ob-required-dot"></span></div>
+      <input class="ob-input" id="ob2a-patient-input" type="text" placeholder="e.g. David, Mum, Mrs Chen" autocomplete="off">
+      <div class="ob-field-error" id="ob2a-patient-error">Please enter their name to continue</div>
+    </div>
+
+    <div class="ob-explain-card" style="margin-bottom:16px">
+      <div class="ob-explain-label">WHAT THEY'LL SEE</div>
+      <div class="ob-explain-text">A simple screen showing their daily schedule, set up by you. Just one button — "Mark as taken". Nothing to configure on their device.</div>
+    </div>
+
+    <button class="ob-btn ob-btn-primary" onclick="ob2aNext()" id="ob2a-btn">Set up their schedule →</button>
+    <button class="ob-btn ob-btn-ghost" onclick="obBack(1)">← Back</button>
   </div>
 
-  <!-- STEP 3 — Slot selection -->
+  <!-- STEP 2B — OWN NAME (self path) -->
+  <div class="ob-step" id="ob-2b">
+    <div class="ob-logo-wrap">
+      <div class="tk-logo tk-logo-md">
+        <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+        <span class="tk-wordmark">TAKENLY</span>
+      </div>
+    </div>
+    <div class="ob-prog-d">
+      <div class="opd done" style="width:14px"></div>
+      <div class="opd on" style="width:36px"></div>
+      <div class="opd" style="width:20px"></div>
+      <div class="opd" style="width:20px"></div>
+    </div>
+    <div class="ob-title">What's your name?</div>
+    <div class="ob-body">Used to personalise your reminders and history. You can update it later in Settings.</div>
+
+    <div class="ob-field">
+      <div class="ob-field-label">Your name <span class="ob-required-dot"></span></div>
+      <input class="ob-input" id="ob2b-name-input" type="text" placeholder="e.g. Sarah" autocomplete="given-name">
+      <div class="ob-field-error" id="ob2b-name-error">Please enter your name to continue</div>
+    </div>
+
+    <button class="ob-btn ob-btn-primary" style="margin-top:auto" onclick="ob2bNext()">Continue →</button>
+    <button class="ob-btn ob-btn-ghost" onclick="obBack(1)">← Back</button>
+  </div>
+
+  <!-- STEP 3 — SLOT SELECTION -->
   <div class="ob-step" id="ob-3">
-    <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
+    <div class="ob-logo-wrap">
+      <div class="tk-logo tk-logo-md">
+        <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
+        <span class="tk-wordmark">TAKENLY</span>
+      </div>
     </div>
-    <div class="ob-progress" id="ob-prog-3"></div>
+    <div class="ob-prog-d">
+      <div class="opd done" style="width:14px"></div>
+      <div class="opd done" style="width:14px"></div>
+      <div class="opd on" style="width:36px"></div>
+      <div class="opd" style="width:20px"></div>
+    </div>
     <div class="ob-title" id="ob3-title">Which slots apply?</div>
-    <div class="ob-body">Tap each time of day that has a dose. You can adjust any time later.</div>
-    <div class="ob-slots-grid">
-      <div class="ob-slot-card" id="obSlot-morning" onclick="toggleObSlot('morning')">
-        <span class="ob-slot-check">✓</span>
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5.22 5.22l1.42 1.42"/><path d="M3 12h2"/><path d="M19 12h2"/><path d="M17.36 6.64l1.42-1.42"/><path d="M6 17h12"/><path d="M8.5 13.5A4 4 0 0 1 12 9a4 4 0 0 1 4 4"/></svg></span>
+    <div class="ob-body" id="ob3-body">Select all that match. You can adjust times and add medications next.</div>
+
+    <div class="ob-slot-list" id="ob3-slot-list">
+      <div class="ob-slot-row" onclick="toggleObSlot(this,'morning')" data-slot="morning">
+        <div class="ob-slot-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5.22 5.22l1.42 1.42"/><path d="M3 12h2"/><path d="M19 12h2"/><path d="M17.36 6.64l1.42-1.42"/><path d="M6 17h12"/><path d="M8.5 13.5A4 4 0 0 1 12 9a4 4 0 0 1 4 4"/></svg>
+        </div>
         <div class="ob-slot-name">Morning</div>
         <div class="ob-slot-time">8:00 AM</div>
+        <div class="ob-slot-check">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
       </div>
-      <div class="ob-slot-card" id="obSlot-lunch" onclick="toggleObSlot('lunch')">
-        <span class="ob-slot-check">✓</span>
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>
+      <div class="ob-slot-row" onclick="toggleObSlot(this,'lunch')" data-slot="lunch">
+        <div class="ob-slot-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </div>
         <div class="ob-slot-name">Lunch</div>
         <div class="ob-slot-time">12:00 PM</div>
+        <div class="ob-slot-check">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
       </div>
-      <div class="ob-slot-card" id="obSlot-dinner" onclick="toggleObSlot('dinner')">
-        <span class="ob-slot-check">✓</span>
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v2"/><path d="M5.22 18.78l1.42-1.42"/><path d="M3 12h2"/><path d="M19 12h2"/><path d="M17.36 17.36l1.42 1.42"/><path d="M6 7h12"/><path d="M8.5 10.5A4 4 0 0 1 12 15a4 4 0 0 1 4-4"/></svg></span>
+      <div class="ob-slot-row" onclick="toggleObSlot(this,'dinner')" data-slot="dinner">
+        <div class="ob-slot-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v2"/><path d="M5.22 18.78l1.42-1.42"/><path d="M3 12h2"/><path d="M19 12h2"/><path d="M17.36 17.36l1.42 1.42"/><path d="M6 7h12"/><path d="M8.5 10.5A4 4 0 0 1 12 15a4 4 0 0 1 4-4"/></svg>
+        </div>
         <div class="ob-slot-name">Dinner</div>
         <div class="ob-slot-time">6:00 PM</div>
+        <div class="ob-slot-check">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
       </div>
-      <div class="ob-slot-card" id="obSlot-bedtime" onclick="toggleObSlot('bedtime')">
-        <span class="ob-slot-check">✓</span>
-        <span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+      <div class="ob-slot-row" onclick="toggleObSlot(this,'bedtime')" data-slot="bedtime">
+        <div class="ob-slot-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </div>
         <div class="ob-slot-name">Bedtime</div>
         <div class="ob-slot-time">9:45 PM</div>
+        <div class="ob-slot-check">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
       </div>
     </div>
-    <button class="ob-btn ob-btn-primary disabled" id="ob3NextBtn" onclick="obStep3Next()">Set up my slots →</button>
-    <button class="ob-btn ob-btn-ghost" onclick="obGoTo(2)">← Back</button>
+
+    <div class="ob-field-error" id="ob3-slot-error" style="margin-bottom:8px">Select at least one slot to continue</div>
+    <button class="ob-btn ob-btn-primary" onclick="ob3Next()" id="ob3-btn">Continue →</button>
+    <button class="ob-btn ob-btn-ghost" onclick="ob3Back()">← Back</button>
   </div>
 
-  <!-- STEP 4 — Configure slot -->
+  <!-- STEP 4 — DONE -->
   <div class="ob-step" id="ob-4">
-    <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
-    </div>
-    <div class="ob-progress" id="ob-prog-4"></div>
-    <div class="ob-slot-config">
-      <div class="ob-slot-config-header">
-        <div class="ob-slot-config-emoji" id="ob4-emoji"><span class="slot-icon ui-icon-teal"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5.22 5.22l1.42 1.42"/><path d="M3 12h2"/><path d="M19 12h2"/><path d="M17.36 6.64l1.42-1.42"/><path d="M6 17h12"/><path d="M8.5 13.5A4 4 0 0 1 12 9a4 4 0 0 1 4 4"/></svg></span></div>
-        <div class="ob-slot-config-name" id="ob4-name">Morning</div>
-        <div class="ob-slot-config-count" id="ob4-count">Slot 1 of 2</div>
+    <div class="ob-done-screen">
+      <div class="ob-done-ring-wrap">
+        <svg class="ob-done-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="54" fill="rgba(13,115,119,0.07)"/>
+          <circle class="ob-done-circle" cx="60" cy="60" r="54" stroke="var(--teal)" stroke-width="3" fill="none" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+          <path class="ob-done-tick" d="M38 60l16 16 28-28" stroke="var(--teal)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
       </div>
-      <div class="ob-input-group">
-        <div>
-          <label class="ob-label">Time</label>
-          <input class="ob-input" type="time" id="ob4-time" value="08:00">
-        </div>
-        <div>
-          <label class="ob-label" id="ob4-med-label">Medications (optional)</label>
-          <div class="ob-meds-list" id="ob4-meds-list"></div>
-          <button class="ob-add-med-btn" onclick="obAddMed()">+ Add medication</button>
-        </div>
+      <div class="ob-done-text">
+        <div class="ob-title ob-done-title" id="ob4-title">All set</div>
+        <div class="ob-body ob-done-body" id="ob4-body">Your schedule is ready. Add medications in Settings whenever you're ready.</div>
       </div>
-    </div>
-    <button class="ob-btn ob-btn-primary" id="ob4NextBtn" onclick="obStep4Next()">Next slot →</button>
-    <button class="ob-btn ob-btn-ghost" onclick="obStep4Back()">← Back</button>
-  </div>
-
-  <!-- STEP 4S — Simple path: once or twice daily, time(s), medication -->
-  <div class="ob-step" id="ob-4s">
-    <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
-    </div>
-    <div class="ob-progress" id="ob-prog-4s"></div>
-    <div class="ob-title" id="ob4s-title">Set your reminder</div>
-    <div class="ob-body" id="ob4s-body">Takenly will remind you at these times each day. You can change them anytime in Settings.</div>
-
-    <!-- Once or twice daily -->
-    <div style="margin-bottom:16px">
-      <label class="ob-label">How often?</label>
-      <div class="ob-who-grid">
-        <button class="ob-who-btn selected" id="obFreqOnce" onclick="selectFrequency('once')">
-          <span class="ob-who-emoji">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-          </span>Once daily
-        </button>
-        <button class="ob-who-btn" id="obFreqTwice" onclick="selectFrequency('twice')">
-          <span class="ob-who-emoji">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>
-          </span>Twice daily
-        </button>
-      </div>
-    </div>
-
-    <div class="ob-input-group">
-      <div>
-        <label class="ob-label" id="ob4s-time1-label">Reminder time</label>
-        <input class="ob-input" type="time" id="obSimpleTime" value="08:00">
-      </div>
-      <div id="ob4s-time2-wrap" style="display:none">
-        <label class="ob-label">Evening reminder</label>
-        <input class="ob-input" type="time" id="obSimpleTime2" value="21:00">
-      </div>
-      <div>
-        <label class="ob-label" id="ob4s-med-label">First medication (optional)</label>
-        <input class="ob-input" type="text" id="obSimpleMedName" placeholder="e.g. Metformin" maxlength="60">
-        <input class="ob-input" type="text" id="obSimpleMedDose" placeholder="e.g. 500mg, 1 tablet" maxlength="40" style="margin-top:8px">
-      </div>
-    </div>
-    <button class="ob-btn ob-btn-finish" onclick="finishSimpleOnboarding()">Continue →</button>
-    <button class="ob-btn ob-btn-ghost" onclick="obGoTo(2)">← Back</button>
-  </div>
-
-  <!-- STEP 5S — Simple done screen -->
-  <div class="ob-step" id="ob-5s">
-    <div class="ob-done-icon" style="color:var(--teal)">
-      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
-    </div>
-    <div class="ob-progress" id="ob-prog-5s"></div>
-    <div class="ob-title" id="ob5s-title">All set!</div>
-    <div class="ob-body" id="ob5s-body">Takenly will remind you each day. You can add more medications and adjust times in Settings.</div>
-    <div id="ob5s-summary" style="margin:20px 0;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)"></div>
-    <div class="ob-note">Everything can be updated anytime from the Settings tab.</div>
-    <button class="ob-btn ob-btn-finish" onclick="openTakenly()">Open Takenly →</button>
-  </div>
-
-  <!-- STEP 5 — Done -->
-  <div class="ob-step" id="ob-5">
-    <div class="ob-done-icon" style="color:var(--green)">
-      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
-    </div>
-    <div class="ob-progress" id="ob-prog-5"></div>
-    <div class="ob-title" id="ob5-title">All set!</div>
-    <div class="ob-body" id="ob5-body">Your schedule is ready. Takenly will remind you at the right times each day.</div>
-    <div class="ob-done-slots" id="ob5-slots"></div>
-    <div class="ob-note">You can update medications, times and caregivers any time from the Settings tab.</div>
-    <button class="ob-btn ob-btn-finish" onclick="finishScheduledOnboarding()">Open Takenly →</button>
-  </div>
-
-</div>
-
-<!-- ══ PIN OVERLAY ══ -->
-<div class="pin-overlay" id="pinOverlay">
-  <button class="pin-close" onclick="closePinOverlay()">✕</button>
-  <div class="tk-logo tk-logo-md">
-      <div class="tk-mark"><div class="tk-sq"></div><div class="tk-sq"></div><div class="tk-sq"></div></div>
-      <span class="tk-wordmark">TAKENLY</span>
-    </div>
-  <div class="pin-title">Caregiver Access</div>
-  <div class="pin-sub" id="pinSub">Enter your 4-digit code to view this schedule.</div>
-  <div class="pin-dots" id="pinDots">
-    <div class="pin-dot"></div><div class="pin-dot"></div>
-    <div class="pin-dot"></div><div class="pin-dot"></div>
-  </div>
-  <div class="pin-error" id="pinError"></div>
-  <div class="pin-pad">
-    <button class="pin-key" onclick="pinKey('1')">1</button>
-    <button class="pin-key" onclick="pinKey('2')">2</button>
-    <button class="pin-key" onclick="pinKey('3')">3</button>
-    <button class="pin-key" onclick="pinKey('4')">4</button>
-    <button class="pin-key" onclick="pinKey('5')">5</button>
-    <button class="pin-key" onclick="pinKey('6')">6</button>
-    <button class="pin-key" onclick="pinKey('7')">7</button>
-    <button class="pin-key" onclick="pinKey('8')">8</button>
-    <button class="pin-key" onclick="pinKey('9')">9</button>
-    <button class="pin-key pin-key-cancel" onclick="pinKey('cancel')">Cancel</button>
-    <button class="pin-key" onclick="pinKey('0')">0</button>
-    <button class="pin-key pin-key-del" onclick="pinKey('del')">⌫</button>
-  </div>
-</div>
-
-<!-- ══ RESET CONFIRM MODAL ══ -->
-<div class="modal-backdrop" id="resetConfirmModal" style="display:none" onclick="closeResetModal(event)">
-  <div class="modal-sheet" style="text-align:center">
-    <div class="modal-handle"></div>
-    <div style="font-size:32px;margin-bottom:12px">
-      <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    </div>
-    <div class="modal-title">Reset all data?</div>
-    <div class="modal-body" style="margin-bottom:20px">This will clear your medications, history, caregiver codes, and onboarding. The app will restart from the beginning.<br><br>This cannot be undone.</div>
-    <div class="modal-actions">
-      <button class="modal-btn modal-btn-cancel" onclick="closeResetModal()">Cancel</button>
-      <button class="modal-btn" style="background:var(--red);color:#fff" onclick="confirmReset()">Reset everything</button>
+      <button class="ob-btn ob-btn-primary ob-done-btn" onclick="finishNewOnboarding()">Open Takenly →</button>
     </div>
   </div>
-</div>
 
-<!-- ══ EARLY MODAL ══ -->
-<div class="modal-backdrop" id="earlyModal" onclick="handleEarlyBackdropClick(event)">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-icon"><span class="ui-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M12 10v3l2 2"/><path d="M5 3L2 6M22 6l-3-3"/></svg></span></div>
-    <div class="modal-title">Taking early?</div>
-    <div class="modal-body">Your next dose isn't due for <strong id="earlyTimeLeft">—</strong>. You can still take it now.</div>
-    <div class="modal-note-label">Reason (optional but helpful)</div>
-    <textarea class="modal-note-input" id="earlyNoteInput" placeholder="e.g. Going out this evening…" maxlength="200"></textarea>
-    <div class="modal-actions">
-      <button class="modal-btn modal-btn-cancel" onclick="closeEarlyModal()">Cancel</button>
-      <button class="modal-btn modal-btn-confirm" onclick="confirmEarlyTake()">Take Now</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ SLOT SETTINGS PANEL ══ -->
-<div class="settings-overlay" id="slotSettingsOverlay" onclick="closeSlotSettings()"></div>
-<div class="settings-panel" id="slotSettingsPanel">
-  <div class="panel-handle"></div>
-  <div class="panel-title">Dose Schedule</div>
-  <p style="font-size:13px;color:var(--ink-mid);margin-bottom:18px;line-height:1.5">Update each slot's time and medications.</p>
-  <div id="slotSettingsList"></div>
-  <button class="save-btn" onclick="saveSlotSettings()">Save Schedule</button>
-</div>
-
-<!-- ══ DAY DETAIL SHEET ══ -->
-<div class="modal-backdrop" id="dayDetailModal" onclick="closeDayDetail(event)" style="display:none">
-  <div class="modal-sheet" id="dayDetailSheet" style="max-height:80vh;overflow-y:auto">
-    <div class="modal-handle"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div class="modal-title" id="dayDetailTitle" style="font-size:16px;font-weight:700">Day Detail</div>
-      <button onclick="closeDayDetailBtn()" style="background:none;border:none;font-size:20px;color:var(--ink-dim);cursor:pointer;padding:4px;line-height:1">×</button>
-    </div>
-    <div id="dayDetailContent"></div>
-  </div>
-</div>
-
+<!-- ══ END NEW ONBOARDING ══ -->
 <!-- ══ TOAST ══ -->
 <div id="toast" style="position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--ink);color:#fff;border-radius:var(--radius);padding:12px 20px;font-size:13px;font-weight:600;z-index:9999;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);font-family:var(--font-body)"></div>
 
@@ -2484,7 +2542,7 @@ body.dark .tab-btn.active {
 
     <!-- Dev reset — only shown when URL contains ?dev=1 -->
     <button class="dev-reset-btn" id="devResetBtn" onclick="devReset()" style="display:none">Reset &amp; restart onboarding (dev)</button>
-    <div class="version-tag">Takenly v3.1</div>
+    <div class="version-tag">Takenly v3.2</div>
   </div>
 
   <!-- ── HISTORY SCREEN ── -->
@@ -2845,7 +2903,7 @@ body.dark .tab-btn.active {
         </div>
       </div>
 
-      <div class="version-tag" style="padding-bottom:16px">Takenly v3.1</div>
+      <div class="version-tag" style="padding-bottom:16px">Takenly v3.2</div>
   </div>
 
   <!-- ── TAB BAR ── -->
@@ -2936,8 +2994,8 @@ let pendingEarlySlot = null;
 let activeTab = 'today';
 
 // Onboarding state
-let obWhoChoice = 'self';
-let obScheduleType = null;
+
+
 let obSelectedSlots = new Set();
 let obSlotConfigs = [];
 let obSlotIndex = 0;
@@ -3067,49 +3125,9 @@ function obGoTo(step) {
   }
 }
 
-function selectWho(who) {
-  obWhoChoice=who; haptic('light');
-  document.getElementById('obForSelf').classList.toggle('selected',who==='self');
-  document.getElementById('obForOther').classList.toggle('selected',who==='other');
-  document.getElementById('obPatientWrap').classList.toggle('show',who==='other');
-  document.getElementById('ob-name-label').textContent=
-    who==='other'?'Your name (the carer — optional)':'Your name (optional)';
-  if(who==='other')document.getElementById('obPatientName').focus();
-}
 
-function obStep1Next() {
-  const name=document.getElementById('obName').value.trim();
-  if(name)state.userName=name;
-  state.whoFor=obWhoChoice;
-  if(obWhoChoice==='other'){const pn=document.getElementById('obPatientName').value.trim();if(pn)state.patientName=pn;}
-  document.getElementById('ob2-title').textContent=obQ('What does {name} schedule look like?');
-  renderObProgress('ob-prog-1',1,5);
-  renderObProgress('ob-prog-2',2,5);
-  obGoTo(2);
-}
 
-function selectScheduleType(type) {
-  obScheduleType=type; haptic('light');
-  document.getElementById('obTypeScheduled').classList.toggle('selected',type==='scheduled');
-  document.getElementById('obTypeSimple').classList.toggle('selected',type==='simple');
-  const btn=document.getElementById('ob2NextBtn');
-  btn.classList.remove('disabled');
-}
 
-function obStep2Next() {
-  if(!obScheduleType)return;
-  if(obScheduleType==='scheduled'){
-    document.getElementById('ob3-title').textContent=obQ('Which slots apply to {name}?');
-    renderObProgress('ob-prog-3',3,5);
-    obGoTo(3);
-  } else {
-    document.getElementById('ob4s-title').textContent=obQ('When does {name} take medication?');
-    document.getElementById('ob4s-body').textContent='Set the daily reminder time and add any medications.';
-    document.getElementById('ob4s-med-label').textContent=obQ('First medication (optional)');
-    renderObProgress('ob-prog-4s',3,4);
-    obGoTo('4s');
-  }
-}
 
 function toggleObSlot(id) {
   haptic('light');
@@ -3156,8 +3174,6 @@ function renderOb4MedList() {
     </div>`).join('');
 }
 
-function obAddMed(){haptic('light');obTempMeds.push({icon:'💊',name:'',dosage:'',instructions:''});renderOb4MedList();}
-function obRemoveMed(i){haptic('light');obTempMeds.splice(i,1);renderOb4MedList();}
 
 function obStep4Next() {
   for(const m of obTempMeds){if((m.dosage||m.instructions)&&!m.name.trim()){showToast('⚠ Please name each medication.');return;}}
@@ -3195,19 +3211,8 @@ function showObDoneScreen() {
   haptic('success');
 }
 
-function finishScheduledOnboarding() {
-  advState.slots=obSlotConfigs.map(cfg=>({id:cfg.id,name:cfg.name,emoji:cfg.emoji,time:cfg.time,meds:cfg.meds}));
-  advState.slots.forEach(sl=>{if(!advState.today[sl.id])advState.today[sl.id]={taken:false,takenAt:null,events:[]};});
-  state.advancedMode=true; state.onboardingDone=true;
-  saveState(); saveAdvState();
-  document.getElementById('obOverlay').style.display='none';
-  applyMode(); renderTimeline(); updateSettingsPanel();
-  haptic('success');
-  const n=state.patientName||state.userName;
-  showToast(n?`Takenly ready for ${n} ✓`:'Takenly ready ✓');
-}
 
-let obFrequency = 'once';
+
 
 function selectFrequency(freq) {
   obFrequency = freq;
@@ -3220,47 +3225,6 @@ function selectFrequency(freq) {
   if (label1) label1.textContent = freq === 'twice' ? 'Morning reminder' : 'Reminder time';
 }
 
-function finishSimpleOnboarding() {
-  const time  = document.getElementById('obSimpleTime').value || '08:00';
-  const time2 = document.getElementById('obSimpleTime2').value || '21:00';
-  const medName = document.getElementById('obSimpleMedName').value.trim();
-  const medDose = document.getElementById('obSimpleMedDose').value.trim();
-
-  state.reminderTime  = time;
-  state.twiceDaily    = obFrequency === 'twice';
-  state.reminderTime2 = state.twiceDaily ? time2 : null;
-  state.taken2 = false; state.takenAt2 = null;
-  state.advancedMode  = false; // explicit — simple path is never scheduled
-
-  if(medName) state.meds = [{
-    id:Date.now(), name:medName, dosage:medDose,
-    icon:'💊', notes:'', form:'', route:'', food:'', timing:''
-  }];
-
-  // Build done screen summary
-  const n = state.patientName || state.userName;
-  const title = n && obWhoChoice === 'other' ? `All set for ${n}!` : 'All set!';
-  const body  = state.twiceDaily
-    ? `Two daily reminders at ${fmt12(time)} and ${fmt12(time2)}.`
-    : `One daily reminder at ${fmt12(time)}.`;
-  const el5t  = document.getElementById('ob5s-title');
-  const el5b  = document.getElementById('ob5s-body');
-  const el5s  = document.getElementById('ob5s-summary');
-  if(el5t) el5t.textContent = title;
-  if(el5b) el5b.textContent = body;
-  if(el5s) {
-    const medLine = medName ? `<div style="font-size:12px;color:var(--ink-mid);margin-top:8px;font-family:var(--font-body)">${medName}${medDose?' · '+medDose:''}</div>` : '';
-    el5s.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:${medName?8:0}px">
-        <div style="color:var(--teal);display:flex">${SLOT_SVGS.simple}</div>
-        <div style="font-size:13px;font-weight:600;color:var(--ink);font-family:var(--font-body)">${state.twiceDaily?`${fmt12(time)} · ${fmt12(time2)}`:fmt12(time)}</div>
-      </div>${medLine}`;
-  }
-
-  renderObProgress('ob-prog-5s', state.twiceDaily ? 4 : 3, state.twiceDaily ? 4 : 3);
-  obGoTo('5s');
-  haptic('success');
-}
 
 function toggleTwiceDaily() {
   haptic('light');
@@ -3290,7 +3254,6 @@ function openTakenly() {
   showToast(n ? `Takenly ready for ${n} ✓` : 'Takenly ready ✓');
 }
 
-function skipOnboarding(){state.onboardingDone=true;saveState();document.getElementById('obOverlay').style.display='none';haptic('medium');}
 
 function checkOnboarding() {
   // Never show onboarding on a caregiver URL — the friend has a fresh device
@@ -4827,21 +4790,16 @@ function showDevTools() {
 }
 
 function devReset() {
-  document.getElementById('resetConfirmModal').style.display = 'flex';
-  haptic('light');
-}
-
-function closeResetModal(e) {
-  if(e && e.target !== document.getElementById('resetConfirmModal')) return;
-  document.getElementById('resetConfirmModal').style.display = 'none';
-}
-
-function confirmReset() {
-  document.getElementById('resetConfirmModal').style.display = 'none';
-  [STATE_KEY, HIST_KEY, ADV_KEY, ADV_HIST, CARER_KEY, 'takenly_demo', 'smartModeDismissed', 'milestoneDismissed'].forEach(k => localStorage.removeItem(k));
+  [STATE_KEY, HIST_KEY, ADV_KEY, ADV_HIST, CARER_KEY, 'takenly_demo', 'smartModeDismissed', 'milestoneDismissed', PATIENT_KEY].forEach(k => {
+    try { localStorage.removeItem(k); } catch(e) {}
+  });
   haptic('medium');
-  window.location.reload();
+  showToast('Reset complete — reloading…');
+  setTimeout(() => window.location.reload(), 600);
 }
+
+function closeResetModal(e) {}
+function confirmReset() { devReset(); }
 
 // ════════════════════════════════════════════════════════
 // SVG ICON SYSTEM
@@ -5440,6 +5398,239 @@ function getNotifStatus() {
   if(state.notifEnabled && state.fcmToken) return 'enabled';
   return 'off';
 }
+
+
+// ════════════════════════════════════════════════════════
+// ONBOARDING v3.2 — D REFINED
+// ════════════════════════════════════════════════════════
+
+let obMode = 'carer';          // 'carer' | 'self'
+let obCarerName  = '';
+let obPatientName = '';
+let obPillInitDone = false;
+
+const OB_SLOT_DEFAULTS = {
+  morning: { name:'Morning', time:'08:00', emoji:'morning' },
+  lunch:   { name:'Lunch',   time:'12:00', emoji:'lunch'   },
+  dinner:  { name:'Dinner',  time:'18:00', emoji:'dinner'  },
+  bedtime: { name:'Bedtime', time:'21:45', emoji:'bedtime' },
+};
+
+// ── Pill toggle ───────────────────────────────────────────
+function initPill() {
+  if(obPillInitDone) return;
+  const pill   = document.getElementById('pill-toggle');
+  const slider = document.getElementById('pill-slider');
+  if(!pill || !slider) return;
+  requestAnimationFrame(() => {
+    const opts = pill.querySelectorAll('.pill-opt');
+    if(!opts.length) return;
+    const w = opts[0].offsetWidth;
+    slider.style.width = w + 'px';
+    slider.style.left  = '4px';
+    obPillInitDone = true;
+  });
+  setPillMode('carer');
+}
+
+function setPillMode(mode) {
+  obMode = mode;
+  const pill   = document.getElementById('pill-toggle');
+  const slider = document.getElementById('pill-slider');
+  const carerOpt = document.getElementById('pill-carer');
+  const selfOpt  = document.getElementById('pill-self');
+  if(!pill || !slider) return;
+
+  const opts = pill.querySelectorAll('.pill-opt');
+  const w = opts[0] ? opts[0].offsetWidth : 120;
+
+  if(mode === 'carer') {
+    slider.style.left  = '4px';
+    slider.style.width = w + 'px';
+    if(carerOpt) carerOpt.classList.add('sel');
+    if(selfOpt)  selfOpt.classList.remove('sel');
+    const lbl = document.getElementById('ob-explain-label');
+    const txt = document.getElementById('ob-explain-text');
+    const nl  = document.getElementById('ob1-name-label');
+    if(lbl) lbl.textContent = 'CARER SETUP';
+    if(txt) txt.textContent = "You'll configure everything — medications, times, and dose slots. The person you care for gets a simple view with just one button to tap.";
+    if(nl)  nl.textContent  = 'Your name';
+    const inp = document.getElementById('ob1-name-input');
+    if(inp) { inp.placeholder = 'e.g. Belle, Sarah'; }
+  } else {
+    slider.style.left  = (w + 4) + 'px';
+    slider.style.width = w + 'px';
+    if(selfOpt)  selfOpt.classList.add('sel');
+    if(carerOpt) carerOpt.classList.remove('sel');
+    const lbl = document.getElementById('ob-explain-label');
+    const txt = document.getElementById('ob-explain-text');
+    const nl  = document.getElementById('ob1-name-label');
+    if(lbl) lbl.textContent = 'PERSONAL SETUP';
+    if(txt) txt.textContent = "You'll manage your own medications, set your reminders, and track your adherence history.";
+    if(nl)  nl.textContent  = 'Your name';
+    const inp = document.getElementById('ob1-name-input');
+    if(inp) { inp.placeholder = 'e.g. Sarah'; }
+  }
+  haptic('light');
+}
+
+// ── Step navigation ───────────────────────────────────────
+function obGoToNew(stepId, backward) {
+  const all = document.querySelectorAll('.ob-step');
+  all.forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(stepId);
+  if(!el) return;
+  el.classList.add('active');
+  haptic('light');
+}
+
+function obBack(toStep) {
+  if(toStep === 1) obGoToNew('ob-1', true);
+  else if(toStep === 3) obGoToNew('ob-3', true);
+}
+
+// ── Step 1 — who + carer name ─────────────────────────────
+function ob1Next() {
+  const inp = document.getElementById('ob1-name-input');
+  const err = document.getElementById('ob1-name-error');
+  const name = inp ? inp.value.trim() : '';
+  if(!name) {
+    if(inp) inp.classList.add('ob-input-error');
+    if(err) err.classList.add('show');
+    if(inp) inp.focus();
+    return;
+  }
+  if(inp) inp.classList.remove('ob-input-error');
+  if(err) err.classList.remove('show');
+
+  if(obMode === 'carer') {
+    obCarerName = name;
+    state.userName = name;
+    obGoToNew('ob-2a', false);
+  } else {
+    obPatientName = name;
+    obCarerName   = name;
+    state.userName = name;
+    obGoToNew('ob-2b', false);
+  }
+}
+
+// ── Step 2a — patient name (carer) ───────────────────────
+function ob2aNext() {
+  const inp = document.getElementById('ob2a-patient-input');
+  const err = document.getElementById('ob2a-patient-error');
+  const name = inp ? inp.value.trim() : '';
+  if(!name) {
+    if(inp) inp.classList.add('ob-input-error');
+    if(err) err.classList.add('show');
+    if(inp) inp.focus();
+    return;
+  }
+  if(inp) inp.classList.remove('ob-input-error');
+  if(err) err.classList.remove('show');
+  obPatientName = name;
+  state.patientName = name;
+  state.whoFor = 'other';
+
+  // Update step 3 title
+  const t3 = document.getElementById('ob3-title');
+  const b3 = document.getElementById('ob3-body');
+  if(t3) t3.textContent = name + "'s schedule";
+  if(b3) b3.textContent = "Choose " + name + "'s dose slots. You can set exact times and add medications next.";
+  const btn = document.getElementById('ob3-btn');
+  if(btn) btn.textContent = "Set up " + name + "'s slots →";
+
+  obGoToNew('ob-3', false);
+}
+
+// ── Step 2b — self name ───────────────────────────────────
+function ob2bNext() {
+  const inp = document.getElementById('ob2b-name-input');
+  const err = document.getElementById('ob2b-name-error');
+  const name = inp ? inp.value.trim() : '';
+  if(!name) {
+    if(inp) inp.classList.add('ob-input-error');
+    if(err) err.classList.add('show');
+    if(inp) inp.focus();
+    return;
+  }
+  if(inp) inp.classList.remove('ob-input-error');
+  if(err) err.classList.remove('show');
+  obPatientName = name;
+  state.userName = name;
+  state.whoFor = 'self';
+
+  const t3 = document.getElementById('ob3-title');
+  const b3 = document.getElementById('ob3-body');
+  if(t3) t3.textContent = 'Which slots apply?';
+  if(b3) b3.textContent = 'Select all that match your routine. You can adjust times and add medications next.';
+  const btn = document.getElementById('ob3-btn');
+  if(btn) btn.textContent = 'Set up my schedule →';
+
+  obGoToNew('ob-3', false);
+}
+
+// ── Step 3 — slot selection ───────────────────────────────
+
+function ob3Next() {
+  if(obSelectedSlots.size === 0) {
+    const err = document.getElementById('ob3-slot-error');
+    if(err) err.classList.add('show');
+    return;
+  }
+  const err = document.getElementById('ob3-slot-error');
+  if(err) err.classList.remove('show');
+
+  // Build advState from selections
+  const slotOrder = ['morning','lunch','dinner','bedtime'].filter(id => obSelectedSlots.has(id));
+  advState.slots = slotOrder.map(id => ({
+    id,
+    name: OB_SLOT_DEFAULTS[id].name,
+    emoji: id,
+    time: OB_SLOT_DEFAULTS[id].time,
+    meds: []
+  }));
+  advState.today = {};
+  advState.slots.forEach(sl => {
+    advState.today[sl.id] = { taken:false, takenAt:null, events:[], snoozeUntil:null };
+  });
+  advState.lastResetDate = todayStr();
+  state.advancedMode = true;
+  state.onboardingDone = true;
+  saveState(); saveAdvState();
+
+  // Personalise done screen
+  const t4 = document.getElementById('ob4-title');
+  const b4 = document.getElementById('ob4-body');
+  if(obMode === 'carer' && obPatientName && obCarerName) {
+    if(t4) t4.textContent = obPatientName + "'s schedule is ready";
+    if(b4) b4.textContent = "Share the link with " + obPatientName + " — they'll see only their schedule with a button to mark each dose taken.";
+  } else if(obPatientName) {
+    if(t4) t4.innerHTML = "You're all set, <em style='color:var(--teal)'>" + esc(obPatientName) + "</em>";
+    if(b4) b4.textContent = "Your reminders are ready. Add your medications in Settings whenever you're ready.";
+  }
+
+  obGoToNew('ob-4', false);
+}
+
+function ob3Back() {
+  if(obMode === 'carer') obGoToNew('ob-2a', true);
+  else obGoToNew('ob-2b', true);
+}
+
+// ── Finish ────────────────────────────────────────────────
+function finishNewOnboarding() {
+  const overlay = document.getElementById('obOverlay');
+  if(overlay) overlay.style.display = 'none';
+  applyMode(); renderTimeline(); updateSettingsPanel();
+  haptic('success');
+  const name = obPatientName || obCarerName;
+  showToast(obMode === 'carer' && obPatientName
+    ? 'Managing ' + obPatientName + "'s schedule"
+    : name ? 'Welcome, ' + name : 'Welcome to Takenly');
+}
+
+// ── checkOnboarding now uses new flow ─────────────────────
 
 function init() {
   loadState(); loadAdvState(); loadCarerCodes();
