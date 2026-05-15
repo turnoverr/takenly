@@ -1293,28 +1293,31 @@ body.dark .tab-btn.active {
 .ob-overlay {
   position: fixed;
   inset: 0;
-  z-index: 900;
+  z-index: 10000;
   background: var(--bg);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: calc(36px + var(--safe-t)) 28px calc(48px + var(--safe-b));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  isolation: isolate;
   background-image: radial-gradient(ellipse at 50% 0%, rgba(13,115,119,0.06), transparent 55%);
 }
 .ob-step {
   display: none;
   width: 100%;
-  max-width: 380px;
+  max-width: 480px;
   flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  text-align: center;
+  align-items: flex-start;
+  gap: 0;
+  text-align: left;
+  padding: calc(var(--safe-t) + 16px) 28px calc(var(--safe-b) + 32px);
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 .ob-step.active {
   display: flex;
-  animation: fadeUp 0.32s ease both;
+  animation: fadeUp 0.28s ease both;
 }
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(14px); }
@@ -1322,7 +1325,8 @@ body.dark .tab-btn.active {
 }
 .ob-logo-wrap {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  margin-bottom: 28px;
   align-items: center;
   gap: 8px;
 }
@@ -2092,7 +2096,7 @@ body.dark .tab-btn.active {
 /* ── NEW ONBOARDING CSS v3.2 ── */
 
 /* Progress dots — D style */
-.ob-prog-d { display:flex; gap:5px; margin-bottom:24px; }
+.ob-prog-d { display:flex; gap:5px; margin-bottom:24px; width:100%; }
 .opd {
   height:3px; border-radius:3px; background:var(--faint);
   transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
@@ -2103,9 +2107,9 @@ body.dark .tab-btn.active {
 /* Pill toggle */
 .pill-toggle {
   position:relative; display:flex;
-  background:var(--faint); border:1px solid var(--border);
+  background:var(--surface2,#F0EEEB); border:1px solid var(--border);
   border-radius:14px; padding:4px; margin-bottom:14px;
-  cursor:pointer; user-select:none;
+  cursor:pointer; user-select:none; width:100%;
 }
 .pill-slider {
   position:absolute; top:4px; bottom:4px;
@@ -2131,10 +2135,10 @@ body.dark .tab-btn.active {
 
 /* Explain card */
 .ob-explain-card {
-  background:var(--surface2,#F5F5F5);
+  background:var(--surface2,#F0EEEB);
   border:1px solid var(--border);
   border-radius:var(--radius);
-  padding:12px 14px; margin-bottom:18px;
+  padding:12px 14px; margin-bottom:18px; width:100%;
 }
 .ob-explain-label {
   font-size:9px; font-weight:700; letter-spacing:0.12em;
@@ -2156,7 +2160,7 @@ body.dark .tab-btn.active {
 }
 
 /* Fields */
-.ob-field { margin-bottom:14px; }
+.ob-field { margin-bottom:14px; width:100%; }
 .ob-field-label {
   font-size:11px; font-weight:700; letter-spacing:0.07em;
   text-transform:uppercase; color:var(--ink-dim);
@@ -2174,7 +2178,7 @@ body.dark .tab-btn.active {
 .ob-input.ob-input-error { border-color:var(--red) !important; }
 
 /* Slot rows */
-.ob-slot-list { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; }
+.ob-slot-list { display:flex; flex-direction:column; gap:7px; margin-bottom:16px; width:100%; }
 .ob-slot-row {
   display:flex; align-items:center; gap:12px;
   padding:11px 14px; border-radius:var(--radius);
@@ -2208,8 +2212,9 @@ body.dark .tab-btn.active {
 .ob-done-screen {
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  flex:1; padding:32px 28px 28px;
+  flex:1; padding:0 0 32px;
   text-align:center; gap:16px;
+  width:100%;
 }
 .ob-done-ring-wrap { margin-bottom:4px; }
 .ob-done-svg { width:120px; height:120px; display:block; }
@@ -3146,7 +3151,7 @@ function obStep3Next() {
   });
   obSlotIndex=0; obTempMeds=[];
   renderOb4();
-  renderObProgress('ob-prog-4',4,5);
+  
   obGoTo(4);
 }
 
@@ -3186,7 +3191,7 @@ function obStep4Next() {
 
 function obStep4Back(){
   if(obSlotIndex>0){obSlotIndex--;obTempMeds=[];renderOb4();haptic('light');}
-  else{renderObProgress('ob-prog-3',3,5);obGoTo(3);}
+  else{obGoTo(3);}
 }
 
 function showObDoneScreen() {
@@ -3206,7 +3211,7 @@ function showObDoneScreen() {
   const n=state.patientName||state.userName;
   document.getElementById('ob5-title').textContent=n&&obWhoChoice==='other'?`All set for ${n}!`:'All set!';
   document.getElementById('ob5-body').textContent=obQ('{Name} schedule is ready. Takenly will remind at the right times each day.');
-  renderObProgress('ob-prog-5',5,5);
+  
   obGoTo(5);
   haptic('success');
 }
@@ -3255,20 +3260,6 @@ function openTakenly() {
 }
 
 
-function checkOnboarding() {
-  // Never show onboarding on a caregiver URL — the friend has a fresh device
-  // with onboardingDone:false but they are not setting up their own schedule.
-  if(window.location.search.includes('carer=1')) return;
-  if(!state.onboardingDone){
-    // Reset onboarding flow state
-    obFrequency = 'once';
-    obWhoChoice = 'self';
-    obScheduleType = null;
-    obSelectedSlots = new Set();
-    renderObProgress('ob-prog-1',1,5);
-    document.getElementById('obOverlay').style.display='flex';
-  }
-}
 
 // ════════════════════════════════════════════════════════
 // TAB NAVIGATION
@@ -5622,6 +5613,8 @@ function ob3Back() {
 function finishNewOnboarding() {
   const overlay = document.getElementById('obOverlay');
   if(overlay) overlay.style.display = 'none';
+  const tabBar = document.querySelector('.tab-bar');
+  if(tabBar) tabBar.style.display = '';
   applyMode(); renderTimeline(); updateSettingsPanel();
   haptic('success');
   const name = obPatientName || obCarerName;
@@ -5631,6 +5624,44 @@ function finishNewOnboarding() {
 }
 
 // ── checkOnboarding now uses new flow ─────────────────────
+
+
+function checkOnboarding() {
+  if(window.location.search.includes('carer=1')) return;
+  const overlay = document.getElementById('obOverlay');
+  const tabBar  = document.querySelector('.tab-bar');
+  if(!state.onboardingDone) {
+    // Show onboarding, hide tab bar completely
+    if(overlay)  overlay.style.display = 'flex';
+    if(tabBar)   tabBar.style.display  = 'none';
+    // Reset all new onboarding state
+    obMode = 'carer';
+    obCarerName   = '';
+    obPatientName = '';
+    obSelectedSlots = new Set();
+    obPillInitDone  = false;
+    // Clear all slot selections
+    document.querySelectorAll('.ob-slot-row').forEach(r => r.classList.remove('sel'));
+    // Clear all inputs and errors
+    ['ob1-name-input','ob2a-patient-input','ob2b-name-input'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) { el.value = ''; el.classList.remove('ob-input-error'); }
+    });
+    ['ob1-name-error','ob2a-patient-error','ob2b-name-error','ob3-slot-error'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.classList.remove('show');
+    });
+    // Set step 1 active
+    document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('active'));
+    const first = document.getElementById('ob-1');
+    if(first) first.classList.add('active');
+    // Init pill after overlay is visible
+    setTimeout(() => { obPillInitDone = false; initPill(); setPillMode('carer'); }, 80);
+  } else {
+    if(overlay) overlay.style.display = 'none';
+    if(tabBar)  tabBar.style.display  = '';
+  }
+}
 
 function init() {
   loadState(); loadAdvState(); loadCarerCodes();
